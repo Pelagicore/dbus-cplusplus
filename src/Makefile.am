@@ -1,0 +1,30 @@
+INCLUDES = $(dbus_CFLAGS) $(xml_CFLAGS) -I$(top_srcdir)/include 
+AM_CPPFLAGS = -DDBUS_API_SUBJECT_TO_CHANGE
+
+HEADER_DIR  = $(top_srcdir)/include/dbus-c++
+HEADER_FILES = \
+	$(HEADER_DIR)/config.h \
+	$(HEADER_DIR)/dbus-c++.h \
+	$(HEADER_DIR)/types.h \
+	$(HEADER_DIR)/connection.h \
+	$(HEADER_DIR)/debug.h \
+	$(HEADER_DIR)/error.h \
+	$(HEADER_DIR)/interface.h \
+	$(HEADER_DIR)/message.h \
+	$(HEADER_DIR)/dispatcher.h \
+	$(HEADER_DIR)/eventloop.h \
+	$(HEADER_DIR)/object.h \
+	$(HEADER_DIR)/pendingcall.h \
+	$(HEADER_DIR)/server.h \
+	$(HEADER_DIR)/debug.h \
+	$(HEADER_DIR)/util.h \
+	$(HEADER_DIR)/refptr_impl.h \
+	$(HEADER_DIR)/xml.h \
+	$(HEADER_DIR)/introspection.h
+
+lib_includedir=$(includedir)/dbus-c++-0.3/dbus-c++
+lib_include_HEADERS = $(HEADER_FILES)
+
+lib_LTLIBRARIES = libdbus-c++-0.3.la
+libdbus_c___0_3_la_SOURCES = $(HEADER_FILES) interface.cpp object.cpp introspection.cpp debug.cpp eventloop.cpp xml.cpp types.cpp connection.cpp connection_p.h dispatcher.cpp dispatcher_p.h pendingcall.cpp pendingcall_p.h error.cpp internalerror.h message.cpp message_p.h server.cpp server_p.h
+libdbus_c___0_3_la_LIBADD = $(dbus_LIBS) $(xml_LIBS)

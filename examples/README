@@ -1,0 +1,11 @@
+This is a very simple use case of the c++ wrappers to write a DBus service, you can test it by running ./echo_server and then issuing the following commands:
+
+dbus-send  --dest=org.test.cbus --type=method_call --print-reply  /org/test/cbus/EchoServer org.test.cbus.EchoServer.Echo string:"hello world"
+
+method return sender=:1.34 -> dest=:1.36
+   string "hello world"
+
+dbus-send  --dest=org.test.cbus --type=method_call --print-reply  /org/test/cbus/EchoServer org.test.cbus.EchoServer.Echo int32:10
+
+Error org.freedesktop.DBus.Error.InvalidArgs: String value expected
+

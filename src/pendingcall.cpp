@@ -1,0 +1,105 @@
+/*
+ *
+ *  D-Bus++ - C++ bindings for DBus
+ *
+ *  Copyright (C) 2005-2006  Paolo Durante <shackan@gmail.com>
+ *
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
+
+
+#include <dbus-c++/pendingcall.h>
+
+#include <dbus/dbus.h>
+
+#include "internalerror.h"
+#include "pendingcall_p.h"
+
+using namespace DBus;
+
+PendingCall::Private::Private( DBusPendingCall* pc )
+: call(pc), dataslot(-1)
+{
+	if(!dbus_pending_call_allocate_data_slot(&dataslot))
+	{
+		throw Error(DBUS_ERROR_NO_MEMORY, "Unable to allocate data slot");
+	}
+}
+
+void PendingCall::Private::notify_stub( DBusPendingCall* dpc, void* data )
+{
+	PendingCall* pc = static_cast<PendingCall*>(data);
+
+	pc->slot(*pc);
+}
+
+PendingCall::Private::~Private()
+{
+	if(dataslot != -1)
+	{
+		dbus_pending_call_allocate_data_slot(&dataslot);
+	}
+}
+
+PendingCall::PendingCall( PendingCall::Private* p )
+: _pvt(p)
+{
+	if(!dbus_pending_call_set_notify(_pvt->call, Private::notify_stub, this, NULL))
+	{
+		throw Error(DBUS_ERROR_NO_MEMORY, "Unable to initialize pending call");
+	}
+}
+
+PendingCall::PendingCall( const PendingCall& c )
+: _pvt(c._pvt)
+{
+	dbus_pending_call_ref(_pvt->call);
+}
+
+PendingCall::~PendingCall()
+{
+	dbus_pending_call_unref(_pvt->call);
+}
+
+bool PendingCall::completed()
+{
+	return dbus_pending_call_get_completed(_pvt->call);
+}
+
+void PendingCall::cancel()
+{
+	dbus_pending_call_cancel(_pvt->call);
+}
+
+void PendingCall::block()
+{
+	dbus_pending_call_block(_pvt->call);
+}
+
+void PendingCall::data( void* p )
+{
+	if(!dbus_pending_call_set_data(_pvt->call, _pvt->dataslot, p, NULL))
+	{
+		throw Error(DBUS_ERROR_NO_MEMORY, "Unable to initialize data slot");
+	}
+}
+
+void* PendingCall::data()
+{
+	return dbus_pending_call_get_data(_pvt->call, _pvt->dataslot);
+}
+
