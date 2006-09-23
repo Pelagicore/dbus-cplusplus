@@ -67,7 +67,7 @@ bool MessageIter::append_basic( int type_id, void* value )
 void MessageIter::get_basic( int type_id, void* ptr )
 {
 	if(type() != type_id)
-		throw Error(DBUS_ERROR_INVALID_ARGS, "type mismatch");
+		throw ErrorInvalidArgs("type mismatch");
 
 	dbus_message_iter_get_basic((DBusMessageIter*)_iter, ptr);
 }
@@ -287,11 +287,11 @@ MessageIter MessageIter::new_variant( const char* sig )
 	return var;	
 }
 
-MessageIter MessageIter::new_struct( const char* sig )
+MessageIter MessageIter::new_struct()
 {
 	MessageIter stu(msg());
 	dbus_message_iter_open_container(
-		(DBusMessageIter*)_iter, DBUS_TYPE_STRUCT, sig, (DBusMessageIter*)&(stu._iter)
+		(DBusMessageIter*)_iter, DBUS_TYPE_STRUCT, 0, (DBusMessageIter*)&(stu._iter)
 	);
 	return stu;
 }
@@ -299,6 +299,56 @@ MessageIter MessageIter::new_struct( const char* sig )
 void MessageIter::close_container( MessageIter& container )
 {
 	dbus_message_iter_close_container((DBusMessageIter*)&_iter, (DBusMessageIter*)&(container._iter));
+}
+
+void MessageIter::copy_data( MessageIter& to )
+{
+	for(MessageIter from = *this; from.at_end(); ++from)
+	{
+		switch(from.type())
+		{
+			case DBUS_TYPE_BYTE:
+			case DBUS_TYPE_BOOLEAN:
+			case DBUS_TYPE_INT16:
+			case DBUS_TYPE_UINT16:
+			case DBUS_TYPE_INT32:
+			case DBUS_TYPE_UINT32:
+			case DBUS_TYPE_INT64:
+			case DBUS_TYPE_UINT64:
+			case DBUS_TYPE_DOUBLE:
+			case DBUS_TYPE_STRING:
+			case DBUS_TYPE_OBJECT_PATH:
+			case DBUS_TYPE_SIGNATURE:
+			{
+				unsigned char value[8];
+				from.get_basic(from.type(), &value);
+				to.append_basic(from.type(), &value);
+				break;
+			}
+			case DBUS_TYPE_ARRAY:
+			case DBUS_TYPE_VARIANT:
+			case DBUS_TYPE_STRUCT:
+			case DBUS_TYPE_DICT_ENTRY:
+			{
+				MessageIter from_container = from.recurse();
+				char* sig = from_container.signature();
+
+				MessageIter to_container(to.msg());
+				dbus_message_iter_open_container
+				(
+					(DBusMessageIter*)&(to._iter),
+					from.type(),
+					sig,
+					(DBusMessageIter*)&(to_container._iter)
+				);
+
+				from_container.copy_data(to_container);
+				to.close_container(to_container);
+				free(sig);
+				break;
+			}
+		}
+	}
 }
 
 /*
@@ -398,14 +448,14 @@ bool Message::is_signal( const char* interface, const char* member ) const
 	return dbus_message_is_signal(_pvt->msg, interface, member);
 }
 
-MessageIter Message::w_iter()
+MessageIter Message::writer()
 {
 	MessageIter iter(*this);
 	dbus_message_iter_init_append(_pvt->msg, (DBusMessageIter*)&(iter._iter));
 	return iter;
 }
 
-MessageIter Message::r_iter() const
+MessageIter Message::reader() const
 {
 	MessageIter iter(const_cast<Message&>(*this));
 	dbus_message_iter_init(_pvt->msg, (DBusMessageIter*)&(iter._iter));

@@ -111,8 +111,9 @@ void EepleMainLoop::dispatch()
 
 	int wait_min = 10000;
 
-	Timeouts::iterator ti = _timeouts.begin();
-	for(;ti != _timeouts.end(); ++ti)
+	Timeouts::iterator ti;
+
+	for(ti = _timeouts.begin(); ti != _timeouts.end(); ++ti)
 	{
 		if((*ti)->enabled() && (*ti)->interval() < wait_min)
 			wait_min = (*ti)->interval();
@@ -151,7 +152,9 @@ void EepleMainLoop::dispatch()
 
 	for(int j = 0; j < nfd; ++j)
 	{
-		for(Watches::iterator wi = _watches.begin(); wi != _watches.end();)
+		Watches::iterator wi;
+
+		for(wi = _watches.begin(); wi != _watches.end();)
 		{
 			Watches::iterator tmp = wi;
 			++tmp;

@@ -23,6 +23,7 @@
 
 
 #include <dbus-c++/introspection.h>
+#include <dbus-c++/object.h>
 #include <dbus-c++/message.h>
 #include <dbus-c++/xml.h>
 
@@ -44,7 +45,7 @@ Message IntrospectableAdaptor::Introspect( const CallMessage& call )
 	
 	Xml::Node iroot("node");
 
-	InterfaceTable::const_iterator iti;
+	InterfaceAdaptorTable::const_iterator iti;
 
 	for(iti = _interfaces.begin(); iti != _interfaces.end(); ++iti)
 	{
@@ -55,6 +56,20 @@ Message IntrospectableAdaptor::Introspect( const CallMessage& call )
 		{
 			Xml::Node& iface = iroot.add(Xml::Node("interface"));
 			iface.set("name", intro->name);
+
+			for(const IntrospectedProperty* p = intro->properties; p->name; ++p)
+			{
+				Xml::Node& property = iface.add(Xml::Node("property"));
+				property.set("name", p->name);
+				property.set("type", p->type);
+
+				std::string access;
+
+				if(p->read)  access += "read";
+				if(p->write) access += "write";
+
+				property.set("access", access); 
+			}
 
 			for(const IntrospectedMethod* m = intro->methods; m->args; ++m)
 			{
@@ -84,10 +99,25 @@ Message IntrospectableAdaptor::Introspect( const CallMessage& call )
 			}
 		}
 	}
+	const std::string parent = object()->path();
+	const ObjectAdaptorPList children = ObjectAdaptor::from_path_prefix(parent + '/');
+
+	ObjectAdaptorPList::const_iterator oci;
+
+	for(oci = children.begin(); oci != children.end(); ++oci) 
+	{
+		Xml::Node& subnode = iroot.add(Xml::Node("node"));
+
+		std::string name = (*oci)->path().substr(parent.length()+1);
+		name.substr(name.find('/'));
+
+		subnode.set("name", name);
+	}
+
 	std::string xml = DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE + iroot.to_xml();
 
 	ReturnMessage reply(call);
-	MessageIter wi = reply.w_iter();
+	MessageIter wi = reply.writer();
 	wi.append_string(xml.c_str());
 	return reply;
 }
@@ -108,9 +138,16 @@ IntrospectedInterface* const IntrospectableAdaptor::introspect() const
 	{
 		{ 0, 0 }
 	};
+	static IntrospectedProperty Introspectable_properties[] =
+	{
+		{ 0, 0, 0, 0 }
+	};
 	static IntrospectedInterface Introspectable_interface =
 	{
-		introspectable_name, Introspectable_methods, Introspectable_signals
+		introspectable_name,
+		Introspectable_methods,
+		Introspectable_signals,
+		Introspectable_properties
 	};
 	return &Introspectable_interface;
 }
@@ -127,7 +164,7 @@ std::string IntrospectableProxy::Introspect()
 
 	DBus::Message ret = invoke_method(call);
 
-	DBus::MessageIter ri = ret.r_iter();
+	DBus::MessageIter ri = ret.reader();
 	const char* str = ri.get_string();
 
 	return str;

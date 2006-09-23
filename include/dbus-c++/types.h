@@ -49,6 +49,7 @@ typedef std::string String;
 struct Path : public std::string
 { 
 	Path() {}
+	Path( const std::string& s ) : std::string(s) {}
 	Path( const char* c ) : std::string(c) {}
 	Path& operator = ( std::string& s )
 	{
@@ -60,6 +61,7 @@ struct Path : public std::string
 struct Signature : public std::string
 { 
 	Signature() {}
+	Signature( const std::string& s ) : std::string(s) {}
 	Signature( const char* c ) : std::string(c) {}
 	Signature& operator = ( std::string& s )
 	{
@@ -80,30 +82,23 @@ public:
 
 	Variant& operator = ( const Variant& v );
 
-	const char* signature() const;
+	const Signature signature() const;
 
-	MessageIter iter() const
+	void clear();
+
+	MessageIter reader() const
 	{
-		return _it;
+		return _msg.reader();
+	}
+
+	MessageIter writer()
+	{
+		return _msg.writer();
 	}
 
 private:
 
 	Message _msg;
-	MessageIter _it;
-	mutable Signature _signature;
-};
-
-template <typename E>
-struct Array : public std::vector<E> {};
-
-template <typename K, typename V>
-struct Dict : public std::map<K, V>
-{ 	
-	bool has_key( const K& key ) const
-	{
-		return this->find(key) != this->end();
-	}
 };
 
 template <
@@ -131,19 +126,19 @@ struct type
 	}
 };
 
-template <> struct type<Byte>		{ static std::string sig(){ return "y"; } };
-template <> struct type<Bool>		{ static std::string sig(){ return "b"; } };
-template <> struct type<Int16>		{ static std::string sig(){ return "n"; } };
-template <> struct type<UInt16>	{ static std::string sig(){ return "q"; } };
-template <> struct type<Int32>		{ static std::string sig(){ return "i"; } };
-template <> struct type<UInt32>	{ static std::string sig(){ return "u"; } };
-template <> struct type<Int64>		{ static std::string sig(){ return "x"; } };
-template <> struct type<UInt64>	{ static std::string sig(){ return "t"; } };
-template <> struct type<Double>	{ static std::string sig(){ return "d"; } };
-template <> struct type<String>	{ static std::string sig(){ return "s"; } };
-template <> struct type<Path>		{ static std::string sig(){ return "o"; } };
-template <> struct type<Signature>	{ static std::string sig(){ return "g"; } };
-template <> struct type<Invalid>	{ static std::string sig(){ return ""; } };
+template <> struct type<Byte>           { static std::string sig(){ return "y"; } };
+template <> struct type<Bool>           { static std::string sig(){ return "b"; } };
+template <> struct type<Int16>          { static std::string sig(){ return "n"; } };
+template <> struct type<UInt16>         { static std::string sig(){ return "q"; } };
+template <> struct type<Int32>          { static std::string sig(){ return "i"; } };
+template <> struct type<UInt32>         { static std::string sig(){ return "u"; } };
+template <> struct type<Int64>          { static std::string sig(){ return "x"; } };
+template <> struct type<UInt64>         { static std::string sig(){ return "t"; } };
+template <> struct type<Double>         { static std::string sig(){ return "d"; } };
+template <> struct type<String>         { static std::string sig(){ return "s"; } };
+template <> struct type<Path>           { static std::string sig(){ return "o"; } };
+template <> struct type<Signature>      { static std::string sig(){ return "g"; } };
+template <> struct type<Invalid>        { static std::string sig(){ return ""; } };
 
 template <typename E> 
 struct type< std::vector<E> >
@@ -315,11 +310,11 @@ template <
 >
 inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Struct<T1,T2,T3,T4,T5,T6,T7,T8>& val )
 {
-	const std::string sig = 
+/*	const std::string sig = 
 		DBus::type<T1>::sig() + DBus::type<T2>::sig() + DBus::type<T3>::sig() + DBus::type<T4>::sig() +
 		DBus::type<T5>::sig() + DBus::type<T6>::sig() + DBus::type<T7>::sig() + DBus::type<T8>::sig();
-
-	DBus::MessageIter sit = iter.new_struct(sig.c_str());
+*/
+	DBus::MessageIter sit = iter.new_struct(/*sig.c_str()*/);
 
 	sit << val._1 << val._2 << val._3 << val._4 << val._5 << val._6 << val._7 << val._8;
 

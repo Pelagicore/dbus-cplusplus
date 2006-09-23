@@ -26,6 +26,7 @@ sources = [
 	'src/eventloop.cpp',
 	'src/interface.cpp',
 	'src/introspection.cpp',
+	'src/property.cpp',
 	'src/message.cpp',
 	'src/object.cpp',
 	'src/pendingcall.cpp',

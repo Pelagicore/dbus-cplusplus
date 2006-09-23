@@ -31,12 +31,12 @@
 
 using namespace DBus;
 
-PendingCall::Private::Private( DBusPendingCall* pc )
-: call(pc), dataslot(-1)
+PendingCall::Private::Private( DBusPendingCall* dpc )
+: call(dpc), dataslot(-1)
 {
 	if(!dbus_pending_call_allocate_data_slot(&dataslot))
 	{
-		throw Error(DBUS_ERROR_NO_MEMORY, "Unable to allocate data slot");
+		throw ErrorNoMemory("Unable to allocate data slot");
 	}
 }
 
@@ -60,7 +60,7 @@ PendingCall::PendingCall( PendingCall::Private* p )
 {
 	if(!dbus_pending_call_set_notify(_pvt->call, Private::notify_stub, this, NULL))
 	{
-		throw Error(DBUS_ERROR_NO_MEMORY, "Unable to initialize pending call");
+		throw ErrorNoMemory("Unable to initialize pending call");
 	}
 }
 
@@ -94,7 +94,7 @@ void PendingCall::data( void* p )
 {
 	if(!dbus_pending_call_set_data(_pvt->call, _pvt->dataslot, p, NULL))
 	{
-		throw Error(DBUS_ERROR_NO_MEMORY, "Unable to initialize data slot");
+		throw ErrorNoMemory("Unable to initialize data slot");
 	}
 }
 

@@ -29,44 +29,29 @@
 
 using namespace DBus;
 
-Message IfaceTracker::rinvoke_method( CallMessage& msg )
-{
-	return ErrorMessage(msg, DBUS_ERROR_NOT_SUPPORTED, "there are no proxies in a InterfaceAdaptor");
-}
-
-Interface::Interface( const char* name )
-:	_name(name)
-{
-	register_interface(name);
-}
+Interface::Interface( const std::string& name )
+: _name(name)
+{}
 
 Interface::~Interface()
+{}
+
+InterfaceAdaptor* AdaptorBase::find_interface( const std::string& name )
 {
-	//unregister_interface(name);	//not needed
+	InterfaceAdaptorTable::const_iterator ii = _interfaces.find(name);
+
+	return ii != _interfaces.end() ? ii->second : NULL;
 }
 
-Message Interface::invoke_method( const CallMessage& )
+InterfaceAdaptor::InterfaceAdaptor( const std::string& name )
+: Interface(name)
 {
-	throw Error(DBUS_ERROR_NOT_SUPPORTED, "");
-}
-
-bool Interface::dispatch_signal( const SignalMessage& )
-{
-	throw Error(DBUS_ERROR_NOT_SUPPORTED, "");
-}
-
-void Interface::register_interface( const char* name )
-{
-	debug_log("registering interface %s",name);
+	debug_log("adding interface %s", name.c_str());
 
 	_interfaces[name] = this;
 }
 
-InterfaceAdaptor::InterfaceAdaptor( const char* name )
-:	Interface(name)
-{}
-
-Message InterfaceAdaptor::invoke_method( const CallMessage& msg )
+Message InterfaceAdaptor::dispatch_method( const CallMessage& msg )
 {
 	const char* name = msg.member();
 
@@ -85,13 +70,53 @@ void InterfaceAdaptor::emit_signal( const SignalMessage& sig )
 {
 	SignalMessage& sig2 = const_cast<SignalMessage&>(sig);
 
-	sig2.interface( iname().c_str() );
-	remit_signal(sig2);
+	sig2.interface( name().c_str() );
+	_emit_signal(sig2);
 }
 
-InterfaceProxy::InterfaceProxy( const char* name )
-:	Interface(name)
-{}
+Variant* InterfaceAdaptor::get_property( const std::string& name )
+{
+	PropertyTable::iterator pti = _properties.find(name);
+
+	if( pti != _properties.end() )
+	{
+		if( !pti->second.read )
+			throw ErrorAccessDenied("property is not readable");
+
+		return &(pti->second.value);
+	}
+	return NULL;
+}
+
+bool InterfaceAdaptor::set_property( const std::string& name, Variant& value )
+{
+	PropertyTable::iterator pti = _properties.find(name);
+
+	if( pti != _properties.end() )
+	{
+		if( !pti->second.write )
+			throw ErrorAccessDenied("property is not writeable");
+
+		pti->second.value = value;
+		return true;
+	}
+	return false;
+}
+
+InterfaceProxy* ProxyBase::find_interface( const std::string& name )
+{
+	InterfaceProxyTable::const_iterator ii = _interfaces.find(name);
+
+	return ii != _interfaces.end() ? ii->second : NULL;
+}
+
+InterfaceProxy::InterfaceProxy( const std::string& name )
+: Interface(name)
+{
+	debug_log("adding interface %s", name.c_str());
+
+	_interfaces[name] = this;
+}
 
 bool InterfaceProxy::dispatch_signal( const SignalMessage& msg )
 {
@@ -113,6 +138,6 @@ Message InterfaceProxy::invoke_method( const CallMessage& call )
 {
 	CallMessage& call2 = const_cast<CallMessage&>(call);
 
-	call2.interface( iname().c_str() );
-	return rinvoke_method(call2);
+	call2.interface( name().c_str() );
+	return _invoke_method(call2);
 }

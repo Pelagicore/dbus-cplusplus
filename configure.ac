@@ -98,7 +98,5 @@ AC_OUTPUT(
 	doc/Makefile
 	doc/Doxyfile
 	doc/html/Makefile
-	examples/Makefile
-	tests/Makefile
 	dbus-c++-0.3.pc
 )

@@ -307,7 +307,7 @@ PendingCall Connection::send_async( Message& msg, int timeout )
 
 	if(!dbus_connection_send_with_reply(_pvt->conn, msg._pvt->msg, &pending, timeout))
 	{
-		throw Error(DBUS_ERROR_NO_MEMORY, "Unable to start asynchronous call");
+		throw ErrorNoMemory("Unable to start asynchronous call");
 	}
 	return PendingCall(new PendingCall::Private(pending));
 }

@@ -125,9 +125,11 @@ public:
 
 	MessageIter new_variant( const char* sig );
 
-	MessageIter new_struct( const char* sig );
+	MessageIter new_struct();
 
 	void close_container( MessageIter& container );
+
+	void copy_data( MessageIter& to );
 
 	Message& msg() const
 	{
@@ -187,9 +189,9 @@ public:
 
 	bool is_signal( const char* interface, const char* member ) const;
 
-	MessageIter r_iter() const;
+	MessageIter reader() const;
 
-	MessageIter w_iter();
+	MessageIter writer();
 
 	bool append( int first_type, ... );
 

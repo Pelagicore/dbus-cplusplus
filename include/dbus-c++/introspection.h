@@ -42,11 +42,20 @@ struct IntrospectedMethod
 	const IntrospectedArgument* args;
 };
 
+struct IntrospectedProperty
+{
+	const char* name;
+	const char* type;
+	const bool  read;
+	const bool  write;
+};
+
 struct IntrospectedInterface
 {
 	const char* name;
 	const IntrospectedMethod* methods;
 	const IntrospectedMethod* signals;
+	const IntrospectedProperty* properties;
 };
 
 class IntrospectableAdaptor : public InterfaceAdaptor

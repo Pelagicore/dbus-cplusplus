@@ -26,6 +26,7 @@
 #include <dbus-c++/object.h>
 #include "internalerror.h"
 
+#include <map>
 #include <dbus/dbus.h>
 
 #include "message_p.h"
@@ -33,7 +34,7 @@
 
 using namespace DBus;
 
-Object::Object( Connection& conn, const char* path, const char* service )
+Object::Object( Connection& conn, const Path& path, const char* service )
 :	_conn(conn), _path(path), _service(service ? service : "")
 {
 }
@@ -57,7 +58,7 @@ static DBusObjectPathVTable _vtable =
 
 void ObjectAdaptor::Private::unregister_function_stub( DBusConnection* conn, void* data )
 {
- 	// XXX: what do we have to do here ?
+ 	//TODO: what do we have to do here ?
 }
 
 DBusHandlerResult ObjectAdaptor::Private::message_function_stub( DBusConnection*, DBusMessage* dmsg, void* data )
@@ -85,7 +86,39 @@ DBusHandlerResult ObjectAdaptor::Private::message_function_stub( DBusConnection*
 	}
 }
 
-ObjectAdaptor::ObjectAdaptor( Connection& conn, const char* path )
+typedef std::map<Path, ObjectAdaptor*> ObjectAdaptorTable;
+static ObjectAdaptorTable _adaptor_table;
+
+ObjectAdaptor* ObjectAdaptor::from_path( const Path& path )
+{
+	ObjectAdaptorTable::iterator ati = _adaptor_table.find(path);
+
+	if(ati != _adaptor_table.end())
+		return ati->second;
+
+	return NULL;
+}
+
+ObjectAdaptorPList ObjectAdaptor::from_path_prefix( const std::string& prefix )
+{
+	ObjectAdaptorPList ali;
+
+	ObjectAdaptorTable::iterator ati = _adaptor_table.begin();
+
+	size_t plen = prefix.length();
+
+	while(ati != _adaptor_table.end())
+	{
+		if(!strncmp(ati->second->path().c_str(), prefix.c_str(), plen))
+			ali.push_back(ati->second);
+
+		++ati;
+	}
+
+	return ali;
+}
+
+ObjectAdaptor::ObjectAdaptor( Connection& conn, const Path& path )
 :	Object(conn, path, conn.unique_name())
 {
 	register_obj();
@@ -102,11 +135,11 @@ void ObjectAdaptor::register_obj()
 
 	if(!dbus_connection_register_object_path(conn()._pvt->conn, path().c_str(), &_vtable, this))
 	{
- 		throw Error(DBUS_ERROR_NO_MEMORY,"unable to register object path");
+ 		throw ErrorNoMemory("unable to register object path");
 	}
 	else
 	{
-		InterfaceTable::const_iterator ii = _interfaces.begin();
+		InterfaceAdaptorTable::const_iterator ii = _interfaces.begin();
 		while( ii != _interfaces.end() )
 		{
 			std::string im = "type='method_call',interface='"+ii->first+"'";
@@ -114,15 +147,19 @@ void ObjectAdaptor::register_obj()
 			++ii;
 		}
 	}
+
+	_adaptor_table[path()] = this;
 }
 
 void ObjectAdaptor::unregister_obj()
 {
+	_adaptor_table.erase(path());
+
 	debug_log("unregistering local object %s", path().c_str());
 
 	dbus_connection_unregister_object_path(conn()._pvt->conn, path().c_str());
 
-	InterfaceTable::const_iterator ii = _interfaces.begin();
+	InterfaceAdaptorTable::const_iterator ii = _interfaces.begin();
 	while( ii != _interfaces.end() )
 	{
 		std::string im = "type='method_call',interface='"+ii->first+"'";
@@ -131,7 +168,7 @@ void ObjectAdaptor::unregister_obj()
 	}
 }
 
-void ObjectAdaptor::remit_signal( SignalMessage& sig )
+void ObjectAdaptor::_emit_signal( SignalMessage& sig )
 {
 	sig.path(path().c_str());
 
@@ -150,17 +187,17 @@ bool ObjectAdaptor::handle_message( const Message& msg )
 		case DBUS_MESSAGE_TYPE_METHOD_CALL:
 		{
 			const CallMessage& cmsg = reinterpret_cast<const CallMessage&>(msg);
-			const char* member		= cmsg.member();
-			const char* interface	= cmsg.interface();
+			const char* member      = cmsg.member();
+			const char* interface   = cmsg.interface();
 
 			debug_log(" invoking method %s.%s", interface, member);
 		
-			InterfaceTable::const_iterator ii = _interfaces.find(interface);
-			if( ii != _interfaces.end() )
+			InterfaceAdaptor* ii = find_interface(interface);
+			if( ii )
 			{
 				try
 				{
-					Message ret = ii->second->invoke_method(cmsg);
+					Message ret = ii->dispatch_method(cmsg);
 					conn().send(ret);
 				}
 				catch(Error& e)
@@ -170,7 +207,7 @@ bool ObjectAdaptor::handle_message( const Message& msg )
 				}
 				catch(WontReturnException& wre)
 				{
-					_deferred_returns[wre.tag] = new DeferredReturn(conn(), cmsg, wre.tag);
+					_continuations[wre.tag] = new Continuation(conn(), cmsg, wre.tag);
 				}
 				return true;
 			}
@@ -193,45 +230,45 @@ void ObjectAdaptor::return_later( const void* tag )
 	throw wre;
 }
 
-void ObjectAdaptor::return_now( DeferredReturn* ret )
+void ObjectAdaptor::return_now( Continuation* ret )
 {
 	ret->_conn.send(ret->_return);
 
-	DeferredReturnMap::iterator di = _deferred_returns.find(ret->_tag);
+	ContinuationMap::iterator di = _continuations.find(ret->_tag);
 
 	delete di->second;
 
-	_deferred_returns.erase(di);
+	_continuations.erase(di);
 }
 
-void ObjectAdaptor::return_error( DeferredReturn* ret, Error& error )
+void ObjectAdaptor::return_error( Continuation* ret, const Error error )
 {
 	ret->_conn.send(ErrorMessage(ret->_call, error.name(), error.message()));
 
-	DeferredReturnMap::iterator di = _deferred_returns.find(ret->_tag);
+	ContinuationMap::iterator di = _continuations.find(ret->_tag);
 
 	delete di->second;
 
-	_deferred_returns.erase(di);
+	_continuations.erase(di);
 }
 
-ObjectAdaptor::DeferredReturn* ObjectAdaptor::find_return( const void* tag )
+ObjectAdaptor::Continuation* ObjectAdaptor::find_continuation( const void* tag )
 {
-	DeferredReturnMap::iterator di = _deferred_returns.find(tag);
+	ContinuationMap::iterator di = _continuations.find(tag);
 
-	return di != _deferred_returns.end() ? di->second : NULL;
+	return di != _continuations.end() ? di->second : NULL;
 }
 
-ObjectAdaptor::DeferredReturn::DeferredReturn( Connection& conn, const CallMessage& call, const void* tag )
+ObjectAdaptor::Continuation::Continuation( Connection& conn, const CallMessage& call, const void* tag )
 : _conn(conn), _call(call), _return(_call), _tag(tag)
 {
-	_writer = _return.w_iter(); //todo: verify
+	_writer = _return.writer(); //todo: verify
 }
 
 /*
 */
 
-ObjectProxy::ObjectProxy( Connection& conn, const char* path, const char* service )
+ObjectProxy::ObjectProxy( Connection& conn, const Path& path, const char* service )
 :	Object(conn, path, service)
 {
 	register_obj();
@@ -250,7 +287,7 @@ void ObjectProxy::register_obj()
 	
 	conn().add_filter(_filtered);
 
-	InterfaceTable::const_iterator ii = _interfaces.begin();
+	InterfaceProxyTable::const_iterator ii = _interfaces.begin();
 	while( ii != _interfaces.end() )
 	{
 		std::string im = "type='signal',interface='"+ii->first+"'";
@@ -266,7 +303,7 @@ void ObjectProxy::unregister_obj()
 {
 	debug_log("unregistering remote object %s", path().c_str());
 	
-	InterfaceTable::const_iterator ii = _interfaces.begin();
+	InterfaceProxyTable::const_iterator ii = _interfaces.begin();
 	while( ii != _interfaces.end() )
 	{
 		std::string im = "type='signal',interface='"+ii->first+"'";
@@ -279,7 +316,7 @@ void ObjectProxy::unregister_obj()
 	conn().remove_filter(_filtered);
 }
 
-Message ObjectProxy::rinvoke_method( CallMessage& call )
+Message ObjectProxy::_invoke_method( CallMessage& call )
 {
 	call.path(path().c_str());
 	call.destination(service().c_str());
@@ -299,10 +336,10 @@ bool ObjectProxy::handle_message( const Message& msg )
 
 			debug_log("filtered signal %s(in %s) from remote object %s", member, interface, msg.sender());
 
-			InterfaceTable::const_iterator ii = _interfaces.find(interface);
-			if( ii != _interfaces.end() )
+			InterfaceProxy* ii = find_interface(interface);
+			if( ii )
 			{
-				return ii->second->dispatch_signal(smsg);
+				return ii->dispatch_signal(smsg);
 			}
 			else
 			{
@@ -313,14 +350,14 @@ bool ObjectProxy::handle_message( const Message& msg )
 		{
 			debug_log("filtered method return from remote object %s", msg.sender());
 
-			//TODO:
+			//TODO?
 			return false;
 		}
 		case DBUS_MESSAGE_TYPE_ERROR:
 		{
 			debug_log("filtered error from remote object %s", msg.sender());
 
-			//TODO:
+			//TODO?
 			return false;
 		}
 		default:

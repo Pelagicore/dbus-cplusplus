@@ -27,7 +27,6 @@
 
 #include <string>
 #include <list>
-#include <map>
 
 #include "interface.h"
 #include "connection.h"
@@ -36,19 +35,11 @@
 
 namespace DBus {
 
-class Object;
-
-typedef std::list<Object*>	ObjectPList;
-
-class ObjectAdaptor;
-
-class ObjectProxy;
-
-class Object : protected virtual IfaceTracker
+class Object
 {
 protected:
 
-	Object( Connection& conn, const char* path, const char* service );
+	Object( Connection& conn, const Path& path, const char* service );
 	
 public:
 
@@ -57,14 +48,10 @@ public:
 	inline const DBus::Path& path() const;
 
 	inline const std::string& service() const;
-
-	inline const Object* object() const;
 	
  	inline Connection& conn();
 
 private:
-
-	//Object( const Object& );
 
 	virtual bool handle_message( const Message& ) = 0;
 	virtual void register_obj() = 0;
@@ -79,11 +66,6 @@ private:
 
 /*
 */
-
-const Object* Object::object() const
-{
-	return this;
-}
 
 Connection& Object::conn()
 {
@@ -103,21 +85,29 @@ const std::string& Object::service() const
 /*
 */
 
-class ObjectAdaptor : public Object
+class ObjectAdaptor;
+
+typedef std::list<ObjectAdaptor*> ObjectAdaptorPList;
+
+class ObjectAdaptor : public Object, public virtual AdaptorBase
 {
 public:
 
+	static ObjectAdaptor* from_path( const Path& path );
+
+	static ObjectAdaptorPList from_path_prefix( const std::string& prefix );
+
 	struct Private;
 
-	ObjectAdaptor( Connection& conn, const char* path );
+	ObjectAdaptor( Connection& conn, const Path& path );
 
 	~ObjectAdaptor();
 
-	void remit_signal( SignalMessage& );
+	inline const ObjectAdaptor* object() const;
 
 protected:
 
-	class DeferredReturn
+	class Continuation
 	{
 	public:
 
@@ -127,7 +117,7 @@ protected:
 
 	private:
 
-		DeferredReturn( Connection& conn, const CallMessage& call, const void* tag );
+		Continuation( Connection& conn, const CallMessage& call, const void* tag );
 
 		Connection _conn;
 		CallMessage _call;
@@ -140,31 +130,38 @@ protected:
 
 	void return_later( const void* tag );
 
-	void return_now( DeferredReturn* ret );
+	void return_now( Continuation* ret );
 
-	void return_error( DeferredReturn* ret, Error& error );
+	void return_error( Continuation* ret, const Error error );
 
-	DeferredReturn* find_return( const void* tag );
+	Continuation* find_continuation( const void* tag );
 
 private:
+
+	void _emit_signal( SignalMessage& );
 
 	bool handle_message( const Message& );
 
 	void register_obj();
 	void unregister_obj();
 
-	typedef std::map<const void*, DeferredReturn*> DeferredReturnMap;
-	DeferredReturnMap _deferred_returns;
+	typedef std::map<const void*, Continuation*> ContinuationMap;
+	ContinuationMap _continuations;
 
 friend struct Private;
 };
 
-void* ObjectAdaptor::DeferredReturn::tag()
+const ObjectAdaptor* ObjectAdaptor::object() const
+{
+	return this;
+}
+
+void* ObjectAdaptor::Continuation::tag()
 {
 	return const_cast<void*>(_tag);
 }
 
-MessageIter& ObjectAdaptor::DeferredReturn::writer()
+MessageIter& ObjectAdaptor::Continuation::writer()
 {
 	return _writer;
 }
@@ -172,17 +169,23 @@ MessageIter& ObjectAdaptor::DeferredReturn::writer()
 /*
 */
 
-class ObjectProxy : public Object
+class ObjectProxy;
+
+typedef std::list<ObjectProxy*> ObjectProxyPList;
+
+class ObjectProxy : public Object, public virtual ProxyBase
 {
 public:
 
-	ObjectProxy( Connection& conn, const char* path, const char* service = "" );
+	ObjectProxy( Connection& conn, const Path& path, const char* service = "" );
 
 	~ObjectProxy();
 
-	Message rinvoke_method( CallMessage& );
+	inline const ObjectProxy* object() const;
 
 private:
+
+	Message _invoke_method( CallMessage& );
 
 	bool handle_message( const Message& );
 
@@ -193,6 +196,11 @@ private:
 
 	MessageSlot _filtered;
 };
+
+const ObjectProxy* ObjectProxy::object() const
+{
+	return this;
+}
 
 } /* namespace DBus */
 

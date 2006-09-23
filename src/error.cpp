@@ -55,17 +55,17 @@ Error::Error( Message& m )
 	dbus_set_error_from_message(&(_int->error), m._pvt->msg);
 }
 
-const char* Error::name()
+const char* Error::name() const
 {
 	return _int->error.name;
 }
 
-const char* Error::message()
+const char* Error::message() const
 {
 	return _int->error.message;
 }
 
-bool Error::is_set()
+bool Error::is_set() const
 {
 	return *(_int);
 }

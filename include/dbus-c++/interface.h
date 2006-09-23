@@ -28,77 +28,94 @@
 #include <string>
 #include <map>
 #include "util.h"
+#include "types.h"
 
 #include "message.h"
 
 namespace DBus {
 
-class Interface;
-class IfaceTracker;
+//todo: this should belong to to properties.h
+struct PropertyData
+{
+	bool	read;
+	bool	write;
+	Variant	value;
+};
 
-typedef std::map<std::string, Interface*>	InterfaceTable;
-
-class Object;
-
-class CallMessage;
-class SignalMessage;
+typedef std::map<std::string, PropertyData>	PropertyTable;
 
 class IntrospectedInterface;
 
-class IfaceTracker
+class ObjectAdaptor;
+class InterfaceAdaptor;
+class SignalMessage;
+
+typedef std::map<std::string, InterfaceAdaptor*> InterfaceAdaptorTable;
+
+class AdaptorBase
 {
 public:
 
-	virtual const Object* object() const = 0 ;
+	virtual const ObjectAdaptor* object() const = 0 ;
 
 protected:
 
-	InterfaceTable	_interfaces;
+	InterfaceAdaptor* find_interface( const std::string& name );
 
-	virtual ~IfaceTracker()
+	virtual ~AdaptorBase()
 	{}
 
-	virtual void remit_signal( SignalMessage& )
-	{}
+	virtual void _emit_signal( SignalMessage& ) = 0;
 
-	virtual Message rinvoke_method( CallMessage& );
-};
-
-typedef std::map< std::string, Slot<Message, const CallMessage&> > MethodTable;
-typedef std::map< std::string, Slot<void, const SignalMessage&> > SignalTable;
-
-class Interface : public virtual IfaceTracker
-{
-public:
-	
-	Interface( const char* name );
-	
-	virtual ~Interface();
-
-	inline const std::string& iname() const;
-
-	virtual Message invoke_method( const CallMessage& );
-
-	virtual bool dispatch_signal( const SignalMessage& );
-
-	virtual IntrospectedInterface* const introspect() const
-	{
-		return NULL;
-	}
-	
-private:
-
-	void register_interface( const char* name );
-
-private:
-
-	std::string _name;
+	InterfaceAdaptorTable _interfaces;
 };
 
 /*
 */
 
-const std::string& Interface::iname() const
+class ObjectProxy;
+class InterfaceProxy;
+class CallMessage;
+
+typedef std::map<std::string, InterfaceProxy*> InterfaceProxyTable;
+
+class ProxyBase
+{
+public:
+
+	virtual const ObjectProxy* object() const = 0 ;
+
+protected:
+
+	InterfaceProxy* find_interface( const std::string& name );
+
+	virtual ~ProxyBase()
+	{}
+
+	virtual Message _invoke_method( CallMessage& ) = 0;
+
+	InterfaceProxyTable _interfaces;
+};
+
+class Interface
+{
+public:
+	
+	Interface( const std::string& name );
+	
+	virtual ~Interface();
+
+	inline const std::string& name() const;
+
+private:
+
+	std::string 	_name;
+};
+
+/*
+*/
+
+const std::string& Interface::name() const
 {
 	return _name;
 }
@@ -106,29 +123,43 @@ const std::string& Interface::iname() const
 /*
 */
 
-class InterfaceAdaptor : public Interface
+typedef std::map< std::string, Slot<Message, const CallMessage&> > MethodTable;
+
+class InterfaceAdaptor : public Interface, public virtual AdaptorBase
 {
 public:
 
-	InterfaceAdaptor( const char* name );
+	InterfaceAdaptor( const std::string& name );
 
-	Message invoke_method( const CallMessage& );
+	Message dispatch_method( const CallMessage& );
 
 	void emit_signal( const SignalMessage& );
+
+	Variant* get_property( const std::string& name );
+
+	bool set_property( const std::string& name, Variant& value );
+
+	virtual IntrospectedInterface* const introspect() const
+	{
+		return NULL;
+	}
 
 protected:
 
 	MethodTable	_methods;
+	PropertyTable	_properties;
 };
 
 /*
 */
 
-class InterfaceProxy : public Interface
+typedef std::map< std::string, Slot<void, const SignalMessage&> > SignalTable;
+
+class InterfaceProxy : public Interface, public virtual ProxyBase
 {
 public:
 
-	InterfaceProxy( const char* name );
+	InterfaceProxy( const std::string& name );
 
 	Message invoke_method( const CallMessage& );
 
@@ -141,11 +172,16 @@ protected:
 
 # define register_method(interface, method, callback) \
 	InterfaceAdaptor::_methods[ #method ] = \
-		new DBus::Callback< interface, DBus::Message, const DBus::CallMessage& >(this, & interface :: callback );
+		new ::DBus::Callback< interface, ::DBus::Message, const ::DBus::CallMessage& >(this, & interface :: callback );
+
+# define bind_property(variable, can_read, can_write) \
+	InterfaceAdaptor::_properties[ #variable ].read = can_read; \
+	InterfaceAdaptor::_properties[ #variable ].write = can_write; \
+	variable.bind( InterfaceAdaptor::_properties[ #variable ] );
 	
-# define connect_signal(interface, signal) \
+# define connect_signal(interface, signal, callback) \
 	InterfaceProxy::_signals[ #signal ] = \
-		new DBus::Callback< interface, void, const DBus::SignalMessage& >(this, & interface :: method );
+		new ::DBus::Callback< interface, void, const ::DBus::SignalMessage& >(this, & interface :: callback );
 
 } /* namespace DBus */
 

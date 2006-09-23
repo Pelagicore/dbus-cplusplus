@@ -25,7 +25,7 @@
 #ifndef __DBUSXX_TOOLS_XML2CPP_H
 #define __DBUSXX_TOOLS_XML2CPP_H
 
-#include <dbus-c++/dbus-c++.h>
+#include <dbus-c++/dbus.h>
 #include <dbus/dbus.h>
 
 #endif//__DBUSXX_TOOLS_XML2CPP_H

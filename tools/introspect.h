@@ -25,7 +25,7 @@
 #ifndef __DBUSXX_TOOLS_INTROSPECT_H
 #define __DBUSXX_TOOLS_INTROSPECT_H
 
-#include <dbus-c++/dbus-c++.h>
+#include <dbus-c++/dbus.h>
 #include <string>
 
 class IntrospectedObject : public DBus::IntrospectableProxy, public DBus::ObjectProxy

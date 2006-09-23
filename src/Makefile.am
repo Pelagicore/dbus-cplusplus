@@ -4,9 +4,10 @@ AM_CPPFLAGS = -DDBUS_API_SUBJECT_TO_CHANGE
 HEADER_DIR  = $(top_srcdir)/include/dbus-c++
 HEADER_FILES = \
 	$(HEADER_DIR)/config.h \
-	$(HEADER_DIR)/dbus-c++.h \
+	$(HEADER_DIR)/dbus.h \
 	$(HEADER_DIR)/types.h \
 	$(HEADER_DIR)/connection.h \
+	$(HEADER_DIR)/property.h \
 	$(HEADER_DIR)/debug.h \
 	$(HEADER_DIR)/error.h \
 	$(HEADER_DIR)/interface.h \
@@ -26,5 +27,5 @@ lib_includedir=$(includedir)/dbus-c++-0.3/dbus-c++
 lib_include_HEADERS = $(HEADER_FILES)
 
 lib_LTLIBRARIES = libdbus-c++-0.3.la
-libdbus_c___0_3_la_SOURCES = $(HEADER_FILES) interface.cpp object.cpp introspection.cpp debug.cpp eventloop.cpp xml.cpp types.cpp connection.cpp connection_p.h dispatcher.cpp dispatcher_p.h pendingcall.cpp pendingcall_p.h error.cpp internalerror.h message.cpp message_p.h server.cpp server_p.h
+libdbus_c___0_3_la_SOURCES = $(HEADER_FILES) interface.cpp object.cpp introspection.cpp debug.cpp eventloop.cpp xml.cpp types.cpp connection.cpp connection_p.h property.cpp dispatcher.cpp dispatcher_p.h pendingcall.cpp pendingcall_p.h error.cpp internalerror.h message.cpp message_p.h server.cpp server_p.h
 libdbus_c___0_3_la_LIBADD = $(dbus_LIBS) $(xml_LIBS)

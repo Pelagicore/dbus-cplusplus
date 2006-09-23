@@ -51,16 +51,16 @@ public:
 
 	const char* what() const throw();
 
-	const char* name();
+	const char* name() const;
 
-	const char* message();
+	const char* message() const;
 
 	void set( const char* name, const char* message );
 	// parameters MUST be static strings
 
-	bool is_set();
+	bool is_set() const;
 
-	operator bool()
+	operator bool() const
 	{
 		return is_set();
 	}
@@ -224,7 +224,61 @@ struct ErrorMatchRuleInvalid : public Error
 	{}
 };
 
-/* TODO: add the remaining error codes from dbus-protocol.h */
+struct ErrorSpawnExecFailed : public Error
+{
+	ErrorSpawnExecFailed( const char* message )
+	: Error("org.freedesktop.DBus.Error.Spawn.ExecFailed", message)
+	{}
+};
+
+struct ErrorSpawnForkFailed : public Error
+{
+	ErrorSpawnForkFailed( const char* message )
+	: Error("org.freedesktop.DBus.Error.Spawn.ForkFailed", message)
+	{}
+};
+
+struct ErrorSpawnChildExited : public Error
+{
+	ErrorSpawnChildExited( const char* message )
+	: Error("org.freedesktop.DBus.Error.Spawn.ChildExited", message)
+	{}
+};
+
+struct ErrorSpawnChildSignaled : public Error
+{
+	ErrorSpawnChildSignaled( const char* message )
+	: Error("org.freedesktop.DBus.Error.Spawn.ChildSignaled", message)
+	{}
+};
+
+struct ErrorSpawnFailed : public Error
+{
+	ErrorSpawnFailed( const char* message )
+	: Error("org.freedesktop.DBus.Error.Spawn.Failed", message)
+	{}
+};
+
+struct ErrorInvalidSignature : public Error
+{
+	ErrorInvalidSignature( const char* message )
+	: Error("org.freedesktop.DBus.Error.InvalidSignature", message)
+	{}
+};
+
+struct ErrorUnixProcessIdUnknown : public Error
+{
+	ErrorUnixProcessIdUnknown( const char* message )
+	: Error("org.freedesktop.DBus.Error.UnixProcessIdUnknown", message)
+	{}
+};
+
+struct ErrorSELinuxSecurityContextUnknown : public Error
+{
+	ErrorSELinuxSecurityContextUnknown( const char* message )
+	: Error("org.freedesktop.DBus.Error.SELinuxSecurityContextUnknown", message)
+	{}
+};
 
 } /* namespace DBus */
 
