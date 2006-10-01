@@ -85,6 +85,17 @@ const std::string& Object::service() const
 /*
 */
 
+class Tag
+{
+public:
+
+	virtual ~Tag()
+	{}
+};
+
+/*
+*/
+
 class ObjectAdaptor;
 
 typedef std::list<ObjectAdaptor*> ObjectAdaptorPList;
@@ -113,28 +124,28 @@ protected:
 
 		inline MessageIter& writer();
 
-		inline void* tag();
+		inline Tag* tag();
 
 	private:
 
-		Continuation( Connection& conn, const CallMessage& call, const void* tag );
+		Continuation( Connection& conn, const CallMessage& call, const Tag* tag );
 
 		Connection _conn;
 		CallMessage _call;
 		MessageIter _writer;
 		ReturnMessage _return;
-		const void* _tag;
+		const Tag* _tag;
 
 	friend class ObjectAdaptor;
 	};
 
-	void return_later( const void* tag );
+	void return_later( const Tag* tag );
 
 	void return_now( Continuation* ret );
 
 	void return_error( Continuation* ret, const Error error );
 
-	Continuation* find_continuation( const void* tag );
+	Continuation* find_continuation( const Tag* tag );
 
 private:
 
@@ -145,7 +156,7 @@ private:
 	void register_obj();
 	void unregister_obj();
 
-	typedef std::map<const void*, Continuation*> ContinuationMap;
+	typedef std::map<const Tag*, Continuation*> ContinuationMap;
 	ContinuationMap _continuations;
 
 friend struct Private;
@@ -156,9 +167,9 @@ const ObjectAdaptor* ObjectAdaptor::object() const
 	return this;
 }
 
-void* ObjectAdaptor::Continuation::tag()
+Tag* ObjectAdaptor::Continuation::tag()
 {
-	return const_cast<void*>(_tag);
+	return const_cast<Tag*>(_tag);
 }
 
 MessageIter& ObjectAdaptor::Continuation::writer()

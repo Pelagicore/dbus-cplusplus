@@ -599,7 +599,7 @@ void generate_adaptor( Xml::Document& doc, const char* filename )
 		}
 
 		file << endl
-		     << "protected:" << endl
+		     << "public:" << endl
 		     << endl
 		     << tab << "/* signals emitted by this interface" << endl
 		     << tab << " */" << endl;

@@ -175,11 +175,6 @@ void ObjectAdaptor::_emit_signal( SignalMessage& sig )
 	conn().send(sig);
 }
 
-struct WontReturnException
-{
-	const void* tag;
-};
-
 bool ObjectAdaptor::handle_message( const Message& msg )
 {
 	switch( msg.type() )
@@ -205,9 +200,9 @@ bool ObjectAdaptor::handle_message( const Message& msg )
 					ErrorMessage em(cmsg, e.name(), e.message());
 					conn().send(em);
 				}
-				catch(WontReturnException& wre)
+				catch(Tag* tag)
 				{
-					_continuations[wre.tag] = new Continuation(conn(), cmsg, wre.tag);
+					_continuations[tag] = new Continuation(conn(), cmsg, tag);
 				}
 				return true;
 			}
@@ -223,11 +218,9 @@ bool ObjectAdaptor::handle_message( const Message& msg )
 	}
 }
 
-void ObjectAdaptor::return_later( const void* tag )
+void ObjectAdaptor::return_later( const Tag* tag )
 {
-	WontReturnException wre = { tag };
-
-	throw wre;
+	throw tag;
 }
 
 void ObjectAdaptor::return_now( Continuation* ret )
@@ -252,14 +245,14 @@ void ObjectAdaptor::return_error( Continuation* ret, const Error error )
 	_continuations.erase(di);
 }
 
-ObjectAdaptor::Continuation* ObjectAdaptor::find_continuation( const void* tag )
+ObjectAdaptor::Continuation* ObjectAdaptor::find_continuation( const Tag* tag )
 {
 	ContinuationMap::iterator di = _continuations.find(tag);
 
 	return di != _continuations.end() ? di->second : NULL;
 }
 
-ObjectAdaptor::Continuation::Continuation( Connection& conn, const CallMessage& call, const void* tag )
+ObjectAdaptor::Continuation::Continuation( Connection& conn, const CallMessage& call, const Tag* tag )
 : _conn(conn), _call(call), _return(_call), _tag(tag)
 {
 	_writer = _return.writer(); //todo: verify

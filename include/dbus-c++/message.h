@@ -167,6 +167,8 @@ public:
 
 	~Message();
 
+	Message& operator = ( const Message& m );
+
 	Message copy();
 
 	int type() const;

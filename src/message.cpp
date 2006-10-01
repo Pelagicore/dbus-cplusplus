@@ -303,7 +303,7 @@ void MessageIter::close_container( MessageIter& container )
 
 void MessageIter::copy_data( MessageIter& to )
 {
-	for(MessageIter from = *this; from.at_end(); ++from)
+	for(MessageIter& from = *this; !from.at_end(); ++from)
 	{
 		switch(from.type())
 		{
@@ -320,6 +320,8 @@ void MessageIter::copy_data( MessageIter& to )
 			case DBUS_TYPE_OBJECT_PATH:
 			case DBUS_TYPE_SIGNATURE:
 			{
+				debug_log("copying basic type: %c", from.type());
+
 				unsigned char value[8];
 				from.get_basic(from.type(), &value);
 				to.append_basic(from.type(), &value);
@@ -333,12 +335,14 @@ void MessageIter::copy_data( MessageIter& to )
 				MessageIter from_container = from.recurse();
 				char* sig = from_container.signature();
 
-				MessageIter to_container(to.msg());
+				debug_log("copying compound type: %c[%s]", from.type(), sig);
+
+				MessageIter to_container (to.msg());
 				dbus_message_iter_open_container
 				(
 					(DBusMessageIter*)&(to._iter),
 					from.type(),
-					sig,
+					from.type() == DBUS_TYPE_VARIANT ? NULL : sig,
 					(DBusMessageIter*)&(to_container._iter)
 				);
 
@@ -374,6 +378,15 @@ Message::Message( const Message& m )
 Message::~Message()
 {
 	dbus_message_unref(_pvt->msg);
+}
+
+Message& Message::operator = ( const Message& m )
+{
+	if(&m != this)
+	{
+		_pvt = m._pvt;
+	}
+	return *this;
 }
 
 Message Message::copy()

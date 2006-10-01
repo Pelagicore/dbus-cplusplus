@@ -89,7 +89,13 @@ MessageIter& operator >> ( MessageIter& iter, Variant& val )
 {
 	//TODO: check if iter really points to a variant
 
-	val = Variant(iter);
+	val.clear();
+
+	MessageIter vit = iter.recurse();
+	MessageIter mit = val.writer();
+
+	vit.copy_data(mit);
+
 	return ++iter;
 }
 

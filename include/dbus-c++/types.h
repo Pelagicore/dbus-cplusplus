@@ -242,7 +242,6 @@ inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Str
 	return iter;
 }
 
-
 inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Path& val )
 {
 	iter.append_path(val.c_str());
@@ -393,6 +392,18 @@ inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::String& v
 	return ++iter;
 }
 
+inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Path& val )
+{
+	val = iter.get_path();
+	return ++iter;
+}
+
+inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Signature& val )
+{
+	val = iter.get_signature();
+	return ++iter;
+}
+
 template<typename E>
 inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, std::vector<E>& val )
 {
@@ -408,8 +419,6 @@ inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, std::vector<E>&
 		ait >> elem;
 
 		val.push_back(elem);
-
-		++ait;
 	}
 	return ++iter;
 }

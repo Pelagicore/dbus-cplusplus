@@ -21,7 +21,7 @@
  *
  */
 
-
+#include <dbus-c++/debug.h>
 #include <dbus-c++/property.h>
 
 #include <dbus-c++/introspection.h>
@@ -46,6 +46,8 @@ Message PropertiesAdaptor::Get( const CallMessage& call )
 
 	ri >> iface_name >> property_name;
 
+	debug_log("requesting property %s on interface %s\n", property_name.c_str(), iface_name.c_str());
+
 	InterfaceAdaptor* interface = (InterfaceAdaptor*) find_interface(iface_name);
 
 	if(!interface)
@@ -63,7 +65,6 @@ Message PropertiesAdaptor::Get( const CallMessage& call )
 	MessageIter wi = reply.writer();
 
 	wi << *value;
-
 	return reply;
 }
 
