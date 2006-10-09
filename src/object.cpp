@@ -175,6 +175,11 @@ void ObjectAdaptor::_emit_signal( SignalMessage& sig )
 	conn().send(sig);
 }
 
+struct ReturnLaterError
+{
+	const Tag* tag;
+};
+
 bool ObjectAdaptor::handle_message( const Message& msg )
 {
 	switch( msg.type() )
@@ -200,9 +205,9 @@ bool ObjectAdaptor::handle_message( const Message& msg )
 					ErrorMessage em(cmsg, e.name(), e.message());
 					conn().send(em);
 				}
-				catch(Tag* tag)
+				catch(ReturnLaterError& rle)
 				{
-					_continuations[tag] = new Continuation(conn(), cmsg, tag);
+					_continuations[rle.tag] = new Continuation(conn(), cmsg, rle.tag);
 				}
 				return true;
 			}
@@ -220,7 +225,8 @@ bool ObjectAdaptor::handle_message( const Message& msg )
 
 void ObjectAdaptor::return_later( const Tag* tag )
 {
-	throw tag;
+	ReturnLaterError rle = { tag };
+	throw rle;
 }
 
 void ObjectAdaptor::return_now( Continuation* ret )
