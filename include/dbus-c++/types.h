@@ -96,6 +96,15 @@ public:
 		return _msg.writer();
 	}
 
+	template <typename T>
+	operator T() const
+	{
+		T cast;
+		MessageIter ri = _msg.reader();
+		ri >> cast;
+		return cast;
+	}
+
 private:
 
 	Message _msg;
@@ -115,6 +124,12 @@ struct Struct
 {
 	T1 _1; T2 _2; T3 _3; T4 _4; T5 _5; T6 _6; T7 _7; T8 _8; 
 };
+
+template<typename K, typename V>
+inline bool dict_has_key( const std::map<K,V>& map, const K& key )
+{
+	return map.find(key) != map.end();
+}
 
 template <typename T>
 struct type
