@@ -38,7 +38,7 @@ class Connection;
 
 typedef Slot<bool, const Message&> MessageSlot;
 
-typedef std::list<Connection*>	ConnectionPList;
+typedef std::list<Connection>	ConnectionList;
 
 class ObjectAdaptor;
 class Dispatcher;
@@ -59,7 +59,7 @@ public:
 
 	Connection( Private* );
 
-	Connection( const char* address, bool priv = false );
+	Connection( const char* address, bool priv = true );
 
 	Connection( const Connection& c );
 

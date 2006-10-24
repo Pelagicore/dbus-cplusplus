@@ -1,4 +1,4 @@
 * Fix dbusxx-xml2cpp to generate client-side proxies
 * Implement continuations in a saner way
 * Find time for some hardcore valgrinding
-* Correctly parse variants containing compound types
+* Make DBus::Server free an incoming connection when it's disconnected, not when freeing the server

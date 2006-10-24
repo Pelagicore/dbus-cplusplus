@@ -88,7 +88,7 @@ Variant* InterfaceAdaptor::get_property( const std::string& name )
 	return NULL;
 }
 
-bool InterfaceAdaptor::set_property( const std::string& name, Variant& value )
+void InterfaceAdaptor::set_property( const std::string& name, Variant& value )
 {
 	PropertyTable::iterator pti = _properties.find(name);
 
@@ -97,10 +97,15 @@ bool InterfaceAdaptor::set_property( const std::string& name, Variant& value )
 		if( !pti->second.write )
 			throw ErrorAccessDenied("property is not writeable");
 
+		Signature sig = value.signature();
+
+		if( pti->second.sig != sig )
+			throw ErrorInvalidSignature("property expects a different type");
+
 		pti->second.value = value;
-		return true;
+		return;
 	}
-	return false;
+	throw ErrorFailed("requested property not found");
 }
 
 InterfaceProxy* ProxyBase::find_interface( const std::string& name )

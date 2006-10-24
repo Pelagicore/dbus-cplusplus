@@ -46,7 +46,7 @@ Message PropertiesAdaptor::Get( const CallMessage& call )
 
 	ri >> iface_name >> property_name;
 
-	debug_log("requesting property %s on interface %s\n", property_name.c_str(), iface_name.c_str());
+	debug_log("requesting property %s on interface %s", property_name.c_str(), iface_name.c_str());
 
 	InterfaceAdaptor* interface = (InterfaceAdaptor*) find_interface(iface_name);
 
@@ -85,8 +85,7 @@ Message PropertiesAdaptor::Set( const CallMessage& call )
 
 	on_set_property(*interface, property_name, value);
 
-	if(!interface->set_property(property_name, value))
-		throw ErrorFailed("requested property not found");
+	interface->set_property(property_name, value);
 
 	ReturnMessage reply(call);
 

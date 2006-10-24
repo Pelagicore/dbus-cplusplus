@@ -44,21 +44,22 @@ public:
 
 	Server( const char* address );
 
-	Server( const Server& s );
-
 	Dispatcher* setup( Dispatcher* );
 
 	virtual ~Server();
 
-	bool operator == ( const Server& ) const;
-
 	bool listening() const;
+
+	bool operator == ( const Server& ) const;
 
 	void disconnect();
 
 	struct Private;
 
 protected:
+
+	Server( const Server& s )
+	{}
 
 	virtual void on_new_connection( Connection& c ) = 0;
 

@@ -45,10 +45,7 @@ public:
 
 	T operator() (void) const
 	{
-		T t;
-		MessageIter ri = _data->value.reader();
-		ri >> t;
-		return t;
+		return (T)_data->value;
 	}
 
 	PropertyAdaptor& operator = ( const T& t )

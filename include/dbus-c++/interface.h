@@ -37,9 +37,10 @@ namespace DBus {
 //todo: this should belong to to properties.h
 struct PropertyData
 {
-	bool	read;
-	bool	write;
-	Variant	value;
+	bool		read;
+	bool		write;
+	std::string	sig;
+	Variant		value;
 };
 
 typedef std::map<std::string, PropertyData>	PropertyTable;
@@ -137,7 +138,7 @@ public:
 
 	Variant* get_property( const std::string& name );
 
-	bool set_property( const std::string& name, Variant& value );
+	void set_property( const std::string& name, Variant& value );
 
 	virtual IntrospectedInterface* const introspect() const
 	{
@@ -174,9 +175,10 @@ protected:
 	InterfaceAdaptor::_methods[ #method ] = \
 		new ::DBus::Callback< interface, ::DBus::Message, const ::DBus::CallMessage& >(this, & interface :: callback );
 
-# define bind_property(variable, can_read, can_write) \
+# define bind_property(variable, type, can_read, can_write) \
 	InterfaceAdaptor::_properties[ #variable ].read = can_read; \
 	InterfaceAdaptor::_properties[ #variable ].write = can_write; \
+	InterfaceAdaptor::_properties[ #variable ].sig = type; \
 	variable.bind( InterfaceAdaptor::_properties[ #variable ] );
 	
 # define connect_signal(interface, signal, callback) \

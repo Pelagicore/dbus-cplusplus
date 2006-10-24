@@ -87,7 +87,8 @@ MessageIter& operator << ( MessageIter& iter, const Variant& val )
 
 MessageIter& operator >> ( MessageIter& iter, Variant& val )
 {
-	//TODO: check if iter really points to a variant
+	if(iter.type() != DBUS_TYPE_VARIANT)
+		throw ErrorInvalidArgs("variant type expected");
 
 	val.clear();
 

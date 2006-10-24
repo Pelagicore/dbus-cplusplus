@@ -30,6 +30,7 @@
 #include <dbus/dbus.h>
 
 #include "message_p.h"
+#include "server_p.h"
 #include "connection_p.h"
 
 using namespace DBus;

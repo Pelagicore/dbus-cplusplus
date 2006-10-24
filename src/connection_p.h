@@ -26,6 +26,7 @@
 #define __DBUSXX_CONNECTION_P_H
 
 #include <dbus-c++/connection.h>
+#include <dbus-c++/server.h>
 #include <dbus-c++/dispatcher.h>
 #include <dbus-c++/refptr_impl.h>
 
@@ -39,7 +40,7 @@ struct Connection::Private
 {
 	DBusConnection*	conn;
 
-	std::vector<std::string>	names;
+	std::vector<std::string> names;
 
 	Dispatcher* dispatcher;
 	bool do_dispatch();
@@ -47,7 +48,10 @@ struct Connection::Private
 	MessageSlot disconn_filter;
 	bool disconn_filter_function( const Message& );
 
-	Private( DBusConnection* );
+	Server::Private* server;
+	void detach_server();
+
+	Private( DBusConnection*, Server::Private* = NULL );
 
 	Private( DBusBusType );
 

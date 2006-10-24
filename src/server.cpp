@@ -35,18 +35,23 @@ using namespace DBus;
 Server::Private::Private( DBusServer* s )
 : server(s)
 {
-	dbus_server_set_new_connection_function(server, on_new_conn_cb, this, NULL);
+}
+
+Server::Private::~Private()
+{
 }
 
 void Server::Private::on_new_conn_cb( DBusServer* server, DBusConnection* conn, void* data )
 {
-	//Private* p = static_cast<Private*>(data);
+	Server* s = static_cast<Server*>(data);
 
-	//m->on_new_connection(nc); //TODO
+	Connection nc (new Connection::Private(conn, s->_pvt.get()));
 
-	Connection nc(new Connection::Private(conn));
+	s->_pvt->connections.push_back(nc);
 
-	debug_log("incoming connection");
+	s->on_new_connection(nc);
+
+	debug_log("incoming connection 0x%08x", conn);
 }
 
 Server::Server( const char* address )
@@ -56,15 +61,21 @@ Server::Server( const char* address )
 
 	if(e)	throw Error(e);
 
-	_pvt = new Private(server);
-}
+	debug_log("server 0x%08x listening on %s", server, address);
 
+	_pvt = new Private(server);
+
+	dbus_server_set_new_connection_function(_pvt->server, Private::on_new_conn_cb, this, NULL);
+
+	setup(default_dispatcher);
+}
+/*
 Server::Server( const Server& s )
 : _pvt(s._pvt)
 {
 	dbus_server_ref(_pvt->server);
 }
-
+*/
 Server::~Server()
 {
 	dbus_server_unref(_pvt->server);

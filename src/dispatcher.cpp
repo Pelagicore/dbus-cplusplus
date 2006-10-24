@@ -27,6 +27,7 @@
 #include <dbus/dbus.h>
 
 #include "dispatcher_p.h"
+#include "server_p.h"
 #include "connection_p.h"
 
 DBus::Dispatcher* DBus::default_dispatcher = NULL;

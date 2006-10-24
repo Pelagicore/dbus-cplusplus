@@ -32,13 +32,14 @@
 
 #include "connection_p.h"
 #include "dispatcher_p.h"
+#include "server_p.h"
 #include "message_p.h"
 #include "pendingcall_p.h"
 
 using namespace DBus;
 
-Connection::Private::Private( DBusConnection* c )
-: conn(c) , dispatcher(0)
+Connection::Private::Private( DBusConnection* c, Server::Private* s )
+: conn(c) , dispatcher(0), server(s)
 {
 	init();
 }
@@ -56,6 +57,10 @@ Connection::Private::Private( DBusBusType type )
 
 Connection::Private::~Private()
 {
+	debug_log("terminating connection 0x%08x", conn);
+
+	detach_server();
+
 	if(dbus_connection_get_is_connected(conn))
 	{
 		std::vector<std::string>::iterator i = names.begin();
@@ -66,7 +71,7 @@ Connection::Private::~Private()
 			dbus_bus_release_name(conn, i->c_str(), NULL);
 			++i;
 		}
-		//dbus_connection_disconnect(conn);
+		dbus_connection_close(conn);
 	}
 	dbus_connection_unref(conn);
 }
@@ -74,6 +79,7 @@ Connection::Private::~Private()
 void Connection::Private::init()
 {
 	dbus_connection_ref(conn);
+	dbus_connection_ref(conn);	//todo: the library has to own another reference
 
 	disconn_filter = new Callback<Connection::Private, bool, const Message&>(
 		this, &Connection::Private::disconn_filter_function
@@ -85,9 +91,39 @@ void Connection::Private::init()
 	dbus_connection_set_exit_on_disconnect(conn, false); //why was this set to true??
 }
 
+void Connection::Private::detach_server()
+{
+/*	Server::Private* tmp = server;
+
+	server = NULL;
+
+	if(tmp)
+	{
+		ConnectionList::iterator i;
+
+		for(i = tmp->connections.begin(); i != tmp->connections.end(); ++i)
+		{
+			if(i->_pvt.get() == this)
+			{
+				tmp->connections.erase(i);
+				break;
+			}
+		}
+	}*/
+}
+
 bool Connection::Private::do_dispatch()
 {
 	debug_log("dispatching on %p", conn);
+
+	if(!dbus_connection_get_is_connected(conn))
+	{
+		debug_log("connection terminated");
+
+		detach_server();
+
+		return true;
+	}
 
 	return dbus_connection_dispatch(conn) != DBUS_DISPATCH_DATA_REMAINS;
 }
@@ -155,8 +191,8 @@ Connection::Connection( const char* address, bool priv )
 {
 	InternalError e;
 	DBusConnection* conn = priv 
-			? dbus_connection_open_private(address, e)
-			: dbus_connection_open(address,e);
+		? dbus_connection_open_private(address, e)
+		: dbus_connection_open(address, e);
 
 	if(e) throw Error(e);
 

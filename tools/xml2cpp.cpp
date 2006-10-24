@@ -405,6 +405,7 @@ void generate_adaptor( Xml::Document& doc, const char* filename )
 
 			file << tab << tab << "bind_property("
 			     << property.get("name") << ", "
+			     << "\"" << property.get("type") << "\", "
 			     << ( property.get("access").find("read") != string::npos
 				? "true"
 				: "false" )

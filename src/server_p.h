@@ -39,7 +39,11 @@ struct Server::Private
 
 	Dispatcher* dispatcher;
 
+	ConnectionList connections;
+
 	Private( DBusServer* );
+
+	~Private();
 
 	static void on_new_conn_cb( DBusServer* server, DBusConnection* conn, void* data );
 };
