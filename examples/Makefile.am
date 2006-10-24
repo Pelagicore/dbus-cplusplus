@@ -1,2 +1,2 @@
-EXTRA_DIST = properties
+SUBDIRS = properties echo
 

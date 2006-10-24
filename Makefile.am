@@ -1,4 +1,4 @@
-SUBDIRS = src tools data doc
+SUBDIRS = src tools data doc examples
 
 EXTRA_DIST = TODO
 

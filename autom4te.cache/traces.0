@@ -1028,7 +1028,7 @@ fi
   esac
 fi
 ])
-m4trace:/usr/share/aclocal/libtool.m4:1794: -1- AC_DEFUN([AC_LIBTOOL_SYS_DYNAMIC_LINKER], [AC_MSG_CHECKING([dynamic linker characteristics])
+m4trace:/usr/share/aclocal/libtool.m4:1770: -1- AC_DEFUN([AC_LIBTOOL_SYS_DYNAMIC_LINKER], [AC_MSG_CHECKING([dynamic linker characteristics])
 library_names_spec=
 libname_spec='lib$name'
 soname_spec=
@@ -1234,18 +1234,6 @@ freebsd1*)
   dynamic_linker=no
   ;;
 
-kfreebsd*-gnu)
-  version_type=linux
-  need_lib_prefix=no
-  need_version=no
-  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major ${libname}${shared_ext}'
-  soname_spec='${libname}${release}${shared_ext}$major'
-  shlibpath_var=LD_LIBRARY_PATH
-  shlibpath_overrides_runpath=no
-  hardcode_into_libs=yes
-  dynamic_linker='GNU ld.so'
-  ;;
-
 freebsd* | dragonfly*)
   # DragonFly does not have aout.  When/if they implement a new
   # versioning mechanism, adjust this.
@@ -1401,7 +1389,7 @@ linux*oldld* | linux*aout* | linux*coff*)
   ;;
 
 # This must be Linux ELF.
-linux*)
+linux* | k*bsd*-gnu)
   version_type=linux
   need_lib_prefix=no
   need_version=no
@@ -1440,18 +1428,6 @@ netbsdelf*-gnu)
   shlibpath_overrides_runpath=no
   hardcode_into_libs=yes
   dynamic_linker='NetBSD ld.elf_so'
-  ;;
-
-knetbsd*-gnu)
-  version_type=linux
-  need_lib_prefix=no
-  need_version=no
-  library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major ${libname}${shared_ext}'
-  soname_spec='${libname}${release}${shared_ext}$major'
-  shlibpath_var=LD_LIBRARY_PATH
-  shlibpath_overrides_runpath=no
-  hardcode_into_libs=yes
-  dynamic_linker='GNU ld.so'
   ;;
 
 netbsd*)
@@ -1635,7 +1611,7 @@ if test "$GCC" = yes; then
   variables_saved_for_relink="$variables_saved_for_relink GCC_EXEC_PREFIX COMPILER_PATH LIBRARY_PATH"
 fi
 ])
-m4trace:/usr/share/aclocal/libtool.m4:1898: -1- AC_DEFUN([_LT_AC_TAGCONFIG], [AC_ARG_WITH([tags],
+m4trace:/usr/share/aclocal/libtool.m4:1874: -1- AC_DEFUN([_LT_AC_TAGCONFIG], [AC_ARG_WITH([tags],
     [AC_HELP_STRING([--with-tags@<:@=TAGS@:>@],
         [include additional configurations @<:@automatic@:>@])],
     [tagnames="$withval"])
@@ -1734,11 +1710,11 @@ if test -f "$ltmain" && test -n "$tagnames"; then
   fi
 fi
 ])
-m4trace:/usr/share/aclocal/libtool.m4:1906: -1- AC_DEFUN([AC_LIBTOOL_DLOPEN], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])
+m4trace:/usr/share/aclocal/libtool.m4:1882: -1- AC_DEFUN([AC_LIBTOOL_DLOPEN], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])
 ])
-m4trace:/usr/share/aclocal/libtool.m4:1914: -1- AC_DEFUN([AC_LIBTOOL_WIN32_DLL], [AC_BEFORE([$0], [AC_LIBTOOL_SETUP])
+m4trace:/usr/share/aclocal/libtool.m4:1890: -1- AC_DEFUN([AC_LIBTOOL_WIN32_DLL], [AC_BEFORE([$0], [AC_LIBTOOL_SETUP])
 ])
-m4trace:/usr/share/aclocal/libtool.m4:1944: -1- AC_DEFUN([AC_ENABLE_SHARED], [define([AC_ENABLE_SHARED_DEFAULT], ifelse($1, no, no, yes))dnl
+m4trace:/usr/share/aclocal/libtool.m4:1920: -1- AC_DEFUN([AC_ENABLE_SHARED], [define([AC_ENABLE_SHARED_DEFAULT], ifelse($1, no, no, yes))dnl
 AC_ARG_ENABLE([shared],
     [AC_HELP_STRING([--enable-shared@<:@=PKGS@:>@],
 	[build shared libraries @<:@default=]AC_ENABLE_SHARED_DEFAULT[@:>@])],
@@ -1761,10 +1737,10 @@ AC_ARG_ENABLE([shared],
     esac],
     [enable_shared=]AC_ENABLE_SHARED_DEFAULT)
 ])
-m4trace:/usr/share/aclocal/libtool.m4:1953: -1- AC_DEFUN([AC_DISABLE_SHARED], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
+m4trace:/usr/share/aclocal/libtool.m4:1929: -1- AC_DEFUN([AC_DISABLE_SHARED], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
 AC_ENABLE_SHARED(no)
 ])
-m4trace:/usr/share/aclocal/libtool.m4:1983: -1- AC_DEFUN([AC_ENABLE_STATIC], [define([AC_ENABLE_STATIC_DEFAULT], ifelse($1, no, no, yes))dnl
+m4trace:/usr/share/aclocal/libtool.m4:1959: -1- AC_DEFUN([AC_ENABLE_STATIC], [define([AC_ENABLE_STATIC_DEFAULT], ifelse($1, no, no, yes))dnl
 AC_ARG_ENABLE([static],
     [AC_HELP_STRING([--enable-static@<:@=PKGS@:>@],
 	[build static libraries @<:@default=]AC_ENABLE_STATIC_DEFAULT[@:>@])],
@@ -1787,10 +1763,10 @@ AC_ARG_ENABLE([static],
     esac],
     [enable_static=]AC_ENABLE_STATIC_DEFAULT)
 ])
-m4trace:/usr/share/aclocal/libtool.m4:1992: -1- AC_DEFUN([AC_DISABLE_STATIC], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
+m4trace:/usr/share/aclocal/libtool.m4:1968: -1- AC_DEFUN([AC_DISABLE_STATIC], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
 AC_ENABLE_STATIC(no)
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2022: -1- AC_DEFUN([AC_ENABLE_FAST_INSTALL], [define([AC_ENABLE_FAST_INSTALL_DEFAULT], ifelse($1, no, no, yes))dnl
+m4trace:/usr/share/aclocal/libtool.m4:1998: -1- AC_DEFUN([AC_ENABLE_FAST_INSTALL], [define([AC_ENABLE_FAST_INSTALL_DEFAULT], ifelse($1, no, no, yes))dnl
 AC_ARG_ENABLE([fast-install],
     [AC_HELP_STRING([--enable-fast-install@<:@=PKGS@:>@],
     [optimize for fast installation @<:@default=]AC_ENABLE_FAST_INSTALL_DEFAULT[@:>@])],
@@ -1813,13 +1789,13 @@ AC_ARG_ENABLE([fast-install],
     esac],
     [enable_fast_install=]AC_ENABLE_FAST_INSTALL_DEFAULT)
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2031: -1- AC_DEFUN([AC_DISABLE_FAST_INSTALL], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
+m4trace:/usr/share/aclocal/libtool.m4:2007: -1- AC_DEFUN([AC_DISABLE_FAST_INSTALL], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
 AC_ENABLE_FAST_INSTALL(no)
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2041: -1- AC_DEFUN([AC_LIBTOOL_PICMODE], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
+m4trace:/usr/share/aclocal/libtool.m4:2017: -1- AC_DEFUN([AC_LIBTOOL_PICMODE], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
 pic_mode=ifelse($#,1,$1,default)
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2119: -1- AC_DEFUN([AC_PATH_TOOL_PREFIX], [AC_REQUIRE([AC_PROG_EGREP])dnl
+m4trace:/usr/share/aclocal/libtool.m4:2095: -1- AC_DEFUN([AC_PATH_TOOL_PREFIX], [AC_REQUIRE([AC_PROG_EGREP])dnl
 AC_MSG_CHECKING([for $1])
 AC_CACHE_VAL(lt_cv_path_MAGIC_CMD,
 [case $MAGIC_CMD in
@@ -1876,7 +1852,7 @@ else
   AC_MSG_RESULT(no)
 fi
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2134: -1- AC_DEFUN([AC_PATH_MAGIC], [AC_PATH_TOOL_PREFIX(${ac_tool_prefix}file, /usr/bin$PATH_SEPARATOR$PATH)
+m4trace:/usr/share/aclocal/libtool.m4:2110: -1- AC_DEFUN([AC_PATH_MAGIC], [AC_PATH_TOOL_PREFIX(${ac_tool_prefix}file, /usr/bin$PATH_SEPARATOR$PATH)
 if test -z "$lt_cv_path_MAGIC_CMD"; then
   if test -n "$ac_tool_prefix"; then
     AC_PATH_TOOL_PREFIX(file, /usr/bin$PATH_SEPARATOR$PATH)
@@ -1885,7 +1861,7 @@ if test -z "$lt_cv_path_MAGIC_CMD"; then
   fi
 fi
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2219: -1- AC_DEFUN([AC_PROG_LD], [AC_ARG_WITH([gnu-ld],
+m4trace:/usr/share/aclocal/libtool.m4:2195: -1- AC_DEFUN([AC_PROG_LD], [AC_ARG_WITH([gnu-ld],
     [AC_HELP_STRING([--with-gnu-ld],
 	[assume the C compiler uses GNU ld @<:@default=no@:>@])],
     [test "$withval" = no || with_gnu_ld=yes],
@@ -1964,7 +1940,7 @@ fi
 test -z "$LD" && AC_MSG_ERROR([no acceptable ld found in \$PATH])
 AC_PROG_LD_GNU
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2237: -1- AC_DEFUN([AC_PROG_LD_GNU], [AC_REQUIRE([AC_PROG_EGREP])dnl
+m4trace:/usr/share/aclocal/libtool.m4:2213: -1- AC_DEFUN([AC_PROG_LD_GNU], [AC_REQUIRE([AC_PROG_EGREP])dnl
 AC_CACHE_CHECK([if the linker ($LD) is GNU ld], lt_cv_prog_gnu_ld,
 [# I'd rather use --version here, but apparently some GNU lds only accept -v.
 case `$LD -v 2>&1 </dev/null` in
@@ -1977,7 +1953,7 @@ case `$LD -v 2>&1 </dev/null` in
 esac])
 with_gnu_ld=$lt_cv_prog_gnu_ld
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2263: -1- AC_DEFUN([AC_PROG_LD_RELOAD_FLAG], [AC_CACHE_CHECK([for $LD option to reload object files],
+m4trace:/usr/share/aclocal/libtool.m4:2239: -1- AC_DEFUN([AC_PROG_LD_RELOAD_FLAG], [AC_CACHE_CHECK([for $LD option to reload object files],
   lt_cv_ld_reload_flag,
   [lt_cv_ld_reload_flag='-r'])
 reload_flag=$lt_cv_ld_reload_flag
@@ -1996,7 +1972,7 @@ case $host_os in
     ;;
 esac
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2446: -1- AC_DEFUN([AC_DEPLIBS_CHECK_METHOD], [AC_CACHE_CHECK([how to recognise dependent libraries],
+m4trace:/usr/share/aclocal/libtool.m4:2422: -1- AC_DEFUN([AC_DEPLIBS_CHECK_METHOD], [AC_CACHE_CHECK([how to recognise dependent libraries],
 lt_cv_deplibs_check_method,
 [lt_cv_file_magic_cmd='$MAGIC_CMD'
 lt_cv_file_magic_test_file=
@@ -2044,7 +2020,7 @@ darwin* | rhapsody*)
   lt_cv_deplibs_check_method=pass_all
   ;;
 
-freebsd* | kfreebsd*-gnu | dragonfly*)
+freebsd* | dragonfly*)
   if echo __ELF__ | $CC -E - | grep __ELF__ > /dev/null; then
     case $host_cpu in
     i*86 )
@@ -2098,11 +2074,11 @@ irix5* | irix6* | nonstopux*)
   ;;
 
 # This must be Linux ELF.
-linux*)
+linux* | k*bsd*-gnu)
   lt_cv_deplibs_check_method=pass_all
   ;;
 
-netbsd* | netbsdelf*-gnu | knetbsd*-gnu)
+netbsd* | netbsdelf*-gnu)
   if echo __ELF__ | $CC -E - | grep __ELF__ > /dev/null; then
     lt_cv_deplibs_check_method='match_pattern /lib[[^/]]+(\.so\.[[0-9]]+\.[[0-9]]+|_pic\.a)$'
   else
@@ -2172,7 +2148,7 @@ file_magic_cmd=$lt_cv_file_magic_cmd
 deplibs_check_method=$lt_cv_deplibs_check_method
 test -z "$deplibs_check_method" && deplibs_check_method=unknown
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2498: -1- AC_DEFUN([AC_PROG_NM], [AC_CACHE_CHECK([for BSD-compatible nm], lt_cv_path_NM,
+m4trace:/usr/share/aclocal/libtool.m4:2474: -1- AC_DEFUN([AC_PROG_NM], [AC_CACHE_CHECK([for BSD-compatible nm], lt_cv_path_NM,
 [if test -n "$NM"; then
   # Let the user override the test.
   lt_cv_path_NM="$NM"
@@ -2218,7 +2194,7 @@ else
 fi])
 NM="$lt_cv_path_NM"
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2519: -1- AC_DEFUN([AC_CHECK_LIBM], [AC_REQUIRE([AC_CANONICAL_HOST])dnl
+m4trace:/usr/share/aclocal/libtool.m4:2495: -1- AC_DEFUN([AC_CHECK_LIBM], [AC_REQUIRE([AC_CANONICAL_HOST])dnl
 LIBM=
 case $host in
 *-*-beos* | *-*-cygwin* | *-*-pw32* | *-*-darwin*)
@@ -2233,7 +2209,7 @@ case $host in
   ;;
 esac
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2544: -1- AC_DEFUN([AC_LIBLTDL_CONVENIENCE], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
+m4trace:/usr/share/aclocal/libtool.m4:2520: -1- AC_DEFUN([AC_LIBLTDL_CONVENIENCE], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
   case $enable_ltdl_convenience in
   no) AC_MSG_ERROR([this package needs a convenience libltdl]) ;;
   "") enable_ltdl_convenience=yes
@@ -2244,7 +2220,7 @@ m4trace:/usr/share/aclocal/libtool.m4:2544: -1- AC_DEFUN([AC_LIBLTDL_CONVENIENCE
   # For backwards non-gettext consistent compatibility...
   INCLTDL="$LTDLINCL"
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2580: -1- AC_DEFUN([AC_LIBLTDL_INSTALLABLE], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
+m4trace:/usr/share/aclocal/libtool.m4:2556: -1- AC_DEFUN([AC_LIBLTDL_INSTALLABLE], [AC_BEFORE([$0],[AC_LIBTOOL_SETUP])dnl
   AC_CHECK_LIB(ltdl, lt_dlinit,
   [test x"$enable_ltdl_install" != xyes && enable_ltdl_install=no],
   [if test x"$enable_ltdl_install" = xno; then
@@ -2265,13 +2241,13 @@ m4trace:/usr/share/aclocal/libtool.m4:2580: -1- AC_DEFUN([AC_LIBLTDL_INSTALLABLE
   # For backwards non-gettext consistent compatibility...
   INCLTDL="$LTDLINCL"
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2588: -1- AC_DEFUN([AC_LIBTOOL_CXX], [AC_REQUIRE([_LT_AC_LANG_CXX])
+m4trace:/usr/share/aclocal/libtool.m4:2564: -1- AC_DEFUN([AC_LIBTOOL_CXX], [AC_REQUIRE([_LT_AC_LANG_CXX])
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2597: -1- AC_DEFUN([_LT_AC_LANG_CXX], [AC_REQUIRE([AC_PROG_CXX])
+m4trace:/usr/share/aclocal/libtool.m4:2573: -1- AC_DEFUN([_LT_AC_LANG_CXX], [AC_REQUIRE([AC_PROG_CXX])
 AC_REQUIRE([_LT_AC_PROG_CXXCPP])
 _LT_AC_SHELL_INIT([tagnames=${tagnames+${tagnames},}CXX])
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2609: -1- AC_DEFUN([_LT_AC_PROG_CXXCPP], [
+m4trace:/usr/share/aclocal/libtool.m4:2585: -1- AC_DEFUN([_LT_AC_PROG_CXXCPP], [
 AC_REQUIRE([AC_PROG_CXX])
 if test -n "$CXX" && ( test "X$CXX" != "Xno" &&
     ( (test "X$CXX" = "Xg++" && `g++ -v >/dev/null 2>&1` ) ||
@@ -2279,14 +2255,14 @@ if test -n "$CXX" && ( test "X$CXX" != "Xno" &&
   AC_PROG_CXXCPP
 fi
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2616: -1- AC_DEFUN([AC_LIBTOOL_F77], [AC_REQUIRE([_LT_AC_LANG_F77])
+m4trace:/usr/share/aclocal/libtool.m4:2592: -1- AC_DEFUN([AC_LIBTOOL_F77], [AC_REQUIRE([_LT_AC_LANG_F77])
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2624: -1- AC_DEFUN([_LT_AC_LANG_F77], [AC_REQUIRE([AC_PROG_F77])
+m4trace:/usr/share/aclocal/libtool.m4:2600: -1- AC_DEFUN([_LT_AC_LANG_F77], [AC_REQUIRE([AC_PROG_F77])
 _LT_AC_SHELL_INIT([tagnames=${tagnames+${tagnames},}F77])
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2632: -1- AC_DEFUN([AC_LIBTOOL_GCJ], [AC_REQUIRE([_LT_AC_LANG_GCJ])
+m4trace:/usr/share/aclocal/libtool.m4:2608: -1- AC_DEFUN([AC_LIBTOOL_GCJ], [AC_REQUIRE([_LT_AC_LANG_GCJ])
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2645: -1- AC_DEFUN([_LT_AC_LANG_GCJ], [AC_PROVIDE_IFELSE([AC_PROG_GCJ],[],
+m4trace:/usr/share/aclocal/libtool.m4:2621: -1- AC_DEFUN([_LT_AC_LANG_GCJ], [AC_PROVIDE_IFELSE([AC_PROG_GCJ],[],
   [AC_PROVIDE_IFELSE([A][M_PROG_GCJ],[],
     [AC_PROVIDE_IFELSE([LT_AC_PROG_GCJ],[],
       [ifdef([AC_PROG_GCJ],[AC_REQUIRE([AC_PROG_GCJ])],
@@ -2294,11 +2270,11 @@ m4trace:/usr/share/aclocal/libtool.m4:2645: -1- AC_DEFUN([_LT_AC_LANG_GCJ], [AC_
 	   [AC_REQUIRE([A][C_PROG_GCJ_OR_A][M_PROG_GCJ])])])])])])
 _LT_AC_SHELL_INIT([tagnames=${tagnames+${tagnames},}GCJ])
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2654: -1- AC_DEFUN([AC_LIBTOOL_RC], [AC_REQUIRE([LT_AC_PROG_RC])
+m4trace:/usr/share/aclocal/libtool.m4:2630: -1- AC_DEFUN([AC_LIBTOOL_RC], [AC_REQUIRE([LT_AC_PROG_RC])
 _LT_AC_SHELL_INIT([tagnames=${tagnames+${tagnames},}RC])
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2662: -1- AC_DEFUN([AC_LIBTOOL_LANG_C_CONFIG], [_LT_AC_LANG_C_CONFIG])
-m4trace:/usr/share/aclocal/libtool.m4:2735: -1- AC_DEFUN([_LT_AC_LANG_C_CONFIG], [lt_save_CC="$CC"
+m4trace:/usr/share/aclocal/libtool.m4:2638: -1- AC_DEFUN([AC_LIBTOOL_LANG_C_CONFIG], [_LT_AC_LANG_C_CONFIG])
+m4trace:/usr/share/aclocal/libtool.m4:2711: -1- AC_DEFUN([_LT_AC_LANG_C_CONFIG], [lt_save_CC="$CC"
 AC_LANG_PUSH(C)
 
 # Source file extension for C test sources.
@@ -2370,8 +2346,8 @@ AC_LIBTOOL_CONFIG($1)
 AC_LANG_POP
 CC="$lt_save_CC"
 ])
-m4trace:/usr/share/aclocal/libtool.m4:2743: -1- AC_DEFUN([AC_LIBTOOL_LANG_CXX_CONFIG], [_LT_AC_LANG_CXX_CONFIG(CXX)])
-m4trace:/usr/share/aclocal/libtool.m4:3743: -1- AC_DEFUN([_LT_AC_LANG_CXX_CONFIG], [AC_LANG_PUSH(C++)
+m4trace:/usr/share/aclocal/libtool.m4:2719: -1- AC_DEFUN([AC_LIBTOOL_LANG_CXX_CONFIG], [_LT_AC_LANG_CXX_CONFIG(CXX)])
+m4trace:/usr/share/aclocal/libtool.m4:3719: -1- AC_DEFUN([_LT_AC_LANG_CXX_CONFIG], [AC_LANG_PUSH(C++)
 AC_REQUIRE([AC_PROG_CXX])
 AC_REQUIRE([_LT_AC_PROG_CXXCPP])
 
@@ -2755,7 +2731,7 @@ case $host_os in
   freebsd-elf*)
     _LT_AC_TAGVAR(archive_cmds_need_lc, $1)=no
     ;;
-  freebsd* | kfreebsd*-gnu | dragonfly*)
+  freebsd* | dragonfly*)
     # FreeBSD 3 and later use GNU C++ and GNU ld with standard ELF
     # conventions
     _LT_AC_TAGVAR(ld_shlibs, $1)=yes
@@ -2914,7 +2890,7 @@ case $host_os in
     _LT_AC_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-rpath ${wl}$libdir'
     _LT_AC_TAGVAR(hardcode_libdir_separator, $1)=:
     ;;
-  linux*)
+  linux* | k*bsd*-gnu)
     case $cc_basename in
       KCC*)
 	# Kuck and Associates, Inc. (KAI) C++ Compiler
@@ -3016,7 +2992,7 @@ case $host_os in
 	;;
     esac
     ;;
-  netbsd* | netbsdelf*-gnu | knetbsd*-gnu)
+  netbsd* | netbsdelf*-gnu)
     if echo __ELF__ | $CC -E - | grep __ELF__ >/dev/null; then
       _LT_AC_TAGVAR(archive_cmds, $1)='$LD -Bshareable  -o $lib $predep_objects $libobjs $deplibs $postdep_objects $linker_flags'
       wlarc=
@@ -3370,7 +3346,7 @@ lt_cv_path_LD=$lt_save_path_LD
 lt_cv_prog_gnu_ldcxx=$lt_cv_prog_gnu_ld
 lt_cv_prog_gnu_ld=$lt_save_with_gnu_ld
 ])
-m4trace:/usr/share/aclocal/libtool.m4:3903: -1- AC_DEFUN([AC_LIBTOOL_POSTDEP_PREDEP], [
+m4trace:/usr/share/aclocal/libtool.m4:3879: -1- AC_DEFUN([AC_LIBTOOL_POSTDEP_PREDEP], [
 dnl we can't use the lt_simple_compile_test_code here,
 dnl because it contains code intended for an executable,
 dnl not a library.  It's possible we should let each
@@ -3523,8 +3499,8 @@ case " $_LT_AC_TAGVAR(postdeps, $1) " in
 *" -lc "*) _LT_AC_TAGVAR(archive_cmds_need_lc, $1)=no ;;
 esac
 ])
-m4trace:/usr/share/aclocal/libtool.m4:3910: -1- AC_DEFUN([AC_LIBTOOL_LANG_F77_CONFIG], [_LT_AC_LANG_F77_CONFIG(F77)])
-m4trace:/usr/share/aclocal/libtool.m4:4004: -1- AC_DEFUN([_LT_AC_LANG_F77_CONFIG], [AC_REQUIRE([AC_PROG_F77])
+m4trace:/usr/share/aclocal/libtool.m4:3886: -1- AC_DEFUN([AC_LIBTOOL_LANG_F77_CONFIG], [_LT_AC_LANG_F77_CONFIG(F77)])
+m4trace:/usr/share/aclocal/libtool.m4:3980: -1- AC_DEFUN([_LT_AC_LANG_F77_CONFIG], [AC_REQUIRE([AC_PROG_F77])
 AC_LANG_PUSH(Fortran 77)
 
 _LT_AC_TAGVAR(archive_cmds_need_lc, $1)=no
@@ -3617,8 +3593,8 @@ AC_LIBTOOL_CONFIG($1)
 AC_LANG_POP
 CC="$lt_save_CC"
 ])
-m4trace:/usr/share/aclocal/libtool.m4:4012: -1- AC_DEFUN([AC_LIBTOOL_LANG_GCJ_CONFIG], [_LT_AC_LANG_GCJ_CONFIG(GCJ)])
-m4trace:/usr/share/aclocal/libtool.m4:4064: -1- AC_DEFUN([_LT_AC_LANG_GCJ_CONFIG], [AC_LANG_SAVE
+m4trace:/usr/share/aclocal/libtool.m4:3988: -1- AC_DEFUN([AC_LIBTOOL_LANG_GCJ_CONFIG], [_LT_AC_LANG_GCJ_CONFIG(GCJ)])
+m4trace:/usr/share/aclocal/libtool.m4:4040: -1- AC_DEFUN([_LT_AC_LANG_GCJ_CONFIG], [AC_LANG_SAVE
 
 # Source file extension for Java test sources.
 ac_ext=java
@@ -3669,8 +3645,8 @@ AC_LIBTOOL_CONFIG($1)
 AC_LANG_RESTORE
 CC="$lt_save_CC"
 ])
-m4trace:/usr/share/aclocal/libtool.m4:4072: -1- AC_DEFUN([AC_LIBTOOL_LANG_RC_CONFIG], [_LT_AC_LANG_RC_CONFIG(RC)])
-m4trace:/usr/share/aclocal/libtool.m4:4108: -1- AC_DEFUN([_LT_AC_LANG_RC_CONFIG], [AC_LANG_SAVE
+m4trace:/usr/share/aclocal/libtool.m4:4048: -1- AC_DEFUN([AC_LIBTOOL_LANG_RC_CONFIG], [_LT_AC_LANG_RC_CONFIG(RC)])
+m4trace:/usr/share/aclocal/libtool.m4:4084: -1- AC_DEFUN([_LT_AC_LANG_RC_CONFIG], [AC_LANG_SAVE
 
 # Source file extension for RC test sources.
 ac_ext=rc
@@ -3705,7 +3681,7 @@ AC_LIBTOOL_CONFIG($1)
 AC_LANG_RESTORE
 CC="$lt_save_CC"
 ])
-m4trace:/usr/share/aclocal/libtool.m4:4602: -1- AC_DEFUN([AC_LIBTOOL_CONFIG], [# The else clause should only fire when bootstrapping the
+m4trace:/usr/share/aclocal/libtool.m4:4578: -1- AC_DEFUN([AC_LIBTOOL_CONFIG], [# The else clause should only fire when bootstrapping the
 # libtool distribution, otherwise you forgot to ship ltmain.sh
 # with your package, and you will get complaints that there are
 # no rules to generate ltmain.sh.
@@ -4190,7 +4166,7 @@ else
   fi
 fi
 ])
-m4trace:/usr/share/aclocal/libtool.m4:4620: -1- AC_DEFUN([AC_LIBTOOL_PROG_COMPILER_NO_RTTI], [AC_REQUIRE([_LT_AC_SYS_COMPILER])dnl
+m4trace:/usr/share/aclocal/libtool.m4:4596: -1- AC_DEFUN([AC_LIBTOOL_PROG_COMPILER_NO_RTTI], [AC_REQUIRE([_LT_AC_SYS_COMPILER])dnl
 
 _LT_AC_TAGVAR(lt_prog_compiler_no_builtin_flag, $1)=
 
@@ -4203,7 +4179,7 @@ if test "$GCC" = yes; then
     [_LT_AC_TAGVAR(lt_prog_compiler_no_builtin_flag, $1)="$_LT_AC_TAGVAR(lt_prog_compiler_no_builtin_flag, $1) -fno-rtti -fno-exceptions"])
 fi
 ])
-m4trace:/usr/share/aclocal/libtool.m4:4822: -1- AC_DEFUN([AC_LIBTOOL_SYS_GLOBAL_SYMBOL_PIPE], [AC_REQUIRE([AC_CANONICAL_HOST])
+m4trace:/usr/share/aclocal/libtool.m4:4798: -1- AC_DEFUN([AC_LIBTOOL_SYS_GLOBAL_SYMBOL_PIPE], [AC_REQUIRE([AC_CANONICAL_HOST])
 AC_REQUIRE([AC_PROG_NM])
 AC_REQUIRE([AC_OBJEXT])
 # Check for command to grab the raw symbol name followed by C symbol from nm.
@@ -4240,7 +4216,7 @@ hpux*) # Its linker distinguishes data from code symbols
   lt_cv_sys_global_symbol_to_cdecl="sed -n -e 's/^T .* \(.*\)$/extern int \1();/p' -e 's/^$symcode* .* \(.*\)$/extern char \1;/p'"
   lt_cv_sys_global_symbol_to_c_name_address="sed -n -e 's/^: \([[^ ]]*\) $/  {\\\"\1\\\", (lt_ptr) 0},/p' -e 's/^$symcode* \([[^ ]]*\) \([[^ ]]*\)$/  {\"\2\", (lt_ptr) \&\2},/p'"
   ;;
-linux*)
+linux* | k*bsd*-gnu)
   if test "$host_cpu" = ia64; then
     symcode='[[ABCDGIRSTW]]'
     lt_cv_sys_global_symbol_to_cdecl="sed -n -e 's/^T .* \(.*\)$/extern int \1();/p' -e 's/^$symcode* .* \(.*\)$/extern char \1;/p'"
@@ -4400,7 +4376,7 @@ else
   AC_MSG_RESULT(ok)
 fi
 ])
-m4trace:/usr/share/aclocal/libtool.m4:5348: -1- AC_DEFUN([AC_LIBTOOL_PROG_COMPILER_PIC], [_LT_AC_TAGVAR(lt_prog_compiler_wl, $1)=
+m4trace:/usr/share/aclocal/libtool.m4:5324: -1- AC_DEFUN([AC_LIBTOOL_PROG_COMPILER_PIC], [_LT_AC_TAGVAR(lt_prog_compiler_wl, $1)=
 _LT_AC_TAGVAR(lt_prog_compiler_pic, $1)=
 _LT_AC_TAGVAR(lt_prog_compiler_static, $1)=
 
@@ -4508,7 +4484,7 @@ AC_MSG_CHECKING([for $compiler option to produce PIC])
 	    ;;
 	esac
 	;;
-      freebsd* | kfreebsd*-gnu | dragonfly*)
+      freebsd* | dragonfly*)
 	# FreeBSD uses GNU C++
 	;;
       hpux9* | hpux10* | hpux11*)
@@ -4551,7 +4527,7 @@ AC_MSG_CHECKING([for $compiler option to produce PIC])
 	    ;;
 	esac
 	;;
-      linux*)
+      linux* | k*bsd*-gnu)
 	case $cc_basename in
 	  KCC*)
 	    # KAI C++ Compiler
@@ -4594,7 +4570,7 @@ AC_MSG_CHECKING([for $compiler option to produce PIC])
 	    ;;
 	esac
 	;;
-      netbsd* | netbsdelf*-gnu | knetbsd*-gnu)
+      netbsd* | netbsdelf*-gnu)
 	;;
       osf3* | osf4* | osf5*)
 	case $cc_basename in
@@ -4805,7 +4781,7 @@ AC_MSG_CHECKING([for $compiler option to produce PIC])
       _LT_AC_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
       ;;
 
-    linux*)
+    linux* | k*bsd*-gnu)
       case $cc_basename in
       icc* | ecc*)
 	_LT_AC_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
@@ -4921,7 +4897,7 @@ AC_LIBTOOL_LINKER_OPTION([if $compiler static flag $lt_tmp_static_flag works],
   [],
   [_LT_AC_TAGVAR(lt_prog_compiler_static, $1)=])
 ])
-m4trace:/usr/share/aclocal/libtool.m4:6294: -1- AC_DEFUN([AC_LIBTOOL_PROG_LD_SHLIBS], [AC_MSG_CHECKING([whether the $compiler linker ($LD) supports shared libraries])
+m4trace:/usr/share/aclocal/libtool.m4:6258: -1- AC_DEFUN([AC_LIBTOOL_PROG_LD_SHLIBS], [AC_MSG_CHECKING([whether the $compiler linker ($LD) supports shared libraries])
 ifelse([$1],[CXX],[
   _LT_AC_TAGVAR(export_symbols_cmds, $1)='$NM $libobjs $convenience | $global_symbol_pipe | $SED '\''s/.* //'\'' | sort | uniq > $export_symbols'
   case $host_os in
@@ -4940,10 +4916,7 @@ ifelse([$1],[CXX],[
   cygwin* | mingw*)
     _LT_AC_TAGVAR(export_symbols_cmds, $1)='$NM $libobjs $convenience | $global_symbol_pipe | $SED -e '\''/^[[BCDGRS]] /s/.* \([[^ ]]*\)/\1 DATA/;/^.* __nm__/s/^.* __nm__\([[^ ]]*\) [[^ ]]*/\1 DATA/;/^I /d;/^[[AITW]] /s/.* //'\'' | sort | uniq > $export_symbols'
   ;;
-  kfreebsd*-gnu)
-    _LT_AC_TAGVAR(link_all_deplibs, $1)=no
-  ;;
-  linux*)
+  linux* | k*bsd*-gnu)
     _LT_AC_TAGVAR(link_all_deplibs, $1)=no
   ;;
   *)
@@ -5116,7 +5089,7 @@ EOF
       _LT_AC_TAGVAR(archive_expsym_cmds, $1)='sed "s,^,_," $export_symbols >$output_objdir/$soname.expsym~$CC -shared $pic_flag $libobjs $deplibs $compiler_flags ${wl}-h,$soname ${wl}--retain-symbols-file,$output_objdir/$soname.expsym ${wl}--image-base,`expr ${RANDOM-$$} % 4096 / 2 \* 262144 + 1342177280` -o $lib'
       ;;
 
-    linux*)
+    linux* | k*bsd*-gnu)
       if $LD --help 2>&1 | grep ': supported targets:.* elf' > /dev/null; then
 	tmp_addflag=
 	case $cc_basename,$host_cpu in
@@ -5148,7 +5121,7 @@ EOF
       fi
       ;;
 
-    netbsd* | netbsdelf*-gnu | knetbsd*-gnu)
+    netbsd* | netbsdelf*-gnu)
       if echo __ELF__ | $CC -E - | grep __ELF__ >/dev/null; then
 	_LT_AC_TAGVAR(archive_cmds, $1)='$LD -Bshareable $libobjs $deplibs $linker_flags -o $lib'
 	wlarc=
@@ -5484,15 +5457,6 @@ _LT_EOF
       _LT_AC_TAGVAR(hardcode_direct, $1)=yes
       _LT_AC_TAGVAR(hardcode_shlibpath_var, $1)=no
       ;;
-      
-    # GNU/kFreeBSD uses gcc -shared to do shared libraries.
-    kfreebsd*-gnu)
-      _LT_AC_TAGVAR(archive_cmds, $1)='$CC -shared -o $lib $libobjs $deplibs $compiler_flags'
-      _LT_AC_TAGVAR(hardcode_libdir_flag_spec, $1)='-R$libdir'
-      _LT_AC_TAGVAR(hardcode_direct, $1)=yes
-      _LT_AC_TAGVAR(hardcode_shlibpath_var, $1)=no
-      _LT_AC_TAGVAR(link_all_deplibs, $1)=no
-      ;;
 
     hpux9*)
       if test "$GCC" = yes; then
@@ -5589,7 +5553,7 @@ _LT_EOF
       _LT_AC_TAGVAR(link_all_deplibs, $1)=yes
       ;;
 
-    netbsd* | netbsdelf*-gnu | knetbsd*-gnu)
+    netbsd* | netbsdelf*-gnu)
       if echo __ELF__ | $CC -E - | grep __ELF__ >/dev/null; then
 	_LT_AC_TAGVAR(archive_cmds, $1)='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'  # a.out
       else
@@ -5861,7 +5825,7 @@ x|xyes)
   ;;
 esac
 ])
-m4trace:/usr/share/aclocal/libtool.m4:6334: -1- AC_DEFUN([_LT_AC_FILE_LTDLL_C], [
+m4trace:/usr/share/aclocal/libtool.m4:6298: -1- AC_DEFUN([_LT_AC_FILE_LTDLL_C], [
 # /* ltdll.c starts here */
 # #define WIN32_LEAN_AND_MEAN
 # #include <windows.h>
@@ -5896,21 +5860,21 @@ m4trace:/usr/share/aclocal/libtool.m4:6334: -1- AC_DEFUN([_LT_AC_FILE_LTDLL_C], 
 # }
 # /* ltdll.c ends here */
 ])
-m4trace:/usr/share/aclocal/libtool.m4:6339: -1- AC_DEFUN([_LT_AC_TAGVAR], [ifelse([$2], [], [$1], [$1_$2])])
-m4trace:/usr/share/aclocal/libtool.m4:6343: -1- AC_DEFUN([AM_PROG_LIBTOOL], [AC_PROG_LIBTOOL])
-m4trace:/usr/share/aclocal/libtool.m4:6344: -1- AC_DEFUN([AM_ENABLE_SHARED], [AC_ENABLE_SHARED($@)])
-m4trace:/usr/share/aclocal/libtool.m4:6345: -1- AC_DEFUN([AM_ENABLE_STATIC], [AC_ENABLE_STATIC($@)])
-m4trace:/usr/share/aclocal/libtool.m4:6346: -1- AC_DEFUN([AM_DISABLE_SHARED], [AC_DISABLE_SHARED($@)])
-m4trace:/usr/share/aclocal/libtool.m4:6347: -1- AC_DEFUN([AM_DISABLE_STATIC], [AC_DISABLE_STATIC($@)])
-m4trace:/usr/share/aclocal/libtool.m4:6348: -1- AC_DEFUN([AM_PROG_LD], [AC_PROG_LD])
-m4trace:/usr/share/aclocal/libtool.m4:6349: -1- AC_DEFUN([AM_PROG_NM], [AC_PROG_NM])
-m4trace:/usr/share/aclocal/libtool.m4:6358: -1- AC_DEFUN([LT_AC_PROG_GCJ], [AC_CHECK_TOOL(GCJ, gcj, no)
+m4trace:/usr/share/aclocal/libtool.m4:6303: -1- AC_DEFUN([_LT_AC_TAGVAR], [ifelse([$2], [], [$1], [$1_$2])])
+m4trace:/usr/share/aclocal/libtool.m4:6307: -1- AC_DEFUN([AM_PROG_LIBTOOL], [AC_PROG_LIBTOOL])
+m4trace:/usr/share/aclocal/libtool.m4:6308: -1- AC_DEFUN([AM_ENABLE_SHARED], [AC_ENABLE_SHARED($@)])
+m4trace:/usr/share/aclocal/libtool.m4:6309: -1- AC_DEFUN([AM_ENABLE_STATIC], [AC_ENABLE_STATIC($@)])
+m4trace:/usr/share/aclocal/libtool.m4:6310: -1- AC_DEFUN([AM_DISABLE_SHARED], [AC_DISABLE_SHARED($@)])
+m4trace:/usr/share/aclocal/libtool.m4:6311: -1- AC_DEFUN([AM_DISABLE_STATIC], [AC_DISABLE_STATIC($@)])
+m4trace:/usr/share/aclocal/libtool.m4:6312: -1- AC_DEFUN([AM_PROG_LD], [AC_PROG_LD])
+m4trace:/usr/share/aclocal/libtool.m4:6313: -1- AC_DEFUN([AM_PROG_NM], [AC_PROG_NM])
+m4trace:/usr/share/aclocal/libtool.m4:6322: -1- AC_DEFUN([LT_AC_PROG_GCJ], [AC_CHECK_TOOL(GCJ, gcj, no)
   test "x${GCJFLAGS+set}" = xset || GCJFLAGS="-g -O2"
   AC_SUBST(GCJFLAGS)
 ])
-m4trace:/usr/share/aclocal/libtool.m4:6362: -1- AC_DEFUN([LT_AC_PROG_RC], [AC_CHECK_TOOL(RC, windres, no)
+m4trace:/usr/share/aclocal/libtool.m4:6326: -1- AC_DEFUN([LT_AC_PROG_RC], [AC_CHECK_TOOL(RC, windres, no)
 ])
-m4trace:/usr/share/aclocal/libtool.m4:6425: -1- AC_DEFUN([LT_AC_PROG_SED], [AC_MSG_CHECKING([for a sed that does not truncate output])
+m4trace:/usr/share/aclocal/libtool.m4:6389: -1- AC_DEFUN([LT_AC_PROG_SED], [AC_MSG_CHECKING([for a sed that does not truncate output])
 AC_CACHE_VAL(lt_cv_path_SED,
 [# Loop through the user's path and test for sed and gsed.
 # Then use that list of sed's as ones to test for truncation.
@@ -6540,68 +6504,171 @@ m4trace:configure.ac:4: -1- m4_pattern_forbid([^_?m4_])
 m4trace:configure.ac:4: -1- m4_pattern_forbid([^dnl$])
 m4trace:configure.ac:4: -1- m4_pattern_forbid([^_?AS_])
 m4trace:configure.ac:4: -1- AC_SUBST([SHELL], [${CONFIG_SHELL-/bin/sh}])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([SHELL])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^SHELL$])
 m4trace:configure.ac:4: -1- AC_SUBST([PATH_SEPARATOR])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([PATH_SEPARATOR])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^PATH_SEPARATOR$])
 m4trace:configure.ac:4: -1- AC_SUBST([PACKAGE_NAME], [m4_ifdef([AC_PACKAGE_NAME],      ['AC_PACKAGE_NAME'])])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([PACKAGE_NAME])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^PACKAGE_NAME$])
 m4trace:configure.ac:4: -1- AC_SUBST([PACKAGE_TARNAME], [m4_ifdef([AC_PACKAGE_TARNAME],   ['AC_PACKAGE_TARNAME'])])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([PACKAGE_TARNAME])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^PACKAGE_TARNAME$])
 m4trace:configure.ac:4: -1- AC_SUBST([PACKAGE_VERSION], [m4_ifdef([AC_PACKAGE_VERSION],   ['AC_PACKAGE_VERSION'])])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([PACKAGE_VERSION])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^PACKAGE_VERSION$])
 m4trace:configure.ac:4: -1- AC_SUBST([PACKAGE_STRING], [m4_ifdef([AC_PACKAGE_STRING],    ['AC_PACKAGE_STRING'])])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([PACKAGE_STRING])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^PACKAGE_STRING$])
 m4trace:configure.ac:4: -1- AC_SUBST([PACKAGE_BUGREPORT], [m4_ifdef([AC_PACKAGE_BUGREPORT], ['AC_PACKAGE_BUGREPORT'])])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([PACKAGE_BUGREPORT])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^PACKAGE_BUGREPORT$])
 m4trace:configure.ac:4: -1- AC_SUBST([exec_prefix], [NONE])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([exec_prefix])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^exec_prefix$])
 m4trace:configure.ac:4: -1- AC_SUBST([prefix], [NONE])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([prefix])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^prefix$])
 m4trace:configure.ac:4: -1- AC_SUBST([program_transform_name], [s,x,x,])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([program_transform_name])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^program_transform_name$])
 m4trace:configure.ac:4: -1- AC_SUBST([bindir], ['${exec_prefix}/bin'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([bindir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^bindir$])
 m4trace:configure.ac:4: -1- AC_SUBST([sbindir], ['${exec_prefix}/sbin'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([sbindir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^sbindir$])
 m4trace:configure.ac:4: -1- AC_SUBST([libexecdir], ['${exec_prefix}/libexec'])
-m4trace:configure.ac:4: -1- AC_SUBST([datadir], ['${prefix}/share'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([libexecdir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^libexecdir$])
+m4trace:configure.ac:4: -1- AC_SUBST([datarootdir], ['${prefix}/share'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([datarootdir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^datarootdir$])
+m4trace:configure.ac:4: -1- AC_SUBST([datadir], ['${datarootdir}'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([datadir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^datadir$])
 m4trace:configure.ac:4: -1- AC_SUBST([sysconfdir], ['${prefix}/etc'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([sysconfdir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^sysconfdir$])
 m4trace:configure.ac:4: -1- AC_SUBST([sharedstatedir], ['${prefix}/com'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([sharedstatedir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^sharedstatedir$])
 m4trace:configure.ac:4: -1- AC_SUBST([localstatedir], ['${prefix}/var'])
-m4trace:configure.ac:4: -1- AC_SUBST([libdir], ['${exec_prefix}/lib'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([localstatedir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^localstatedir$])
 m4trace:configure.ac:4: -1- AC_SUBST([includedir], ['${prefix}/include'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([includedir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^includedir$])
 m4trace:configure.ac:4: -1- AC_SUBST([oldincludedir], ['/usr/include'])
-m4trace:configure.ac:4: -1- AC_SUBST([infodir], ['${prefix}/info'])
-m4trace:configure.ac:4: -1- AC_SUBST([mandir], ['${prefix}/man'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([oldincludedir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^oldincludedir$])
+m4trace:configure.ac:4: -1- AC_SUBST([docdir], [m4_ifset([AC_PACKAGE_TARNAME],
+				     ['${datarootdir}/doc/${PACKAGE_TARNAME}'],
+				     ['${datarootdir}/doc/${PACKAGE}'])])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([docdir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^docdir$])
+m4trace:configure.ac:4: -1- AC_SUBST([infodir], ['${datarootdir}/info'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([infodir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^infodir$])
+m4trace:configure.ac:4: -1- AC_SUBST([htmldir], ['${docdir}'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([htmldir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^htmldir$])
+m4trace:configure.ac:4: -1- AC_SUBST([dvidir], ['${docdir}'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([dvidir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^dvidir$])
+m4trace:configure.ac:4: -1- AC_SUBST([pdfdir], ['${docdir}'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([pdfdir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^pdfdir$])
+m4trace:configure.ac:4: -1- AC_SUBST([psdir], ['${docdir}'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([psdir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^psdir$])
+m4trace:configure.ac:4: -1- AC_SUBST([libdir], ['${exec_prefix}/lib'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([libdir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^libdir$])
+m4trace:configure.ac:4: -1- AC_SUBST([localedir], ['${datarootdir}/locale'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([localedir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^localedir$])
+m4trace:configure.ac:4: -1- AC_SUBST([mandir], ['${datarootdir}/man'])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([mandir])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^mandir$])
 m4trace:configure.ac:4: -1- AC_DEFINE_TRACE_LITERAL([PACKAGE_NAME])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^PACKAGE_NAME$])
 m4trace:configure.ac:4: -1- AH_OUTPUT([PACKAGE_NAME], [/* Define to the full name of this package. */
 #undef PACKAGE_NAME])
 m4trace:configure.ac:4: -1- AC_DEFINE_TRACE_LITERAL([PACKAGE_TARNAME])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^PACKAGE_TARNAME$])
 m4trace:configure.ac:4: -1- AH_OUTPUT([PACKAGE_TARNAME], [/* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME])
 m4trace:configure.ac:4: -1- AC_DEFINE_TRACE_LITERAL([PACKAGE_VERSION])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^PACKAGE_VERSION$])
 m4trace:configure.ac:4: -1- AH_OUTPUT([PACKAGE_VERSION], [/* Define to the version of this package. */
 #undef PACKAGE_VERSION])
 m4trace:configure.ac:4: -1- AC_DEFINE_TRACE_LITERAL([PACKAGE_STRING])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^PACKAGE_STRING$])
 m4trace:configure.ac:4: -1- AH_OUTPUT([PACKAGE_STRING], [/* Define to the full name and version of this package. */
 #undef PACKAGE_STRING])
 m4trace:configure.ac:4: -1- AC_DEFINE_TRACE_LITERAL([PACKAGE_BUGREPORT])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^PACKAGE_BUGREPORT$])
 m4trace:configure.ac:4: -1- AH_OUTPUT([PACKAGE_BUGREPORT], [/* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT])
-m4trace:configure.ac:4: -1- AC_SUBST([build_alias])
-m4trace:configure.ac:4: -1- AC_SUBST([host_alias])
-m4trace:configure.ac:4: -1- AC_SUBST([target_alias])
 m4trace:configure.ac:4: -1- AC_SUBST([DEFS])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([DEFS])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^DEFS$])
 m4trace:configure.ac:4: -1- AC_SUBST([ECHO_C])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([ECHO_C])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^ECHO_C$])
 m4trace:configure.ac:4: -1- AC_SUBST([ECHO_N])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([ECHO_N])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^ECHO_N$])
 m4trace:configure.ac:4: -1- AC_SUBST([ECHO_T])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([ECHO_T])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^ECHO_T$])
 m4trace:configure.ac:4: -1- AC_SUBST([LIBS])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([LIBS])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^LIBS$])
+m4trace:configure.ac:4: -1- AC_SUBST([build_alias])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([build_alias])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^build_alias$])
+m4trace:configure.ac:4: -1- AC_SUBST([host_alias])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([host_alias])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^host_alias$])
+m4trace:configure.ac:4: -1- AC_SUBST([target_alias])
+m4trace:configure.ac:4: -1- AC_SUBST_TRACE([target_alias])
+m4trace:configure.ac:4: -1- m4_pattern_allow([^target_alias$])
 m4trace:configure.ac:6: -1- AM_INIT_AUTOMAKE([libdbus-c++], [0.3.0])
 m4trace:configure.ac:6: -1- m4_pattern_allow([^AM_[A-Z]+FLAGS$])
 m4trace:configure.ac:6: -1- AM_SET_CURRENT_AUTOMAKE_VERSION
 m4trace:configure.ac:6: -1- AM_AUTOMAKE_VERSION([1.9.6])
 m4trace:configure.ac:6: -1- AC_PROG_INSTALL
+m4trace:configure.ac:6: -1- AC_REQUIRE_AUX_FILE([install-sh])
 m4trace:configure.ac:6: -1- AC_SUBST([INSTALL_PROGRAM])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([INSTALL_PROGRAM])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^INSTALL_PROGRAM$])
 m4trace:configure.ac:6: -1- AC_SUBST([INSTALL_SCRIPT])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([INSTALL_SCRIPT])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^INSTALL_SCRIPT$])
 m4trace:configure.ac:6: -1- AC_SUBST([INSTALL_DATA])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([INSTALL_DATA])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^INSTALL_DATA$])
 m4trace:configure.ac:6: -1- AC_SUBST([CYGPATH_W])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([CYGPATH_W])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^CYGPATH_W$])
 m4trace:configure.ac:6: -1- AC_SUBST([PACKAGE], [libdbus-c++])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([PACKAGE])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^PACKAGE$])
 m4trace:configure.ac:6: -1- AC_SUBST([VERSION], [0.3.0])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([VERSION])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^VERSION$])
 m4trace:configure.ac:6: -1- _AM_IF_OPTION([no-define], [], [AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE", [Name of package])
  AC_DEFINE_UNQUOTED(VERSION, "$VERSION", [Version number of package])])
 m4trace:configure.ac:6: -2- _AM_MANGLE_OPTION([no-define])
 m4trace:configure.ac:6: -1- AC_DEFINE_TRACE_LITERAL([PACKAGE])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^PACKAGE$])
 m4trace:configure.ac:6: -1- AH_OUTPUT([PACKAGE], [/* Name of package */
 #undef PACKAGE])
 m4trace:configure.ac:6: -1- AC_DEFINE_TRACE_LITERAL([VERSION])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^VERSION$])
 m4trace:configure.ac:6: -1- AH_OUTPUT([VERSION], [/* Version number of package */
 #undef VERSION])
 m4trace:configure.ac:6: -1- AM_SANITY_CHECK
@@ -6609,28 +6676,51 @@ m4trace:configure.ac:6: -1- AM_MISSING_PROG([ACLOCAL], [aclocal-${am__api_versio
 m4trace:configure.ac:6: -1- AM_MISSING_HAS_RUN
 m4trace:configure.ac:6: -1- AM_AUX_DIR_EXPAND
 m4trace:configure.ac:6: -1- AC_SUBST([ACLOCAL])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([ACLOCAL])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^ACLOCAL$])
 m4trace:configure.ac:6: -1- AM_MISSING_PROG([AUTOCONF], [autoconf])
 m4trace:configure.ac:6: -1- AC_SUBST([AUTOCONF])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([AUTOCONF])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^AUTOCONF$])
 m4trace:configure.ac:6: -1- AM_MISSING_PROG([AUTOMAKE], [automake-${am__api_version}])
 m4trace:configure.ac:6: -1- AC_SUBST([AUTOMAKE])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([AUTOMAKE])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^AUTOMAKE$])
 m4trace:configure.ac:6: -1- AM_MISSING_PROG([AUTOHEADER], [autoheader])
 m4trace:configure.ac:6: -1- AC_SUBST([AUTOHEADER])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([AUTOHEADER])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^AUTOHEADER$])
 m4trace:configure.ac:6: -1- AM_MISSING_PROG([MAKEINFO], [makeinfo])
 m4trace:configure.ac:6: -1- AC_SUBST([MAKEINFO])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([MAKEINFO])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^MAKEINFO$])
 m4trace:configure.ac:6: -1- AM_PROG_INSTALL_SH
 m4trace:configure.ac:6: -1- AC_SUBST([install_sh])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([install_sh])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^install_sh$])
 m4trace:configure.ac:6: -1- AM_PROG_INSTALL_STRIP
 m4trace:configure.ac:6: -1- AC_SUBST([STRIP])
-m4trace:configure.ac:6: -1- AC_SUBST([ac_ct_STRIP])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([STRIP])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^STRIP$])
 m4trace:configure.ac:6: -1- AC_SUBST([INSTALL_STRIP_PROGRAM])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([INSTALL_STRIP_PROGRAM])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^INSTALL_STRIP_PROGRAM$])
 m4trace:configure.ac:6: -1- AM_PROG_MKDIR_P
 m4trace:configure.ac:6: -1- AC_SUBST([mkdir_p])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([mkdir_p])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^mkdir_p$])
 m4trace:configure.ac:6: -1- AC_PROG_AWK
 m4trace:configure.ac:6: -1- AC_SUBST([AWK])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([AWK])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^AWK$])
 m4trace:configure.ac:6: -1- AC_PROG_MAKE_SET
 m4trace:configure.ac:6: -1- AC_SUBST([SET_MAKE])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([SET_MAKE])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^SET_MAKE$])
 m4trace:configure.ac:6: -1- AM_SET_LEADING_DOT
 m4trace:configure.ac:6: -1- AC_SUBST([am__leading_dot])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([am__leading_dot])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^am__leading_dot$])
 m4trace:configure.ac:6: -1- _AM_IF_OPTION([tar-ustar], [_AM_PROG_TAR([ustar])], [_AM_IF_OPTION([tar-pax], [_AM_PROG_TAR([pax])],
 	      		     [_AM_PROG_TAR([v7])])])
 m4trace:configure.ac:6: -2- _AM_MANGLE_OPTION([tar-ustar])
@@ -6639,8 +6729,14 @@ m4trace:configure.ac:6: -2- _AM_MANGLE_OPTION([tar-pax])
 m4trace:configure.ac:6: -1- _AM_PROG_TAR([v7])
 m4trace:configure.ac:6: -1- AM_MISSING_PROG([AMTAR], [tar])
 m4trace:configure.ac:6: -1- AC_SUBST([AMTAR])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([AMTAR])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^AMTAR$])
 m4trace:configure.ac:6: -1- AC_SUBST([am__tar])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([am__tar])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^am__tar$])
 m4trace:configure.ac:6: -1- AC_SUBST([am__untar])
+m4trace:configure.ac:6: -1- AC_SUBST_TRACE([am__untar])
+m4trace:configure.ac:6: -1- m4_pattern_allow([^am__untar$])
 m4trace:configure.ac:6: -1- _AM_IF_OPTION([no-dependencies], [], [AC_PROVIDE_IFELSE([AC_PROG_CC],
                   [_AM_DEPENDENCIES(CC)],
                   [define([AC_PROG_CC],
@@ -6657,127 +6753,203 @@ You should run autoupdate.], [/usr/share/aclocal-1.9/header.m4:12: AM_CONFIG_HEA
 configure.ac:7: the top level])
 m4trace:configure.ac:7: -1- AC_CONFIG_HEADERS([include/dbus-c++/config.h])
 m4trace:configure.ac:9: -1- AC_CANONICAL_HOST
+m4trace:configure.ac:9: -1- AC_CANONICAL_BUILD
+m4trace:configure.ac:9: -1- AC_REQUIRE_AUX_FILE([config.sub])
+m4trace:configure.ac:9: -1- AC_REQUIRE_AUX_FILE([config.guess])
 m4trace:configure.ac:9: -1- AC_SUBST([build], [$ac_cv_build])
-m4trace:configure.ac:9: -1- AC_SUBST([build_cpu], [`echo $ac_cv_build | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\1/'`])
-m4trace:configure.ac:9: -1- AC_SUBST([build_vendor], [`echo $ac_cv_build | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\2/'`])
-m4trace:configure.ac:9: -1- AC_SUBST([build_os], [`echo $ac_cv_build | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\3/'`])
+m4trace:configure.ac:9: -1- AC_SUBST_TRACE([build])
+m4trace:configure.ac:9: -1- m4_pattern_allow([^build$])
+m4trace:configure.ac:9: -1- AC_SUBST([build_cpu], [$[1]])
+m4trace:configure.ac:9: -1- AC_SUBST_TRACE([build_cpu])
+m4trace:configure.ac:9: -1- m4_pattern_allow([^build_cpu$])
+m4trace:configure.ac:9: -1- AC_SUBST([build_vendor], [$[2]])
+m4trace:configure.ac:9: -1- AC_SUBST_TRACE([build_vendor])
+m4trace:configure.ac:9: -1- m4_pattern_allow([^build_vendor$])
+m4trace:configure.ac:9: -1- AC_SUBST([build_os])
+m4trace:configure.ac:9: -1- AC_SUBST_TRACE([build_os])
+m4trace:configure.ac:9: -1- m4_pattern_allow([^build_os$])
 m4trace:configure.ac:9: -1- AC_SUBST([host], [$ac_cv_host])
-m4trace:configure.ac:9: -1- AC_SUBST([host_cpu], [`echo $ac_cv_host | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\1/'`])
-m4trace:configure.ac:9: -1- AC_SUBST([host_vendor], [`echo $ac_cv_host | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\2/'`])
-m4trace:configure.ac:9: -1- AC_SUBST([host_os], [`echo $ac_cv_host | sed 's/^\([[^-]]*\)-\([[^-]]*\)-\(.*\)$/\3/'`])
+m4trace:configure.ac:9: -1- AC_SUBST_TRACE([host])
+m4trace:configure.ac:9: -1- m4_pattern_allow([^host$])
+m4trace:configure.ac:9: -1- AC_SUBST([host_cpu], [$[1]])
+m4trace:configure.ac:9: -1- AC_SUBST_TRACE([host_cpu])
+m4trace:configure.ac:9: -1- m4_pattern_allow([^host_cpu$])
+m4trace:configure.ac:9: -1- AC_SUBST([host_vendor], [$[2]])
+m4trace:configure.ac:9: -1- AC_SUBST_TRACE([host_vendor])
+m4trace:configure.ac:9: -1- m4_pattern_allow([^host_vendor$])
+m4trace:configure.ac:9: -1- AC_SUBST([host_os])
+m4trace:configure.ac:9: -1- AC_SUBST_TRACE([host_os])
+m4trace:configure.ac:9: -1- m4_pattern_allow([^host_os$])
 m4trace:configure.ac:23: -1- _m4_warn([obsolete], [The macro `AC_LANG_CPLUSPLUS' is obsolete.
-You should run autoupdate.], [autoconf/c.m4:103: AC_LANG_CPLUSPLUS is expanded from...
+You should run autoupdate.], [autoconf/c.m4:105: AC_LANG_CPLUSPLUS is expanded from...
 configure.ac:23: the top level])
 m4trace:configure.ac:25: -1- AC_PROG_CC
 m4trace:configure.ac:25: -1- AC_SUBST([CC])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([CC])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^CC$])
 m4trace:configure.ac:25: -1- AC_SUBST([CFLAGS])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([CFLAGS])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^CFLAGS$])
 m4trace:configure.ac:25: -1- AC_SUBST([LDFLAGS])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([LDFLAGS])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^LDFLAGS$])
 m4trace:configure.ac:25: -1- AC_SUBST([CPPFLAGS])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([CPPFLAGS])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^CPPFLAGS$])
 m4trace:configure.ac:25: -1- AC_SUBST([CC])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([CC])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^CC$])
+m4trace:configure.ac:25: -1- AC_SUBST([CC])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([CC])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^CC$])
+m4trace:configure.ac:25: -1- AC_SUBST([CC])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([CC])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^CC$])
+m4trace:configure.ac:25: -1- AC_SUBST([CC])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([CC])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^CC$])
 m4trace:configure.ac:25: -1- AC_SUBST([ac_ct_CC])
-m4trace:configure.ac:25: -1- AC_SUBST([CC])
-m4trace:configure.ac:25: -1- AC_SUBST([ac_ct_CC])
-m4trace:configure.ac:25: -1- AC_SUBST([CC])
-m4trace:configure.ac:25: -1- AC_SUBST([CC])
-m4trace:configure.ac:25: -1- AC_SUBST([ac_ct_CC])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([ac_ct_CC])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^ac_ct_CC$])
 m4trace:configure.ac:25: -1- AC_SUBST([EXEEXT], [$ac_cv_exeext])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([EXEEXT])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^EXEEXT$])
 m4trace:configure.ac:25: -1- AC_SUBST([OBJEXT], [$ac_cv_objext])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([OBJEXT])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^OBJEXT$])
 m4trace:configure.ac:25: -1- _AM_DEPENDENCIES([CC])
 m4trace:configure.ac:25: -1- AM_SET_DEPDIR
 m4trace:configure.ac:25: -1- AC_SUBST([DEPDIR], ["${am__leading_dot}deps"])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([DEPDIR])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^DEPDIR$])
 m4trace:configure.ac:25: -1- AM_OUTPUT_DEPENDENCY_COMMANDS
 m4trace:configure.ac:25: -1- AM_MAKE_INCLUDE
 m4trace:configure.ac:25: -1- AC_SUBST([am__include])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([am__include])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^am__include$])
 m4trace:configure.ac:25: -1- AC_SUBST([am__quote])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([am__quote])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^am__quote$])
 m4trace:configure.ac:25: -1- AM_DEP_TRACK
 m4trace:configure.ac:25: -1- AM_CONDITIONAL([AMDEP], [test "x$enable_dependency_tracking" != xno])
 m4trace:configure.ac:25: -1- AC_SUBST([AMDEP_TRUE])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([AMDEP_TRUE])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^AMDEP_TRUE$])
 m4trace:configure.ac:25: -1- AC_SUBST([AMDEP_FALSE])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([AMDEP_FALSE])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^AMDEP_FALSE$])
 m4trace:configure.ac:25: -1- AC_SUBST([AMDEPBACKSLASH])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([AMDEPBACKSLASH])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^AMDEPBACKSLASH$])
 m4trace:configure.ac:25: -1- AC_SUBST([CCDEPMODE], [depmode=$am_cv_CC_dependencies_compiler_type])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([CCDEPMODE])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^CCDEPMODE$])
 m4trace:configure.ac:25: -1- AM_CONDITIONAL([am__fastdepCC], [
   test "x$enable_dependency_tracking" != xno \
   && test "$am_cv_CC_dependencies_compiler_type" = gcc3])
 m4trace:configure.ac:25: -1- AC_SUBST([am__fastdepCC_TRUE])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([am__fastdepCC_TRUE])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^am__fastdepCC_TRUE$])
 m4trace:configure.ac:25: -1- AC_SUBST([am__fastdepCC_FALSE])
+m4trace:configure.ac:25: -1- AC_SUBST_TRACE([am__fastdepCC_FALSE])
+m4trace:configure.ac:25: -1- m4_pattern_allow([^am__fastdepCC_FALSE$])
 m4trace:configure.ac:26: -1- AC_PROG_CXX
 m4trace:configure.ac:26: -1- AC_SUBST([CXX])
+m4trace:configure.ac:26: -1- AC_SUBST_TRACE([CXX])
+m4trace:configure.ac:26: -1- m4_pattern_allow([^CXX$])
 m4trace:configure.ac:26: -1- AC_SUBST([CXXFLAGS])
+m4trace:configure.ac:26: -1- AC_SUBST_TRACE([CXXFLAGS])
+m4trace:configure.ac:26: -1- m4_pattern_allow([^CXXFLAGS$])
 m4trace:configure.ac:26: -1- AC_SUBST([LDFLAGS])
+m4trace:configure.ac:26: -1- AC_SUBST_TRACE([LDFLAGS])
+m4trace:configure.ac:26: -1- m4_pattern_allow([^LDFLAGS$])
 m4trace:configure.ac:26: -1- AC_SUBST([CPPFLAGS])
+m4trace:configure.ac:26: -1- AC_SUBST_TRACE([CPPFLAGS])
+m4trace:configure.ac:26: -1- m4_pattern_allow([^CPPFLAGS$])
 m4trace:configure.ac:26: -1- AC_SUBST([CXX])
+m4trace:configure.ac:26: -1- AC_SUBST_TRACE([CXX])
+m4trace:configure.ac:26: -1- m4_pattern_allow([^CXX$])
 m4trace:configure.ac:26: -1- AC_SUBST([ac_ct_CXX])
+m4trace:configure.ac:26: -1- AC_SUBST_TRACE([ac_ct_CXX])
+m4trace:configure.ac:26: -1- m4_pattern_allow([^ac_ct_CXX$])
 m4trace:configure.ac:26: -1- _AM_DEPENDENCIES([CXX])
 m4trace:configure.ac:26: -1- AC_SUBST([CXXDEPMODE], [depmode=$am_cv_CXX_dependencies_compiler_type])
+m4trace:configure.ac:26: -1- AC_SUBST_TRACE([CXXDEPMODE])
+m4trace:configure.ac:26: -1- m4_pattern_allow([^CXXDEPMODE$])
 m4trace:configure.ac:26: -1- AM_CONDITIONAL([am__fastdepCXX], [
   test "x$enable_dependency_tracking" != xno \
   && test "$am_cv_CXX_dependencies_compiler_type" = gcc3])
 m4trace:configure.ac:26: -1- AC_SUBST([am__fastdepCXX_TRUE])
+m4trace:configure.ac:26: -1- AC_SUBST_TRACE([am__fastdepCXX_TRUE])
+m4trace:configure.ac:26: -1- m4_pattern_allow([^am__fastdepCXX_TRUE$])
 m4trace:configure.ac:26: -1- AC_SUBST([am__fastdepCXX_FALSE])
+m4trace:configure.ac:26: -1- AC_SUBST_TRACE([am__fastdepCXX_FALSE])
+m4trace:configure.ac:26: -1- m4_pattern_allow([^am__fastdepCXX_FALSE$])
 m4trace:configure.ac:30: -1- AM_PROG_LIBTOOL
 m4trace:configure.ac:30: -1- AC_PROG_LIBTOOL
 m4trace:configure.ac:30: -1- _AC_PROG_LIBTOOL
 m4trace:configure.ac:30: -1- AC_LIBTOOL_SETUP
 m4trace:configure.ac:30: -1- AC_ENABLE_SHARED
 m4trace:configure.ac:30: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
-You should run autoupdate.], [autoconf/general.m4:219: AC_HELP_STRING is expanded from...
-autoconf/general.m4:1303: AC_ARG_ENABLE is expanded from...
-/usr/share/aclocal/libtool.m4:1944: AC_ENABLE_SHARED is expanded from...
-configure.ac:30: AC_ENABLE_SHARED is required by...
+You should run autoupdate.], [autoconf/general.m4:209: AC_HELP_STRING is expanded from...
+autoconf/general.m4:1382: AC_ARG_ENABLE is expanded from...
+/usr/share/aclocal/libtool.m4:1920: AC_ENABLE_SHARED is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
 m4trace:configure.ac:30: -1- AC_ENABLE_STATIC
 m4trace:configure.ac:30: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
-You should run autoupdate.], [autoconf/general.m4:219: AC_HELP_STRING is expanded from...
-autoconf/general.m4:1303: AC_ARG_ENABLE is expanded from...
-/usr/share/aclocal/libtool.m4:1983: AC_ENABLE_STATIC is expanded from...
-configure.ac:30: AC_ENABLE_STATIC is required by...
+You should run autoupdate.], [autoconf/general.m4:209: AC_HELP_STRING is expanded from...
+autoconf/general.m4:1382: AC_ARG_ENABLE is expanded from...
+/usr/share/aclocal/libtool.m4:1959: AC_ENABLE_STATIC is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
 m4trace:configure.ac:30: -1- AC_ENABLE_FAST_INSTALL
 m4trace:configure.ac:30: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
-You should run autoupdate.], [autoconf/general.m4:219: AC_HELP_STRING is expanded from...
-autoconf/general.m4:1303: AC_ARG_ENABLE is expanded from...
-/usr/share/aclocal/libtool.m4:2022: AC_ENABLE_FAST_INSTALL is expanded from...
-configure.ac:30: AC_ENABLE_FAST_INSTALL is required by...
+You should run autoupdate.], [autoconf/general.m4:209: AC_HELP_STRING is expanded from...
+autoconf/general.m4:1382: AC_ARG_ENABLE is expanded from...
+/usr/share/aclocal/libtool.m4:1998: AC_ENABLE_FAST_INSTALL is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
 m4trace:configure.ac:30: -1- AC_PROG_LD
 m4trace:configure.ac:30: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
-You should run autoupdate.], [autoconf/general.m4:219: AC_HELP_STRING is expanded from...
-autoconf/general.m4:1331: AC_ARG_WITH is expanded from...
-/usr/share/aclocal/libtool.m4:2219: AC_PROG_LD is expanded from...
-configure.ac:30: AC_PROG_LD is required by...
+You should run autoupdate.], [autoconf/general.m4:209: AC_HELP_STRING is expanded from...
+autoconf/general.m4:1400: AC_ARG_WITH is expanded from...
+/usr/share/aclocal/libtool.m4:2195: AC_PROG_LD is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
 m4trace:configure.ac:30: -1- LT_AC_PROG_SED
 m4trace:configure.ac:30: -1- AC_PROG_LD_GNU
 m4trace:configure.ac:30: -1- AC_PROG_EGREP
+m4trace:configure.ac:30: -1- AC_SUBST([GREP])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([GREP])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^GREP$])
+m4trace:configure.ac:30: -1- AC_SUBST([GREP])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([GREP])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^GREP$])
 m4trace:configure.ac:30: -1- AC_SUBST([EGREP])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([EGREP])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^EGREP$])
+m4trace:configure.ac:30: -1- AC_SUBST([EGREP])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([EGREP])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^EGREP$])
 m4trace:configure.ac:30: -1- AC_PROG_LD_RELOAD_FLAG
 m4trace:configure.ac:30: -1- AC_PROG_NM
 m4trace:configure.ac:30: -1- AC_PROG_LN_S
 m4trace:configure.ac:30: -1- AC_SUBST([LN_S], [$as_ln_s])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([LN_S])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^LN_S$])
 m4trace:configure.ac:30: -1- AC_DEPLIBS_CHECK_METHOD
 m4trace:configure.ac:30: -1- AC_LIBTOOL_SYS_MAX_CMD_LEN
 m4trace:configure.ac:30: -1- AC_LIBTOOL_SYS_GLOBAL_SYMBOL_PIPE
@@ -6935,35 +7107,36 @@ fi
 AC_SUBST(ECHO)
 ])
 m4trace:configure.ac:30: -1- AC_SUBST([ECHO])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([ECHO])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^ECHO$])
 m4trace:configure.ac:30: -1- AC_SUBST([AR])
-m4trace:configure.ac:30: -1- AC_SUBST([ac_ct_AR])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([AR])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^AR$])
 m4trace:configure.ac:30: -1- AC_SUBST([RANLIB])
-m4trace:configure.ac:30: -1- AC_SUBST([ac_ct_RANLIB])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([RANLIB])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^RANLIB$])
 m4trace:configure.ac:30: -1- AC_SUBST([STRIP])
-m4trace:configure.ac:30: -1- AC_SUBST([ac_ct_STRIP])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([STRIP])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^STRIP$])
 m4trace:configure.ac:30: -1- _LT_CC_BASENAME([$compiler])
 m4trace:configure.ac:30: -1- AC_PATH_MAGIC
 m4trace:configure.ac:30: -1- AC_PATH_TOOL_PREFIX([${ac_tool_prefix}file], [/usr/bin$PATH_SEPARATOR$PATH])
 m4trace:configure.ac:30: -1- AC_PATH_TOOL_PREFIX([file], [/usr/bin$PATH_SEPARATOR$PATH])
 m4trace:configure.ac:30: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
-You should run autoupdate.], [autoconf/general.m4:219: AC_HELP_STRING is expanded from...
-autoconf/general.m4:1303: AC_ARG_ENABLE is expanded from...
+You should run autoupdate.], [autoconf/general.m4:209: AC_HELP_STRING is expanded from...
+autoconf/general.m4:1382: AC_ARG_ENABLE is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
 m4trace:configure.ac:30: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
-You should run autoupdate.], [autoconf/general.m4:219: AC_HELP_STRING is expanded from...
-autoconf/general.m4:1331: AC_ARG_WITH is expanded from...
+You should run autoupdate.], [autoconf/general.m4:209: AC_HELP_STRING is expanded from...
+autoconf/general.m4:1400: AC_ARG_WITH is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
 m4trace:configure.ac:30: -1- AC_LIBTOOL_LANG_C_CONFIG
 m4trace:configure.ac:30: -1- _LT_AC_LANG_C_CONFIG
@@ -7068,20 +7241,18 @@ m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([lt_cv_prog_compiler_c_o], [])
 m4trace:configure.ac:30: -1- AC_LIBTOOL_SYS_HARD_LINK_LOCKS([])
 m4trace:configure.ac:30: -1- _LT_AC_LOCK
 m4trace:configure.ac:30: -1- _m4_warn([obsolete], [The macro `AC_TRY_LINK' is obsolete.
-You should run autoupdate.], [autoconf/general.m4:2223: AC_TRY_LINK is expanded from...
-autoconf/general.m4:1799: AC_CACHE_VAL is expanded from...
-autoconf/general.m4:1808: AC_CACHE_CHECK is expanded from...
+You should run autoupdate.], [autoconf/general.m4:2426: AC_TRY_LINK is expanded from...
+../../lib/m4sugar/m4sh.m4:519: AS_IF is expanded from...
+autoconf/general.m4:1922: AC_CACHE_VAL is expanded from...
+autoconf/general.m4:1935: AC_CACHE_CHECK is expanded from...
 /usr/share/aclocal/libtool.m4:608: _LT_AC_LOCK is expanded from...
-configure.ac:30: _LT_AC_LOCK is required by...
 /usr/share/aclocal/libtool.m4:1094: AC_LIBTOOL_SYS_HARD_LINK_LOCKS is expanded from...
-/usr/share/aclocal/libtool.m4:2735: _LT_AC_LANG_C_CONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:2662: AC_LIBTOOL_LANG_C_CONFIG is expanded from...
+/usr/share/aclocal/libtool.m4:2711: _LT_AC_LANG_C_CONFIG is expanded from...
+/usr/share/aclocal/libtool.m4:2638: AC_LIBTOOL_LANG_C_CONFIG is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([lt_cv_prog_compiler_c_o], [])
 m4trace:configure.ac:30: -1- AC_LIBTOOL_PROG_LD_SHLIBS([])
@@ -7242,11 +7413,6 @@ m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([archive_cmds], [])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_libdir_flag_spec], [])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_direct], [])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_shlibpath_var], [])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([archive_cmds], [])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_libdir_flag_spec], [])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_direct], [])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_shlibpath_var], [])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([link_all_deplibs], [])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([archive_cmds], [])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([archive_cmds], [])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_libdir_flag_spec], [])
@@ -7412,9 +7578,16 @@ m4trace:configure.ac:30: -1- AH_OUTPUT([HAVE_DLFCN_H], [/* Define to 1 if you ha
 m4trace:configure.ac:30: -1- AC_HEADER_STDC
 m4trace:configure.ac:30: -1- AC_PROG_CPP
 m4trace:configure.ac:30: -1- AC_SUBST([CPP])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([CPP])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^CPP$])
 m4trace:configure.ac:30: -1- AC_SUBST([CPPFLAGS])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([CPPFLAGS])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^CPPFLAGS$])
 m4trace:configure.ac:30: -1- AC_SUBST([CPP])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([CPP])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^CPP$])
 m4trace:configure.ac:30: -1- AC_DEFINE_TRACE_LITERAL([STDC_HEADERS])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^STDC_HEADERS$])
 m4trace:configure.ac:30: -1- AH_OUTPUT([STDC_HEADERS], [/* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS])
 m4trace:configure.ac:30: -1- AC_CHECK_HEADERS([sys/types.h sys/stat.h stdlib.h string.h memory.h strings.h \
@@ -7553,38 +7726,38 @@ m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([exclude_expsyms], [])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([include_expsyms], [])
 m4trace:configure.ac:30: -1- _LT_AC_TAGCONFIG
 m4trace:configure.ac:30: -1- _m4_warn([obsolete], [The macro `AC_HELP_STRING' is obsolete.
-You should run autoupdate.], [autoconf/general.m4:219: AC_HELP_STRING is expanded from...
-autoconf/general.m4:1331: AC_ARG_WITH is expanded from...
-/usr/share/aclocal/libtool.m4:1898: _LT_AC_TAGCONFIG is expanded from...
+You should run autoupdate.], [autoconf/general.m4:209: AC_HELP_STRING is expanded from...
+autoconf/general.m4:1400: AC_ARG_WITH is expanded from...
+/usr/share/aclocal/libtool.m4:1874: _LT_AC_TAGCONFIG is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
-m4trace:configure.ac:30: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: tag name \"$tagname\" already exists], [/usr/share/aclocal/libtool.m4:1898: _LT_AC_TAGCONFIG is expanded from...
+m4trace:configure.ac:30: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me:$LINENO: error: tag name \"$tagname\" already exists], [/usr/share/aclocal/libtool.m4:1874: _LT_AC_TAGCONFIG is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
-m4trace:configure.ac:30: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: tag name \"$tagname\" already exists], [/usr/share/aclocal/libtool.m4:1898: _LT_AC_TAGCONFIG is expanded from...
+m4trace:configure.ac:30: -1- _m4_warn([obsolete], [back quotes and double quotes must not be escaped in: $as_me: error: tag name \"$tagname\" already exists], [/usr/share/aclocal/libtool.m4:1874: _LT_AC_TAGCONFIG is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
 m4trace:configure.ac:30: -1- AC_LIBTOOL_LANG_CXX_CONFIG
 m4trace:configure.ac:30: -1- _LT_AC_LANG_CXX_CONFIG([CXX])
 m4trace:configure.ac:30: -1- _LT_AC_PROG_CXXCPP
 m4trace:configure.ac:30: -1- AC_SUBST([CXXCPP])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([CXXCPP])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^CXXCPP$])
 m4trace:configure.ac:30: -1- AC_SUBST([CPPFLAGS])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([CPPFLAGS])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^CPPFLAGS$])
 m4trace:configure.ac:30: -1- AC_SUBST([CXXCPP])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([CXXCPP])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^CXXCPP$])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([archive_cmds_need_lc], [CXX])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([allow_undefined_flag], [CXX])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([always_export_symbols], [CXX])
@@ -7963,7 +8136,6 @@ m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([export_symbols_cmds], [CXX])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([export_symbols_cmds], [CXX])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([export_symbols_cmds], [CXX])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([link_all_deplibs], [CXX])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([link_all_deplibs], [CXX])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([export_symbols_cmds], [CXX])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([ld_shlibs], [CXX])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([ld_shlibs], [CXX])
@@ -8083,10 +8255,20 @@ m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([include_expsyms], [CXX])
 m4trace:configure.ac:30: -1- AC_LIBTOOL_LANG_F77_CONFIG
 m4trace:configure.ac:30: -1- _LT_AC_LANG_F77_CONFIG([F77])
 m4trace:configure.ac:30: -1- AC_SUBST([F77])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([F77])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^F77$])
 m4trace:configure.ac:30: -1- AC_SUBST([FFLAGS])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([FFLAGS])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^FFLAGS$])
 m4trace:configure.ac:30: -1- AC_SUBST([LDFLAGS])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([LDFLAGS])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^LDFLAGS$])
 m4trace:configure.ac:30: -1- AC_SUBST([F77])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([F77])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^F77$])
 m4trace:configure.ac:30: -1- AC_SUBST([ac_ct_F77])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([ac_ct_F77])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^ac_ct_F77$])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([archive_cmds_need_lc], [F77])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([allow_undefined_flag], [F77])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([always_export_symbols], [F77])
@@ -8362,11 +8544,6 @@ m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_libdir_flag_spec], [F77])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_direct], [F77])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_shlibpath_var], [F77])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([archive_cmds], [F77])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_libdir_flag_spec], [F77])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_direct], [F77])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_shlibpath_var], [F77])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([link_all_deplibs], [F77])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([archive_cmds], [F77])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([archive_cmds], [F77])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_libdir_flag_spec], [F77])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_libdir_separator], [F77])
@@ -8610,28 +8787,14 @@ m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([include_expsyms], [F77])
 m4trace:configure.ac:30: -1- AC_LIBTOOL_LANG_GCJ_CONFIG
 m4trace:configure.ac:30: -1- _LT_AC_LANG_GCJ_CONFIG([GCJ])
 m4trace:configure.ac:30: -1- _m4_warn([obsolete], [The macro `AC_LANG_SAVE' is obsolete.
-You should run autoupdate.], [autoconf/lang.m4:166: AC_LANG_SAVE is expanded from...
-/usr/share/aclocal/libtool.m4:4064: _LT_AC_LANG_GCJ_CONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:4012: AC_LIBTOOL_LANG_GCJ_CONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:1898: _LT_AC_TAGCONFIG is expanded from...
+You should run autoupdate.], [autoconf/lang.m4:170: AC_LANG_SAVE is expanded from...
+/usr/share/aclocal/libtool.m4:4040: _LT_AC_LANG_GCJ_CONFIG is expanded from...
+/usr/share/aclocal/libtool.m4:3988: AC_LIBTOOL_LANG_GCJ_CONFIG is expanded from...
+/usr/share/aclocal/libtool.m4:1874: _LT_AC_TAGCONFIG is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
-configure.ac:30: the top level])
-m4trace:configure.ac:30: -1- _m4_warn([obsolete], [instead of using `AC_LANG', `AC_LANG_SAVE',
-and `AC_LANG_RESTORE', you should use `AC_LANG_PUSH' and `AC_LANG_POP'.], [autoconf/lang.m4:166: AC_LANG_SAVE is expanded from...
-/usr/share/aclocal/libtool.m4:4064: _LT_AC_LANG_GCJ_CONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:4012: AC_LIBTOOL_LANG_GCJ_CONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:1898: _LT_AC_TAGCONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
-/usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
-/usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([objext], [GCJ])
 m4trace:configure.ac:30: -1- _LT_AC_SYS_COMPILER
@@ -8896,11 +9059,6 @@ m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_libdir_flag_spec], [GCJ])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_direct], [GCJ])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_shlibpath_var], [GCJ])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([archive_cmds], [GCJ])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_libdir_flag_spec], [GCJ])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_direct], [GCJ])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_shlibpath_var], [GCJ])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([link_all_deplibs], [GCJ])
-m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([archive_cmds], [GCJ])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([archive_cmds], [GCJ])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_libdir_flag_spec], [GCJ])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([hardcode_libdir_separator], [GCJ])
@@ -9142,42 +9300,26 @@ m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([export_symbols_cmds], [GCJ])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([exclude_expsyms], [GCJ])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([include_expsyms], [GCJ])
 m4trace:configure.ac:30: -1- _m4_warn([obsolete], [The macro `AC_LANG_RESTORE' is obsolete.
-You should run autoupdate.], [autoconf/lang.m4:172: AC_LANG_RESTORE is expanded from...
-/usr/share/aclocal/libtool.m4:4064: _LT_AC_LANG_GCJ_CONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:4012: AC_LIBTOOL_LANG_GCJ_CONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:1898: _LT_AC_TAGCONFIG is expanded from...
+You should run autoupdate.], [autoconf/lang.m4:176: AC_LANG_RESTORE is expanded from...
+/usr/share/aclocal/libtool.m4:4040: _LT_AC_LANG_GCJ_CONFIG is expanded from...
+/usr/share/aclocal/libtool.m4:3988: AC_LIBTOOL_LANG_GCJ_CONFIG is expanded from...
+/usr/share/aclocal/libtool.m4:1874: _LT_AC_TAGCONFIG is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
 m4trace:configure.ac:30: -1- AC_LIBTOOL_LANG_RC_CONFIG
 m4trace:configure.ac:30: -1- _LT_AC_LANG_RC_CONFIG([RC])
 m4trace:configure.ac:30: -1- _m4_warn([obsolete], [The macro `AC_LANG_SAVE' is obsolete.
-You should run autoupdate.], [autoconf/lang.m4:166: AC_LANG_SAVE is expanded from...
-/usr/share/aclocal/libtool.m4:4108: _LT_AC_LANG_RC_CONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:4072: AC_LIBTOOL_LANG_RC_CONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:1898: _LT_AC_TAGCONFIG is expanded from...
+You should run autoupdate.], [autoconf/lang.m4:170: AC_LANG_SAVE is expanded from...
+/usr/share/aclocal/libtool.m4:4084: _LT_AC_LANG_RC_CONFIG is expanded from...
+/usr/share/aclocal/libtool.m4:4048: AC_LIBTOOL_LANG_RC_CONFIG is expanded from...
+/usr/share/aclocal/libtool.m4:1874: _LT_AC_TAGCONFIG is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
-configure.ac:30: the top level])
-m4trace:configure.ac:30: -1- _m4_warn([obsolete], [instead of using `AC_LANG', `AC_LANG_SAVE',
-and `AC_LANG_RESTORE', you should use `AC_LANG_PUSH' and `AC_LANG_POP'.], [autoconf/lang.m4:166: AC_LANG_SAVE is expanded from...
-/usr/share/aclocal/libtool.m4:4108: _LT_AC_LANG_RC_CONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:4072: AC_LIBTOOL_LANG_RC_CONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:1898: _LT_AC_TAGCONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
-/usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
-/usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([objext], [RC])
 m4trace:configure.ac:30: -1- _LT_AC_SYS_COMPILER
@@ -9272,18 +9414,18 @@ m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([export_symbols_cmds], [RC])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([exclude_expsyms], [RC])
 m4trace:configure.ac:30: -1- _LT_AC_TAGVAR([include_expsyms], [RC])
 m4trace:configure.ac:30: -1- _m4_warn([obsolete], [The macro `AC_LANG_RESTORE' is obsolete.
-You should run autoupdate.], [autoconf/lang.m4:172: AC_LANG_RESTORE is expanded from...
-/usr/share/aclocal/libtool.m4:4108: _LT_AC_LANG_RC_CONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:4072: AC_LIBTOOL_LANG_RC_CONFIG is expanded from...
-/usr/share/aclocal/libtool.m4:1898: _LT_AC_TAGCONFIG is expanded from...
+You should run autoupdate.], [autoconf/lang.m4:176: AC_LANG_RESTORE is expanded from...
+/usr/share/aclocal/libtool.m4:4084: _LT_AC_LANG_RC_CONFIG is expanded from...
+/usr/share/aclocal/libtool.m4:4048: AC_LIBTOOL_LANG_RC_CONFIG is expanded from...
+/usr/share/aclocal/libtool.m4:1874: _LT_AC_TAGCONFIG is expanded from...
 /usr/share/aclocal/libtool.m4:220: AC_LIBTOOL_SETUP is expanded from...
-configure.ac:30: AC_LIBTOOL_SETUP is required by...
 /usr/share/aclocal/libtool.m4:75: _AC_PROG_LIBTOOL is expanded from...
-configure.ac:30: _AC_PROG_LIBTOOL is required by...
 /usr/share/aclocal/libtool.m4:55: AC_PROG_LIBTOOL is expanded from...
-/usr/share/aclocal/libtool.m4:6343: AM_PROG_LIBTOOL is expanded from...
+/usr/share/aclocal/libtool.m4:6307: AM_PROG_LIBTOOL is expanded from...
 configure.ac:30: the top level])
 m4trace:configure.ac:30: -1- AC_SUBST([LIBTOOL])
+m4trace:configure.ac:30: -1- AC_SUBST_TRACE([LIBTOOL])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^LIBTOOL$])
 m4trace:configure.ac:30: -1- AC_LIBTOOL_CXX
 m4trace:configure.ac:30: -1- _LT_AC_LANG_CXX
 m4trace:configure.ac:30: -1- _LT_AC_SHELL_INIT([tagnames=${tagnames+${tagnames},}CXX])
@@ -9294,8 +9436,11 @@ m4trace:configure.ac:32: -1- PKG_PROG_PKG_CONFIG
 m4trace:configure.ac:32: -1- m4_pattern_forbid([^_?PKG_[A-Z_]+$])
 m4trace:configure.ac:32: -1- m4_pattern_allow([^PKG_CONFIG(_PATH)?$])
 m4trace:configure.ac:32: -1- AC_SUBST([PKG_CONFIG])
-m4trace:configure.ac:32: -1- AC_SUBST([PKG_CONFIG], [$ac_cv_path_PKG_CONFIG])
-m4trace:configure.ac:32: -1- AC_SUBST([ac_pt_PKG_CONFIG], [$ac_cv_path_ac_pt_PKG_CONFIG])
+m4trace:configure.ac:32: -1- AC_SUBST_TRACE([PKG_CONFIG])
+m4trace:configure.ac:32: -1- m4_pattern_allow([^PKG_CONFIG$])
+m4trace:configure.ac:32: -1- AC_SUBST([PKG_CONFIG])
+m4trace:configure.ac:32: -1- AC_SUBST_TRACE([PKG_CONFIG])
+m4trace:configure.ac:32: -1- m4_pattern_allow([^PKG_CONFIG$])
 m4trace:configure.ac:41: -1- PKG_CHECK_MODULES([dbus], [dbus-1 >= $DBUS_REQUIRED_VERSION], [], [{ { echo "$as_me:$LINENO: error: You need the DBus libraries (version 0.6 or better)
 	http://www.freedesktop.org/wiki/Software_2fdbus" >&5
 echo "$as_me: error: You need the DBus libraries (version 0.6 or better)
@@ -9303,36 +9448,71 @@ echo "$as_me: error: You need the DBus libraries (version 0.6 or better)
    { (exit 1); exit 1; }; }
 ])
 m4trace:configure.ac:41: -1- AC_SUBST([dbus_CFLAGS])
+m4trace:configure.ac:41: -1- AC_SUBST_TRACE([dbus_CFLAGS])
+m4trace:configure.ac:41: -1- m4_pattern_allow([^dbus_CFLAGS$])
 m4trace:configure.ac:41: -1- AC_SUBST([dbus_LIBS])
+m4trace:configure.ac:41: -1- AC_SUBST_TRACE([dbus_LIBS])
+m4trace:configure.ac:41: -1- m4_pattern_allow([^dbus_LIBS$])
 m4trace:configure.ac:41: -1- PKG_CHECK_EXISTS([dbus-1 >= $DBUS_REQUIRED_VERSION], [pkg_cv_[]dbus_CFLAGS=`$PKG_CONFIG --[]cflags "dbus-1 >= $DBUS_REQUIRED_VERSION" 2>/dev/null`], [pkg_failed=yes])
 m4trace:configure.ac:41: -1- PKG_CHECK_EXISTS([dbus-1 >= $DBUS_REQUIRED_VERSION], [pkg_cv_[]dbus_LIBS=`$PKG_CONFIG --[]libs "dbus-1 >= $DBUS_REQUIRED_VERSION" 2>/dev/null`], [pkg_failed=yes])
 m4trace:configure.ac:41: -1- _PKG_SHORT_ERRORS_SUPPORTED
 m4trace:configure.ac:42: -1- AC_SUBST([dbus_CFLAGS])
+m4trace:configure.ac:42: -1- AC_SUBST_TRACE([dbus_CFLAGS])
+m4trace:configure.ac:42: -1- m4_pattern_allow([^dbus_CFLAGS$])
 m4trace:configure.ac:43: -1- AC_SUBST([dbus_LIBS])
+m4trace:configure.ac:43: -1- AC_SUBST_TRACE([dbus_LIBS])
+m4trace:configure.ac:43: -1- m4_pattern_allow([^dbus_LIBS$])
 m4trace:configure.ac:47: -1- AC_CHECK_LIB([expat], [XML_ParserCreate_MM], [ AC_CHECK_HEADERS(expat.h, have_expat=true, have_expat=false) ], [have_expat=false])
 m4trace:configure.ac:47: -1- AC_CHECK_HEADERS([expat.h], [have_expat=true], [have_expat=false])
 m4trace:configure.ac:47: -1- AH_OUTPUT([HAVE_EXPAT_H], [/* Define to 1 if you have the <expat.h> header file. */
 #undef HAVE_EXPAT_H])
 m4trace:configure.ac:57: -1- AC_SUBST([xml_CFLAGS])
+m4trace:configure.ac:57: -1- AC_SUBST_TRACE([xml_CFLAGS])
+m4trace:configure.ac:57: -1- m4_pattern_allow([^xml_CFLAGS$])
 m4trace:configure.ac:58: -1- AC_SUBST([xml_LIBS])
+m4trace:configure.ac:58: -1- AC_SUBST_TRACE([xml_LIBS])
+m4trace:configure.ac:58: -1- m4_pattern_allow([^xml_LIBS$])
 m4trace:configure.ac:63: -1- AC_SUBST([DEBUG_FLAGS])
-m4trace:configure.ac:68: -1- AC_SUBST([DOXYGEN], [$ac_cv_path_DOXYGEN])
+m4trace:configure.ac:63: -1- AC_SUBST_TRACE([DEBUG_FLAGS])
+m4trace:configure.ac:63: -1- m4_pattern_allow([^DEBUG_FLAGS$])
+m4trace:configure.ac:68: -1- AC_SUBST([DOXYGEN])
+m4trace:configure.ac:68: -1- AC_SUBST_TRACE([DOXYGEN])
+m4trace:configure.ac:68: -1- m4_pattern_allow([^DOXYGEN$])
 m4trace:configure.ac:88: -1- AM_CONDITIONAL([DBUS_DOXYGEN_DOCS_ENABLED], [test x$enable_doxygen_docs = xyes])
 m4trace:configure.ac:88: -1- AC_SUBST([DBUS_DOXYGEN_DOCS_ENABLED_TRUE])
+m4trace:configure.ac:88: -1- AC_SUBST_TRACE([DBUS_DOXYGEN_DOCS_ENABLED_TRUE])
+m4trace:configure.ac:88: -1- m4_pattern_allow([^DBUS_DOXYGEN_DOCS_ENABLED_TRUE$])
 m4trace:configure.ac:88: -1- AC_SUBST([DBUS_DOXYGEN_DOCS_ENABLED_FALSE])
-m4trace:configure.ac:103: -1- AC_CONFIG_FILES([Makefile
+m4trace:configure.ac:88: -1- AC_SUBST_TRACE([DBUS_DOXYGEN_DOCS_ENABLED_FALSE])
+m4trace:configure.ac:88: -1- m4_pattern_allow([^DBUS_DOXYGEN_DOCS_ENABLED_FALSE$])
+m4trace:configure.ac:105: -1- AC_CONFIG_FILES([Makefile
 	src/Makefile
 	tools/Makefile
 	data/Makefile
 	doc/Makefile
 	doc/Doxyfile
 	doc/html/Makefile
+	examples/Makefile
 	examples/properties/Makefile
+	examples/echo/Makefile
 	dbus-c++-0.3.pc
 ])
-m4trace:configure.ac:103: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
+m4trace:configure.ac:105: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
 You should run autoupdate.], [])
-m4trace:configure.ac:103: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
-m4trace:configure.ac:103: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
-m4trace:configure.ac:103: -1- _AC_AM_CONFIG_HEADER_HOOK([$ac_file])
-m4trace:configure.ac:103: -1- _AM_OUTPUT_DEPENDENCY_COMMANDS
+m4trace:configure.ac:105: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
+m4trace:configure.ac:105: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
+m4trace:configure.ac:105: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.ac:105: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
+m4trace:configure.ac:105: -1- AC_SUBST_TRACE([LTLIBOBJS])
+m4trace:configure.ac:105: -1- m4_pattern_allow([^LTLIBOBJS$])
+m4trace:configure.ac:105: -1- AC_SUBST_TRACE([top_builddir])
+m4trace:configure.ac:105: -1- AC_SUBST_TRACE([srcdir])
+m4trace:configure.ac:105: -1- AC_SUBST_TRACE([abs_srcdir])
+m4trace:configure.ac:105: -1- AC_SUBST_TRACE([top_srcdir])
+m4trace:configure.ac:105: -1- AC_SUBST_TRACE([abs_top_srcdir])
+m4trace:configure.ac:105: -1- AC_SUBST_TRACE([builddir])
+m4trace:configure.ac:105: -1- AC_SUBST_TRACE([abs_builddir])
+m4trace:configure.ac:105: -1- AC_SUBST_TRACE([abs_top_builddir])
+m4trace:configure.ac:105: -1- AC_SUBST_TRACE([INSTALL])
+m4trace:configure.ac:105: -1- _AC_AM_CONFIG_HEADER_HOOK([$ac_file])
+m4trace:configure.ac:105: -1- _AM_OUTPUT_DEPENDENCY_COMMANDS
