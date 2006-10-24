@@ -301,11 +301,33 @@ void MessageIter::close_container( MessageIter& container )
 	dbus_message_iter_close_container((DBusMessageIter*)&_iter, (DBusMessageIter*)&(container._iter));
 }
 
+static bool is_basic_type(int typecode)
+{
+	switch(typecode)
+	{
+		case 'y':
+		case 'b':
+		case 'n':
+		case 'q':
+		case 'i':
+		case 'u':
+		case 'x':
+		case 't':
+		case 'd':
+		case 's':
+		case 'o':
+		case 'g':
+			return true;
+		default:
+			return false;
+	}
+}
+
 void MessageIter::copy_data( MessageIter& to )
 {
 	for(MessageIter& from = *this; !from.at_end(); ++from)
 	{
-		if(dbus_type_is_basic(from.type()))
+		if(is_basic_type(from.type()))
 		{
 			debug_log("copying basic type: %c", from.type());
 
