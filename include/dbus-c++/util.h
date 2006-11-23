@@ -238,7 +238,7 @@ public:
 
 	bool empty()
 	{
-		return _cb.get() != 0;
+		return _cb.get() == 0;
 	}
 
 private:

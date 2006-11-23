@@ -205,13 +205,13 @@ void generate_proxy( Xml::Document& doc, const char* filename )
 	std::string filestring = filename;
 	underscorize(filestring);
 
-	std::string cond_comp = "__dbusxx__" + filestring + "__CLIENT_MARSHAL_H";
+	std::string cond_comp = "__dbusxx__" + filestring + "__PROXY_MARSHAL_H";
 
 	file << "#ifndef " << cond_comp << endl;
 	file << "#define " << cond_comp << endl;
 
 	file << dbus_includes;
-#if 0
+
 	Xml::Node& root = *(doc.root);
 	Xml::Nodes interfaces = root["interface"];
 
@@ -220,14 +220,42 @@ void generate_proxy( Xml::Document& doc, const char* filename )
 		Xml::Node& iface = **i;
 		Xml::Nodes methods = iface["method"];
 		Xml::Nodes signals = iface["signal"];
+		Xml::Nodes properties = iface["property"];
+		Xml::Nodes ms;
+		ms.insert(ms.end(), methods.begin(), methods.end());
+		ms.insert(ms.end(), signals.begin(), signals.end());
 
 		std::string ifacename = iface.get("name");
-		std::string ifaceclass = ifacename;
-		underscorize(ifaceclass);
+		if(ifacename == "org.freedesktop.DBus.Introspectable"
+		 ||ifacename == "org.freedesktop.DBus.Properties")
+		{
+			cerr << "skipping interface " << ifacename << endl;
+			continue;
+		}
+
+		std::istringstream ss(ifacename);
+		string nspace;
+		size_t nspaces = 0;
+
+		while(ss.str().find('.', ss.tellg()) != string::npos)
+		{
+			getline(ss, nspace, '.');
+
+			file << "namespace " << nspace << " {" << endl;
+
+			++nspaces;
+		}
+		file << endl;
+
+		std::string ifaceclass;
+
+		getline(ss, ifaceclass);
 
 		cerr << "generating code for interface " << ifacename << "..." << endl;
 
-		file << "class " << ifaceclass << " : public ::DBus::InterfaceProxy" << endl
+
+		file << "class " << ifaceclass << endl
+		     << " : public ::DBus::InterfaceProxy" << endl
 		     << "{" << endl
 		     << "public:" << endl
 		     << endl
@@ -241,62 +269,69 @@ void generate_proxy( Xml::Document& doc, const char* filename )
 
 			std::string marshname = "_" + signal.get("name") + "_stub";
 
-			file << tab << tab << "connect_signal(" << ifaceclass << ", " << marshname << ");" << endl;
+			file << tab << tab << "connect_signal(" 
+			     << ifaceclass << ", " << signal.get("name") << ", " << stub_name(signal.get("name"))
+			     << ");" << endl;
 		}
 
 		file << tab << "}" << endl
 		     << endl;
 
-		for(Xml::Nodes::iterator j = methods.begin(); j != methods.end(); ++j)
-		{
-			Xml::Node& method = **j;
-			std::string methodname = method.get("name");
-			std::string marshname = "_" + methodname + "_stub";
+		file << "public:" << endl
+		     << endl
+		     << tab << "/* methods exported by this interface," << endl
+		     << tab << " * this functions will invoke the corresponding methods on the remote objects" << endl
+		     << tab << " */" << endl;
 
+		for(Xml::Nodes::iterator mi = methods.begin(); mi != methods.end(); ++mi)
+		{
+			Xml::Node& method = **mi;
 			Xml::Nodes args = method["arg"];
 			Xml::Nodes args_in = args.select("direction","in");
 			Xml::Nodes args_out = args.select("direction","out");
 
-			file << endl;
-
-			if(args_out.size() == 1)
+			if(args_out.size() == 0 || args_out.size() > 1 )
 			{
-				std::string ret_type = args_out.front()->get("type");
-				std::string ret_sig;
-
-				if(is_atomic_type(ret_type))
-				{
-					ret_sig = atomic_type_to_string(ret_type[0]);
-				}
-				else
-				{
-				}
-
-				file << tab << ret_sig << " " << methodname << "( ";
-
-				for(Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai)
-				{
-					Xml::Node& a = **ai;
-
-					file << "const ";
-
-					if(is_atomic_type(a.get("type")))
-					{
-						file << atomic_type_to_string(a.get("type")[0]);
-					}
-					else
-					{
-					}
-
-					file << "& " << a.get("name") << ( ai+1 != args_in.end() ? ", " : " " );
-				}
-
-				file << ")" << endl;
+				file << tab << "void ";
 			}
-			else
+			else if(args_out.size() == 1)
 			{
-				file << tab << "void " << methodname << "( args )" << endl;
+				file << tab << signature_to_type(args_out.front()->get("type")) << " ";
 			}
+
+			file << method.get("name") << "( ";
+			
+			unsigned int i = 0;
+			for(Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
+			{
+				Xml::Node& arg = **ai;
+				file << "const " << signature_to_type(arg.get("type")) << "& ";
+
+				std::string arg_name = arg.get("name");
+				if(arg_name.length())
+					file << arg_name;
+
+				if((i+1 != args_in.size() || args_out.size() > 1))
+					file << ", ";
+			}
+
+			if(args_out.size() > 1)
+			{
+				unsigned int i = 0;
+				for(Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
+				{
+					Xml::Node& arg = **ao;
+					file << signature_to_type(arg.get("type")) << "&";
+
+					std::string arg_name = arg.get("name");
+					if(arg_name.length())
+						file << " " << arg_name;
+
+					if(i+1 != args_out.size())
+						file << ", ";
+				}		
+			}
+			file << " )" << endl;
 
 			file << tab << "{" << endl
 			     << tab << tab << "::DBus::CallMessage call;" << endl
@@ -308,7 +343,7 @@ void generate_proxy( Xml::Document& doc, const char* filename )
 				Xml::Node& arg = **ai;
 			}
 
-			file << tab << tab << "call.member(\"" << methodname << "\");" << endl
+			file << tab << tab << "call.member(\"" << method.get("name") << "\");" << endl
 			     << tab << tab << "::DBus::Message ret = invoke_method(call);" << endl
 			     << tab << tab << "::DBus::MessageIter ri = ret.reader();" << endl
 			     << endl;
@@ -321,7 +356,7 @@ void generate_proxy( Xml::Document& doc, const char* filename )
 		file << "};" << endl
 		     << endl;
 	}
-#endif
+
 	file << "#endif//" << cond_comp << endl;
 
 	file.close();

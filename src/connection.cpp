@@ -149,9 +149,11 @@ void Connection::Private::dispatch_status_stub( DBusConnection* dc, DBusDispatch
 	}
 }
 
-DBusHandlerResult Connection::Private::message_filter_stub( DBusConnection*, DBusMessage* dmsg, void* data )
+DBusHandlerResult Connection::Private::message_filter_stub( DBusConnection* conn, DBusMessage* dmsg, void* data )
 {
 	MessageSlot* slot = static_cast<MessageSlot*>(data);
+
+	debug_log("incoming message on connection %p", conn);
 
 	Message msg = Message(new Message::Private(dmsg));
 

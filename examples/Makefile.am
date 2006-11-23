@@ -1,2 +1,2 @@
-SUBDIRS = properties echo
+SUBDIRS = properties echo hal
 
