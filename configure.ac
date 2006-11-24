@@ -101,6 +101,5 @@ AC_OUTPUT(
 	examples/properties/Makefile
 	examples/echo/Makefile
 	examples/hal/Makefile
-	examples/tcp/Makefile
 	dbus-c++-0.3.pc
 )
