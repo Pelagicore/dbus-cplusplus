@@ -86,14 +86,15 @@ unsigned char MessageIter::get_byte()
 
 bool MessageIter::append_bool( bool b )
 {
-	return append_basic(DBUS_TYPE_BOOLEAN, &b);
+	dbus_bool_t db = b;
+	return append_basic(DBUS_TYPE_BOOLEAN, &db);
 }
 
 bool MessageIter::get_bool()	
 {
- 	bool b;
-	get_basic(DBUS_TYPE_BOOLEAN, &b);
- 	return b;
+ 	dbus_bool_t db;
+	get_basic(DBUS_TYPE_BOOLEAN, &db);
+ 	return (bool)db;
 }
 
 bool MessageIter::append_int16( signed short i )
