@@ -113,19 +113,19 @@ public:
 
 	int get_array( void* ptr );
 
-	MessageIter new_array( const char* sig );
+	int array_length();
 
 	bool is_array();
 
-	int array_length();
-
-	MessageIter new_dict_entry();
-
 	bool is_dict();
+
+	MessageIter new_array( const char* sig );
 
 	MessageIter new_variant( const char* sig );
 
 	MessageIter new_struct();
+
+	MessageIter new_dict_entry();
 
 	void close_container( MessageIter& container );
 

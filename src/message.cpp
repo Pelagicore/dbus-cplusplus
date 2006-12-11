@@ -246,13 +246,9 @@ int MessageIter::get_array( void* ptr )
 	return length;
 }
 
-MessageIter MessageIter::new_array( const char* sig )
+int MessageIter::array_length()
 {
-	MessageIter arr(msg());
-	dbus_message_iter_open_container(
-		(DBusMessageIter*)&_iter, DBUS_TYPE_ARRAY, sig, (DBusMessageIter*)&(arr._iter)
-	);
-	return arr;
+	return dbus_message_iter_get_array_len((DBusMessageIter*)&_iter);
 }
 
 bool MessageIter::is_array()
@@ -260,23 +256,18 @@ bool MessageIter::is_array()
 	return dbus_message_iter_get_arg_type((DBusMessageIter*)&_iter) == DBUS_TYPE_ARRAY;
 }
 
-int MessageIter::array_length()
-{
-	return dbus_message_iter_get_array_len((DBusMessageIter*)&_iter);
-}
-
-MessageIter MessageIter::new_dict_entry()
-{
-	MessageIter ent(msg());
-	dbus_message_iter_open_container(
-		(DBusMessageIter*)_iter, DBUS_TYPE_DICT_ENTRY, 0, (DBusMessageIter*)&(ent._iter)
-	);
-	return ent;
-}
-
 bool MessageIter::is_dict()
 {
 	return is_array() && dbus_message_iter_get_element_type((DBusMessageIter*)_iter) == DBUS_TYPE_DICT_ENTRY;
+}
+
+MessageIter MessageIter::new_array( const char* sig )
+{
+	MessageIter arr(msg());
+	dbus_message_iter_open_container(
+		(DBusMessageIter*)&_iter, DBUS_TYPE_ARRAY, sig, (DBusMessageIter*)&(arr._iter)
+	);
+	return arr;
 }
 
 MessageIter MessageIter::new_variant( const char* sig )
@@ -292,9 +283,18 @@ MessageIter MessageIter::new_struct()
 {
 	MessageIter stu(msg());
 	dbus_message_iter_open_container(
-		(DBusMessageIter*)_iter, DBUS_TYPE_STRUCT, 0, (DBusMessageIter*)&(stu._iter)
+		(DBusMessageIter*)_iter, DBUS_TYPE_STRUCT, NULL, (DBusMessageIter*)&(stu._iter)
 	);
 	return stu;
+}
+
+MessageIter MessageIter::new_dict_entry()
+{
+	MessageIter ent(msg());
+	dbus_message_iter_open_container(
+		(DBusMessageIter*)_iter, DBUS_TYPE_DICT_ENTRY, NULL, (DBusMessageIter*)&(ent._iter)
+	);
+	return ent;
 }
 
 void MessageIter::close_container( MessageIter& container )

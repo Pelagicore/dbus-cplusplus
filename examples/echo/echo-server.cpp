@@ -1,4 +1,5 @@
 #include "echo-server.h"
+#include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
 
@@ -34,6 +35,18 @@ DBus::Int32 EchoServer::Sum( const std::vector<DBus::Int32>& ints )
 	for(size_t i = 0; i < ints.size(); ++i) sum += ints[i];
 
 	return sum;	
+}
+
+std::map< DBus::String, DBus::String > EchoServer::Info()
+{
+	std::map< DBus::String, DBus::String > info;
+	char hostname[HOST_NAME_MAX];
+
+	gethostname(hostname, sizeof(hostname));
+	info["hostname"] = hostname;
+	info["username"] = getlogin();
+
+	return info;
 }
 
 

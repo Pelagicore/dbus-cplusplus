@@ -295,7 +295,7 @@ inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const std::vect
 template<typename K, typename V>
 inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const std::map<K,V>& val )
 {
-	const std::string sig = DBus::type<K>::sig() + DBus::type<V>::sig();
+	const std::string sig = "{" + DBus::type<K>::sig() + DBus::type<V>::sig() + "}";
 	DBus::MessageIter ait = iter.new_array(sig.c_str());
 
 	typename std::map<K,V>::const_iterator mit;

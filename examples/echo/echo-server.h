@@ -20,6 +20,8 @@ public:
 	DBus::Variant Echo( const DBus::Variant & value );
 
 	DBus::Int32 Sum( const std::vector<DBus::Int32> & ints );
+
+	std::map< DBus::String, DBus::String > Info();
 };
 
 #endif//__DEMO_ECHO_SERVER_H

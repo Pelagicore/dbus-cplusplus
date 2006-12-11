@@ -19,5 +19,8 @@
     <signal name="Echoed">
       <arg type="v" name="value"/>
     </signal>
+    <method name="Info">
+      <arg type="a{ss}" name="info" direction="out"/>
+    </method>
   </interface>
 </node>
