@@ -58,7 +58,7 @@ void usage( const char* argv0 )
 	exit(-1);
 }
 
-void underscorize( std::string& str )
+void underscorize( string& str )
 {
 	for(unsigned int i = 0; i < str.length(); ++i)
 	{
@@ -66,7 +66,7 @@ void underscorize( std::string& str )
 	}
 }
 
-std::string stub_name( std::string name )
+string stub_name( string name )
 {
 	underscorize(name);
 
@@ -109,12 +109,12 @@ const char* atomic_type_to_string( char t )
 	return atos[i].name;
 }
 
-bool is_atomic_type( const std::string& type )
+bool is_atomic_type( const string& type )
 {
 	return type.length() == 1 && char_to_atomic_type(type[0]) != DBUS_TYPE_INVALID;
 }
 
-void _parse_signature( const std::string& signature, std::string& type, size_t& i )
+void _parse_signature( const string& signature, string& type, unsigned int& i )
 {
 	for(; i < signature.length(); ++i)
 	{
@@ -182,10 +182,10 @@ void _parse_signature( const std::string& signature, std::string& type, size_t& 
 	}
 }
 
-std::string signature_to_type( const std::string& signature )
+string signature_to_type( const string& signature )
 {
-	std::string type;
-	size_t i = 0;
+	string type;
+	unsigned int i = 0;
 	_parse_signature(signature, type, i);
 	return type;
 }
@@ -202,10 +202,10 @@ void generate_proxy( Xml::Document& doc, const char* filename )
 	}
 
 	file << header;
-	std::string filestring = filename;
+	string filestring = filename;
 	underscorize(filestring);
 
-	std::string cond_comp = "__dbusxx__" + filestring + "__PROXY_MARSHAL_H";
+	string cond_comp = "__dbusxx__" + filestring + "__PROXY_MARSHAL_H";
 
 	file << "#ifndef " << cond_comp << endl;
 	file << "#define " << cond_comp << endl;
@@ -225,7 +225,7 @@ void generate_proxy( Xml::Document& doc, const char* filename )
 		ms.insert(ms.end(), methods.begin(), methods.end());
 		ms.insert(ms.end(), signals.begin(), signals.end());
 
-		std::string ifacename = iface.get("name");
+		string ifacename = iface.get("name");
 		if(ifacename == "org.freedesktop.DBus.Introspectable"
 		 ||ifacename == "org.freedesktop.DBus.Properties")
 		{
@@ -233,9 +233,9 @@ void generate_proxy( Xml::Document& doc, const char* filename )
 			continue;
 		}
 
-		std::istringstream ss(ifacename);
+		istringstream ss(ifacename);
 		string nspace;
-		size_t nspaces = 0;
+		unsigned int nspaces = 0;
 
 		while(ss.str().find('.', ss.tellg()) != string::npos)
 		{
@@ -247,12 +247,11 @@ void generate_proxy( Xml::Document& doc, const char* filename )
 		}
 		file << endl;
 
-		std::string ifaceclass;
+		string ifaceclass;
 
 		getline(ss, ifaceclass);
 
 		cerr << "generating code for interface " << ifacename << "..." << endl;
-
 
 		file << "class " << ifaceclass << endl
 		     << " : public ::DBus::InterfaceProxy" << endl
@@ -267,7 +266,7 @@ void generate_proxy( Xml::Document& doc, const char* filename )
 		{
 			Xml::Node& signal = **si;
 
-			std::string marshname = "_" + signal.get("name") + "_stub";
+			string marshname = "_" + signal.get("name") + "_stub";
 
 			file << tab << tab << "connect_signal(" 
 			     << ifaceclass << ", " << signal.get("name") << ", " << stub_name(signal.get("name"))
@@ -307,9 +306,11 @@ void generate_proxy( Xml::Document& doc, const char* filename )
 				Xml::Node& arg = **ai;
 				file << "const " << signature_to_type(arg.get("type")) << "& ";
 
-				std::string arg_name = arg.get("name");
+				string arg_name = arg.get("name");
 				if(arg_name.length())
 					file << arg_name;
+				else
+					file << "argin" << i;
 
 				if((i+1 != args_in.size() || args_out.size() > 1))
 					file << ", ";
@@ -323,38 +324,168 @@ void generate_proxy( Xml::Document& doc, const char* filename )
 					Xml::Node& arg = **ao;
 					file << signature_to_type(arg.get("type")) << "&";
 
-					std::string arg_name = arg.get("name");
+					string arg_name = arg.get("name");
 					if(arg_name.length())
 						file << " " << arg_name;
+					else
+						file << " argout" << i;
 
 					if(i+1 != args_out.size())
 						file << ", ";
-				}		
+				}
 			}
 			file << " )" << endl;
 
 			file << tab << "{" << endl
-			     << tab << tab << "::DBus::CallMessage call;" << endl
-			     << tab << tab << "::DBus::MessageIter wi = call.writer();" << endl
-			     << endl;
+			     << tab << tab << "::DBus::CallMessage call;" << endl;
 
-			for(Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai)
+			if(args_in.size() > 0)
+			{
+				file << tab << tab << "::DBus::MessageIter wi = call.writer();" << endl
+				     << endl;
+			}
+
+			unsigned int j = 0;
+			for(Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++j)
 			{
 				Xml::Node& arg = **ai;
+				string arg_name = arg.get("name");
+				if(arg_name.length())
+					file << tab << tab << "wi << " << arg_name << ";" << endl;
+				else
+					file << tab << tab << "wi << argout" << j << ";" << endl;
 			}
 
 			file << tab << tab << "call.member(\"" << method.get("name") << "\");" << endl
-			     << tab << tab << "::DBus::Message ret = invoke_method(call);" << endl
-			     << tab << tab << "::DBus::MessageIter ri = ret.reader();" << endl
-			     << endl;
+			     << tab << tab << "::DBus::Message ret = invoke_method(call);" << endl;
+
+
+			if(args_out.size() > 0)
+			{
+				file << tab << tab << "::DBus::MessageIter ri = ret.reader();" << endl
+				     << endl;
+			}
+
+			if(args_out.size() == 1)
+			{
+				file << tab << tab << signature_to_type(args_out.front()->get("type")) << " argout;" << endl;
+				file << tab << tab << "ri >> argout;" << endl;
+				file << tab << tab << "return argout;" << endl;
+			}
+			else if(args_out.size() > 1)
+			{
+				unsigned int i = 0;
+				for(Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
+				{
+					Xml::Node& arg = **ao;
+
+					string arg_name = arg.get("name");
+					if(arg_name.length())
+						file << tab << tab << "ri >> " << arg.get("name") << ";" << endl;
+					else
+						file << tab << tab << "ri >> argout" << i << ";" << endl;
+				}
+			}
 
 			file << tab << "}" << endl
 			     << endl;
-			
 		}
+
+		file << endl
+		     << "public:" << endl
+		     << endl
+		     << tab << "/* signal handlers for this interface" << endl
+		     << tab << " */" << endl;
+
+		for(Xml::Nodes::iterator si = signals.begin(); si != signals.end(); ++si)
+		{
+			Xml::Node& signal = **si;
+			Xml::Nodes args = signal["arg"];
+
+			file << tab << "virtual void " << signal.get("name") << "( ";
+
+			unsigned int i = 0;
+			for(Xml::Nodes::iterator ai = args.begin(); ai != args.end(); ++ai, ++i)
+			{
+				Xml::Node& arg = **ai;
+				file << "const " << signature_to_type(arg.get("type")) << "& ";
+
+				string arg_name = arg.get("name");
+				if(arg_name.length())
+					file << arg_name;
+				else
+					file << "argin" << i;
+
+				if((ai+1 != args.end()))
+					file << ", ";
+			}
+			file << " ) = 0;" << endl;
+		}
+
+		file << endl
+		     << "private:" << endl
+		     << endl
+		     << tab << "/* unmarshalers (to unpack the DBus message before calling the actual signal handler)" << endl
+		     << tab << " */" << endl;
+
+		for(Xml::Nodes::iterator si = signals.begin(); si != signals.end(); ++si)
+		{
+			Xml::Node& signal = **si;
+			Xml::Nodes args = signal["arg"];
+
+			file << tab << "void " << stub_name(signal.get("name")) << "( const ::DBus::SignalMessage& sig )" << endl
+			     << tab << "{" << endl;
+
+			if(args.size() > 0)
+			{
+				file << tab << tab << "::DBus::MessageIter ri = sig.reader();" << endl
+				     << endl;
+			}
+
+			unsigned int i = 0;
+			for(Xml::Nodes::iterator ai = args.begin(); ai != args.end(); ++ai, ++i)
+			{
+				Xml::Node& arg = **ai;
+				file << tab << tab << signature_to_type(arg.get("type")) << " " ;
+
+				string arg_name = arg.get("name");
+				if(arg_name.length())
+					file << arg_name << ";" << " ri >> " << arg_name << ";" << endl;
+				else
+					file << "arg" << i << ";" << " ri >> " << "arg" << i << ";" << endl;
+			}
+
+			file << tab << tab << signal.get("name") << "(";
+
+			unsigned int j = 0;
+			for(Xml::Nodes::iterator ai = args.begin(); ai != args.end(); ++ai, ++j)
+			{
+				Xml::Node& arg = **ai;
+
+				string arg_name = arg.get("name");
+				if(arg_name.length())
+					file << arg_name;
+				else
+					file << "arg" << j;
+
+				if(ai+1 != args.end())
+					file << ", ";
+			}
+
+			file << ");" << endl;
+
+			file << tab << "}" << endl;
+		}
+
 
 		file << "};" << endl
 		     << endl;
+
+		for(unsigned int i = 0; i < nspaces; ++i)
+		{
+			file << "} ";
+		}
+		file << endl;
 	}
 
 	file << "#endif//" << cond_comp << endl;
@@ -374,10 +505,10 @@ void generate_adaptor( Xml::Document& doc, const char* filename )
 	}
 
 	file << header;
-	std::string filestring = filename;
+	string filestring = filename;
 	underscorize(filestring);
 
-	std::string cond_comp = "__dbusxx__" + filestring + "__ADAPTOR_MARSHAL_H";
+	string cond_comp = "__dbusxx__" + filestring + "__ADAPTOR_MARSHAL_H";
 
 	file << "#ifndef " << cond_comp << endl
 	     << "#define " << cond_comp << endl;
@@ -397,7 +528,7 @@ void generate_adaptor( Xml::Document& doc, const char* filename )
 		ms.insert(ms.end(), methods.begin(), methods.end());
 		ms.insert(ms.end(), signals.begin(), signals.end());
 
-		std::string ifacename = iface.get("name");
+		string ifacename = iface.get("name");
 		if(ifacename == "org.freedesktop.DBus.Introspectable"
 		 ||ifacename == "org.freedesktop.DBus.Properties")
 		{
@@ -405,9 +536,9 @@ void generate_adaptor( Xml::Document& doc, const char* filename )
 			continue;
 		}
 
-		std::istringstream ss(ifacename);
+		istringstream ss(ifacename);
 		string nspace;
-		size_t nspaces = 0;
+		unsigned int nspaces = 0;
 
 		while(ss.str().find('.', ss.tellg()) != string::npos)
 		{
@@ -419,7 +550,7 @@ void generate_adaptor( Xml::Document& doc, const char* filename )
 		}
 		file << endl;
 
-		std::string ifaceclass;
+		string ifaceclass;
 
 		getline(ss, ifaceclass);
 
@@ -566,9 +697,9 @@ void generate_adaptor( Xml::Document& doc, const char* filename )
 		for(Xml::Nodes::iterator pi = properties.begin(); pi != properties.end(); ++pi)
 		{
 			Xml::Node& property = **pi;
-			std::string name = property.get("name");
-			std::string type = property.get("type");
-			std::string type_name = signature_to_type(type);
+			string name = property.get("name");
+			string type = property.get("type");
+			string type_name = signature_to_type(type);
 
 			file << tab << "::DBus::PropertyAdaptor< " << type_name << " > " << name << ";" << endl;
 		}
@@ -607,7 +738,7 @@ void generate_adaptor( Xml::Document& doc, const char* filename )
 				Xml::Node& arg = **ai;
 				file << "const " << signature_to_type(arg.get("type")) << "& ";
 
-				std::string arg_name = arg.get("name");
+				string arg_name = arg.get("name");
 				if(arg_name.length())
 					file << arg_name;
 
@@ -623,7 +754,7 @@ void generate_adaptor( Xml::Document& doc, const char* filename )
 					Xml::Node& arg = **ao;
 					file << signature_to_type(arg.get("type")) << "&";
 
-					std::string arg_name = arg.get("name");
+					string arg_name = arg.get("name");
 					if(arg_name.length())
 						file << " " << arg_name;
 
@@ -637,7 +768,7 @@ void generate_adaptor( Xml::Document& doc, const char* filename )
 		file << endl
 		     << "public:" << endl
 		     << endl
-		     << tab << "/* signals emitted by this interface" << endl
+		     << tab << "/* signal emitters for this interface" << endl
 		     << tab << " */" << endl;
 
 		for(Xml::Nodes::iterator si = signals.begin(); si != signals.end(); ++si)
@@ -680,7 +811,7 @@ void generate_adaptor( Xml::Document& doc, const char* filename )
 		file << endl
 		     << "private:" << endl
 		     << endl
-		     << tab << "/* marshalers (to unpack the DBus message before calling the actual interface method)" << endl
+		     << tab << "/* unmarshalers (to unpack the DBus message before calling the actual interface method)" << endl
 		     << tab << " */" << endl;
 
 		for(Xml::Nodes::iterator mi = methods.begin(); mi != methods.end(); ++mi)
@@ -763,7 +894,7 @@ void generate_adaptor( Xml::Document& doc, const char* filename )
 		file << "};" << endl
 		     << endl;
 
-		for(size_t i = 0; i < nspaces; ++i)
+		for(unsigned int i = 0; i < nspaces; ++i)
 		{
 			file << "} ";
 		}
