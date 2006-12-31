@@ -10,3 +10,6 @@ index.html: Doxyfile
 	doxygen Doxyfile
 
 endif
+
+MAINTAINERCLEANFILES = \
+	Makefile.in

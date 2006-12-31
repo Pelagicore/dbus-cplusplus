@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function autocmd()
 {
@@ -9,10 +9,10 @@ function autocmd()
 	}
 }
 
+autocmd libtoolize --force --copy
 autocmd aclocal
-autocmd automake -acf
-autocmd autoconf
-autocmd libtoolize -f
 autocmd autoheader
+autocmd automake --add-missing --force-missing --copy -Wall
+autocmd autoconf
 
 echo "Autogen done, now you can ./configure"

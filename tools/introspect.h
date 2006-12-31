@@ -1,8 +1,8 @@
 /*
  *
- *  D-Bus++ - C++ bindings for DBus
+ *  D-Bus++ - C++ bindings for D-Bus
  *
- *  Copyright (C) 2005-2006  Paolo Durante <shackan@gmail.com>
+ *  Copyright (C) 2005-2007  Paolo Durante <shackan@gmail.com>
  *
  *
  *  This library is free software; you can redistribute it and/or

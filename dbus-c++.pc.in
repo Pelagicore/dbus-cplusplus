@@ -7,5 +7,5 @@ Name: dbus-c++
 Description: Native C++ bindings for D-Bus.
 Requires: dbus-1
 Version: @VERSION@
-Libs: -L${libdir} -ldbus-c++-0.3
-Cflags: -I${includedir}/dbus-c++-0.3 -DDBUS_API_SUBJECT_TO_CHANGE
+Libs: -L${libdir} -ldbus-c++-1
+Cflags: -I${includedir}/dbus-c++ -DDBUS_API_SUBJECT_TO_CHANGE

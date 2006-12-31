@@ -1,7 +1,7 @@
-# Autojunk script for libdbus++
+# Autojunk script for libdbus-c++
 
 AC_PREREQ(2.59)
-AC_INIT([libdbus-c++], 0.3.0, [shackan@gmail.com])
+AC_INIT([libdbus-c++], 0.5.0, [shackan@gmail.com])
 
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_CONFIG_HEADER([include/dbus-c++/config.h])
@@ -11,12 +11,17 @@ AC_CANONICAL_HOST
 
 # Set configuration options
 
+AC_ARG_ENABLE(debug,
+	AS_HELP_STRING([--enable-debug],
+		[enable debugging support]),
+	enable_debug=$enableval,enable_debug=auto
+)
+
 AC_ARG_ENABLE(doxygen-docs,
 	AS_HELP_STRING([--enable-doxygen-docs],
 		[build DOXYGEN documentation (requires Doxygen)]),
 	enable_doxygen_docs=$enableval,enable_doxygen_docs=auto
 )
-
 
 # Check for programs
 
@@ -25,8 +30,6 @@ AC_LANG_CPLUSPLUS
 AC_PROG_CC
 AC_PROG_CXX
 
-#AM_ENABLE_STATIC
-#AM_DISABLE_SHARED
 AM_PROG_LIBTOOL
 
 PKG_PROG_PKG_CONFIG
@@ -57,10 +60,11 @@ xml_LIBS=-lexpat
 AC_SUBST(xml_CFLAGS)
 AC_SUBST(xml_LIBS)
 
-CXXFLAGS="-ggdb -O0 -DDEBUG -Wall"
-#CXXFLAGS="-O3 -DDEBUG -Wall"
-
-AC_SUBST(DEBUG_FLAGS)
+if test x$enable_debug = xyes ; then
+	CXXFLAGS="-Wall -ggdb -O0 -DDEBUG"
+else
+	CXXFLAGS="-Wall -O3 -DDEBUG"
+fi
 
 
 # Doxygen Documentation
@@ -79,7 +83,7 @@ if test x$enable_doxygen_docs = xauto ; then
     enable_doxygen_docs=no
 fi
 
-if test x$enable_doxygen_docs = xyes; then
+if test x$enable_doxygen_docs = xyes ; then
     if test x$have_doxygen = xno; then
 	AC_MSG_ERROR([Building Doxygen docs explicitly required, but Doxygen not found])
     fi
@@ -101,5 +105,5 @@ AC_OUTPUT(
 	examples/properties/Makefile
 	examples/echo/Makefile
 	examples/hal/Makefile
-	dbus-c++-0.3.pc
+	dbus-c++.pc
 )
