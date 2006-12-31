@@ -30,6 +30,9 @@ AC_LANG_CPLUSPLUS
 AC_PROG_CC
 AC_PROG_CXX
 
+CXX_FOR_BUILD=${CXX_FOR_BUILD-${CXX}}
+AC_SUBST(CXX_FOR_BUILD)
+
 AM_PROG_LIBTOOL
 
 PKG_PROG_PKG_CONFIG
@@ -92,6 +95,20 @@ fi
 AM_CONDITIONAL(DBUS_DOXYGEN_DOCS_ENABLED, test x$enable_doxygen_docs = xyes)
 AC_MSG_RESULT(yes)
 
+
+# For the tools/, we need libdbus-c++ for the "build" architecture as well
+
+AM_CONDITIONAL(CROSS_COMPILING, test $cross_compiling = yes)
+
+AC_ARG_WITH(build-libdbus-cxx,
+    AS_HELP_STRING([--with-build-libdbus-cxx],[For cross compilation: path to
+    libdbus-cxx which was compiled for the 'build' system.]),
+    [ BUILD_LIBDBUS_CXX_DIR=${withval} ],
+    [ BUILD_LIBDBUS_CXX_DIR="\$(top_builddir)" ]
+)
+AC_SUBST(BUILD_LIBDBUS_CXX_DIR)
+
+
 # Save processed files
 
 AC_OUTPUT(
@@ -105,5 +122,5 @@ AC_OUTPUT(
 	examples/properties/Makefile
 	examples/echo/Makefile
 	examples/hal/Makefile
-	dbus-c++.pc
+	dbus-c++-1.pc
 )

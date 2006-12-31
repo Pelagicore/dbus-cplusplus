@@ -14,7 +14,7 @@ BUILT_SOURCES = props-glue.h
 CLEANFILES = $(BUILT_SOURCES)
 
 dist-hook:
-       cd $(distdir); rm -f $(BUILT_SOURCES)
+	cd $(distdir); rm -f $(BUILT_SOURCES)
 
 MAINTAINERCLEANFILES = \
 	Makefile.in

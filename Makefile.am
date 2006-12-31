@@ -3,7 +3,7 @@ SUBDIRS = src tools data doc examples
 EXTRA_DIST = autogen.sh
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = dbus-c++.pc
+pkgconfig_DATA = dbus-c++-1.pc
 
 MAINTAINERCLEANFILES = \
 	configure \
