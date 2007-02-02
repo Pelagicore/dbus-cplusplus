@@ -288,7 +288,9 @@ inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const std::vect
 template<>
 inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const std::vector<DBus::Byte>& val )
 {
-	iter.append_array('y', &val.front(), val.size());
+	DBus::MessageIter ait = iter.new_array("y");
+	ait.append_array('y', &val.front(), val.size());
+	iter.close_container(ait);
 	return iter;
 }
 
@@ -447,9 +449,12 @@ inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, std::vector<DBu
 	if(iter.array_type() != 'y')
 		throw DBus::ErrorInvalidArgs("byte-array expected");
 
-	val.reserve(iter.array_length());
+	DBus::MessageIter ait = iter.recurse();
 
-	iter.get_array(const_cast<DBus::Byte*>(&val.front()));
+	DBus::Byte* array;
+	size_t length = ait.get_array(&array);
+
+	val.insert(val.end(), array, array+length);
 
 	return ++iter;
 }

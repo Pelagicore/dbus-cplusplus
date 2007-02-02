@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <stdio.h>
 
 static const char* ECHO_SERVER_NAME = "org.freedesktop.DBus.Examples.Echo";
 static const char* ECHO_SERVER_PATH = "/org/freedesktop/DBus/Examples/Echo";
@@ -26,6 +27,21 @@ DBus::Variant EchoServer::Echo( const DBus::Variant& value )
 	this->Echoed(value);
 
 	return value;
+}
+
+std::vector< DBus::Byte > EchoServer::Cat( const DBus::String & file )
+{
+	FILE* handle = fopen(file.c_str(), "rb");
+
+	if(!handle) throw DBus::Error("org.freedesktop.DBus.EchoDemo.ErrorFileNotFound", "file not found");
+
+	DBus::Byte buff[1024];
+
+	size_t nread = fread(buff, 1, sizeof(buff), handle);
+
+	fclose(handle);
+
+	return std::vector< DBus::Byte > (buff, buff + nread);
 }
 
 DBus::Int32 EchoServer::Sum( const std::vector<DBus::Int32>& ints )

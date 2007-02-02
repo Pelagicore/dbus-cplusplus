@@ -231,7 +231,7 @@ char* MessageIter::signature() const
 
 bool MessageIter::append_array( char type, const void* ptr, size_t length )
 {
-	return dbus_message_iter_append_fixed_array((DBusMessageIter*)&_iter, type, ptr, length);
+	return dbus_message_iter_append_fixed_array((DBusMessageIter*)&_iter, type, &ptr, length);
 }
 
 int MessageIter::array_type()

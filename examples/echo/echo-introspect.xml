@@ -12,6 +12,10 @@
       <arg type="v" name="input" direction="in"/>
       <arg type="v" name="output" direction="out"/>
     </method>
+    <method name="Cat">
+      <arg type="s" name="file" direction="in"/>
+      <arg type="ay" name="stream" direction="out"/>
+    </method>
     <method name="Sum">
       <arg type="ai" name="ints" direction="in"/>
       <arg type="i" names="sum" direction="out"/>

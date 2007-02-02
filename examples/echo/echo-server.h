@@ -19,6 +19,8 @@ public:
 
 	DBus::Variant Echo( const DBus::Variant & value );
 
+	std::vector< DBus::Byte > Cat( const DBus::String & file );
+
 	DBus::Int32 Sum( const std::vector<DBus::Int32> & ints );
 
 	std::map< DBus::String, DBus::String > Info();
