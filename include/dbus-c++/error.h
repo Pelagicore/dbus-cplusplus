@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_ERROR_H
 #define __DBUSXX_ERROR_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "util.h"
 
 #include <exception>

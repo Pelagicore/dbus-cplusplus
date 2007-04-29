@@ -17,6 +17,12 @@ AC_ARG_ENABLE(debug,
 	enable_debug=$enableval,enable_debug=auto
 )
 
+AC_ARG_ENABLE(glib,
+	AS_HELP_STRING([--enable-glib],
+		[enable glib integration]),
+	enable_glib=$enableval,enable_debug=auto
+)
+
 AC_ARG_ENABLE(doxygen-docs,
 	AS_HELP_STRING([--enable-doxygen-docs],
 		[build DOXYGEN documentation (requires Doxygen)]),
@@ -48,6 +54,32 @@ PKG_CHECK_MODULES([dbus], dbus-1 >= $DBUS_REQUIRED_VERSION,,
 AC_SUBST(dbus_CFLAGS)
 AC_SUBST(dbus_LIBS)
 
+DBUS_API_STABLE_VERSION=1.0.0
+PKG_CHECK_EXISTS(dbus-1 < $DBUS_API_STABLE_VERSION,
+	AC_DEFINE(DBUS_API_SUBJECT_TO_CHANGE, , [unstable DBus])
+)
+
+DBUS_RECURSIVE_MUTEX_VERSION=0.95
+PKG_CHECK_EXISTS(dbus-1 >= $DBUS_RECURSIVE_MUTEX_VERSION,
+	AC_DEFINE(DBUS_HAS_RECURSIVE_MUTEX, , [DBus supports recursive mutexes (needs DBus >= 0.95)])
+)
+
+if test x$enable_glib = xyes ; then
+PKG_CHECK_MODULES([glib], glib-2.0)
+AC_SUBST(glib_CFLAGS)
+AC_SUBST(glib_LIBS)
+AM_CONDITIONAL(ENABLE_GLIB, test 1 = 1)
+PKG_CHECK_MODULES([gtkmm], gtkmm-2.4,
+	AM_CONDITIONAL(HAVE_GTKMM, test 1 = 1),
+	AM_CONDITIONAL(HAVE_GTKMM, test 0 = 1)
+)
+AC_SUBST(gtkmm_CFLAGS)
+AC_SUBST(gtkmm_LIBS)
+else
+AM_CONDITIONAL(ENABLE_GLIB, test 0 = 1)
+AM_CONDITIONAL(HAVE_GTKMM, test 0 = 1)
+fi
+
 AC_CHECK_LIB([expat], XML_ParserCreate_MM,
     [ AC_CHECK_HEADERS(expat.h, have_expat=true, have_expat=false) ],
 	have_expat=false)
@@ -66,7 +98,7 @@ AC_SUBST(xml_LIBS)
 if test x$enable_debug = xyes ; then
 	CXXFLAGS="-Wall -ggdb -O0 -DDEBUG"
 else
-	CXXFLAGS="-Wall -O3 -DDEBUG"
+	CXXFLAGS="-Wall -O3"
 fi
 
 
@@ -122,5 +154,6 @@ AC_OUTPUT(
 	examples/properties/Makefile
 	examples/echo/Makefile
 	examples/hal/Makefile
+	examples/glib/Makefile
 	dbus-c++-1.pc
 )

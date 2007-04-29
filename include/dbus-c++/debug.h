@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_DEBUG_H
 #define __DBUSXX_DEBUG_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 namespace DBus {
 
 typedef void (*LogFunction)(const char* format, ...);

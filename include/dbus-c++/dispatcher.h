@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_DISPATCHER_H
 #define __DBUSXX_DISPATCHER_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "connection.h"
 
 namespace DBus {
@@ -126,9 +130,9 @@ public:
 
 	virtual ~Mutex() {}
 
-	virtual bool lock() = 0;
+	virtual void lock() = 0;
 
-	virtual bool unlock() = 0;
+	virtual void unlock() = 0;
 
 	struct Internal;
 
@@ -158,10 +162,18 @@ protected:
 	Internal* _int;
 };
 
+#ifndef DBUS_HAS_RECURSIVE_MUTEX
+typedef Mutex* (*MutexNewFn)();
+typedef bool (*MutexFreeFn)( Mutex* mx );
+typedef bool (*MutexLockFn)( Mutex* mx );
+typedef void (*MutexUnlockFn)( Mutex* mx );
+#else
 typedef Mutex* (*MutexNewFn)();
 typedef void (*MutexFreeFn)( Mutex* mx );
 typedef void (*MutexLockFn)( Mutex* mx );
 typedef void (*MutexUnlockFn)( Mutex* mx );
+#endif//DBUS_HAS_RECURSIVE_MUTEX
+
 typedef CondVar* (*CondVarNewFn)();
 typedef void (*CondVarFreeFn)( CondVar* cv );
 typedef void (*CondVarWaitFn)( CondVar* cv, Mutex* mx );

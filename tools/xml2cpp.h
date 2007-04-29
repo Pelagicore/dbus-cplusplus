@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_TOOLS_XML2CPP_H
 #define __DBUSXX_TOOLS_XML2CPP_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <dbus-c++/dbus.h>
 #include <dbus/dbus.h>
 

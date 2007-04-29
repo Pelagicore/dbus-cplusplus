@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_PROPERTY_H
 #define __DBUSXX_PROPERTY_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "types.h"
 #include "interface.h"
 

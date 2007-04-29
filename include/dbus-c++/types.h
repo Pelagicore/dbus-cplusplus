@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_TYPES_H
 #define __DBUSXX_TYPES_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <string>
 #include <vector>
 #include <map>

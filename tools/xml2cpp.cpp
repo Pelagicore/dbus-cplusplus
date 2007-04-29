@@ -353,7 +353,7 @@ void generate_proxy( Xml::Document& doc, const char* filename )
 				if(arg_name.length())
 					file << tab << tab << "wi << " << arg_name << ";" << endl;
 				else
-					file << tab << tab << "wi << argout" << j << ";" << endl;
+					file << tab << tab << "wi << argin" << j << ";" << endl;
 			}
 
 			file << tab << tab << "call.member(\"" << method.get("name") << "\");" << endl

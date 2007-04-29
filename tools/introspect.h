@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_TOOLS_INTROSPECT_H
 #define __DBUSXX_TOOLS_INTROSPECT_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <dbus-c++/dbus.h>
 #include <string>
 

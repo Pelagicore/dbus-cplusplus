@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_CONNECTION_P_H
 #define __DBUSXX_CONNECTION_P_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <dbus-c++/connection.h>
 #include <dbus-c++/server.h>
 #include <dbus-c++/dispatcher.h>

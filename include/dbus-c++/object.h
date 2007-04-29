@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_OBJECT_H
 #define __DBUSXX_OBJECT_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <string>
 #include <list>
 

@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_UTIL_H
 #define __DBUSXX_UTIL_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "debug.h"
 
 namespace DBus {

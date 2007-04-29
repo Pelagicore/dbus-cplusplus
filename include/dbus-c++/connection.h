@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_CONNECTION_H
 #define __DBUSXX_CONNECTION_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <list>
 
 #include "types.h"

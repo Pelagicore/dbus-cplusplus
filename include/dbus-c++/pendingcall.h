@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_PENDING_CALL_H
 #define __DBUSXX_PENDING_CALL_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "util.h"
 
 namespace DBus {

@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_INTROSPECTION_H
 #define __DBUSXX_INTROSPECTION_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "interface.h"
 
 namespace DBus {

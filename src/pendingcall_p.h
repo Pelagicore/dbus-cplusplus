@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_PENDING_CALL_P_H
 #define __DBUSXX_PENDING_CALL_P_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <dbus-c++/pendingcall.h>
 #include <dbus-c++/refptr_impl.h>
 

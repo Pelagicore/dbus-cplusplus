@@ -4,8 +4,7 @@ CXX = $(CXX_FOR_BUILD)
 
 AM_CPPFLAGS = \
 	$(dbus_CFLAGS) \
-	-I$(top_srcdir)/include \
-	-DDBUS_API_SUBJECT_TO_CHANGE
+	-I$(top_srcdir)/include
 
 if CROSS_COMPILING
 libdbus_cxx_la = $(BUILD_LIBDBUS_CXX_DIR)/src/libdbus-c++-1.la

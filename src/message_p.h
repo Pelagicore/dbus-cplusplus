@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_MESSAGE_P_H
 #define __DBUSXX_MESSAGE_P_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <dbus-c++/message.h>
 #include <dbus-c++/refptr_impl.h>
 

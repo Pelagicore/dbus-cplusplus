@@ -181,6 +181,7 @@ void DBus::_init_threading(
 	CondVarWakeAllFn c6
 )
 {
+#ifndef DBUS_HAS_RECURSIVE_MUTEX
 	DBusThreadFunctions functions = {
 		DBUS_THREAD_FUNCTIONS_MUTEX_NEW_MASK |
 		DBUS_THREAD_FUNCTIONS_MUTEX_FREE_MASK |
@@ -203,5 +204,30 @@ void DBus::_init_threading(
 		(DBusCondVarWakeOneFunction) c5,
 		(DBusCondVarWakeAllFunction) c6
 	};
+#else
+	DBusThreadFunctions functions = {
+		DBUS_THREAD_FUNCTIONS_RECURSIVE_MUTEX_NEW_MASK |
+		DBUS_THREAD_FUNCTIONS_RECURSIVE_MUTEX_FREE_MASK |
+		DBUS_THREAD_FUNCTIONS_RECURSIVE_MUTEX_LOCK_MASK |
+		DBUS_THREAD_FUNCTIONS_RECURSIVE_MUTEX_UNLOCK_MASK |
+		DBUS_THREAD_FUNCTIONS_CONDVAR_NEW_MASK |
+		DBUS_THREAD_FUNCTIONS_CONDVAR_FREE_MASK |
+		DBUS_THREAD_FUNCTIONS_CONDVAR_WAIT_MASK |
+		DBUS_THREAD_FUNCTIONS_CONDVAR_WAIT_TIMEOUT_MASK |
+		DBUS_THREAD_FUNCTIONS_CONDVAR_WAKE_ONE_MASK|
+		DBUS_THREAD_FUNCTIONS_CONDVAR_WAKE_ALL_MASK,
+		0, 0, 0, 0,
+		(DBusCondVarNewFunction) c1,
+		(DBusCondVarFreeFunction) c2,
+		(DBusCondVarWaitFunction) c3,
+		(DBusCondVarWaitTimeoutFunction) c4,
+		(DBusCondVarWakeOneFunction) c5,
+		(DBusCondVarWakeAllFunction) c6,
+		(DBusRecursiveMutexNewFunction) m1,
+		(DBusRecursiveMutexFreeFunction) m2,
+		(DBusRecursiveMutexLockFunction) m3,
+		(DBusRecursiveMutexUnlockFunction) m4
+	};
+#endif//DBUS_HAS_RECURSIVE_MUTEX
 	dbus_threads_init(&functions);
 }

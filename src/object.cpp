@@ -143,7 +143,7 @@ void ObjectAdaptor::register_obj()
 		InterfaceAdaptorTable::const_iterator ii = _interfaces.begin();
 		while( ii != _interfaces.end() )
 		{
-			std::string im = "type='method_call',interface='"+ii->first+"'";
+			std::string im = "type='method_call',interface='"+ii->first+"',path='"+path()+"'";
 			conn().add_match(im.c_str());
 			++ii;
 		}
@@ -163,7 +163,7 @@ void ObjectAdaptor::unregister_obj()
 	InterfaceAdaptorTable::const_iterator ii = _interfaces.begin();
 	while( ii != _interfaces.end() )
 	{
-		std::string im = "type='method_call',interface='"+ii->first+"'";
+		std::string im = "type='method_call',interface='"+ii->first+"',path='"+path()+"'";
 		conn().remove_match(im.c_str());
 		++ii;
 	}
@@ -290,13 +290,10 @@ void ObjectProxy::register_obj()
 	InterfaceProxyTable::const_iterator ii = _interfaces.begin();
 	while( ii != _interfaces.end() )
 	{
-		std::string im = "type='signal',interface='"+ii->first+"'";
+		std::string im = "type='signal',interface='"+ii->first+"',path='"+path()+"'";
 		conn().add_match(im.c_str());
 		++ii;
 	}
-	
-//	conn().add_match("type='signal'");
-//	conn().add_match("type='method_call'");
 }
 
 void ObjectProxy::unregister_obj()
@@ -306,13 +303,10 @@ void ObjectProxy::unregister_obj()
 	InterfaceProxyTable::const_iterator ii = _interfaces.begin();
 	while( ii != _interfaces.end() )
 	{
-		std::string im = "type='signal',interface='"+ii->first+"'";
+		std::string im = "type='signal',interface='"+ii->first+"',path='"+path()+"'";
 		conn().remove_match(im.c_str());
 		++ii;
 	}
-//	conn().remove_match("type='method_call'");
-//	conn().remove_match("type='signal'");
-
 	conn().remove_filter(_filtered);
 }
 
@@ -334,7 +328,8 @@ bool ObjectProxy::handle_message( const Message& msg )
 			const char* interface	= smsg.interface();
 			const char* member	= smsg.member();
 
-			debug_log("filtered signal %s(in %s) from remote object %s", member, interface, msg.sender());
+			debug_log("filtered signal %s(in %s) from remote object %s",
+				member, interface, msg.sender());
 
 			InterfaceProxy* ii = find_interface(interface);
 			if( ii )

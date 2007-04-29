@@ -25,6 +25,10 @@
 #ifndef __DBUSXX_XML_H
 #define __DBUSXX_XML_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <exception>
 #include <string>
 #include <vector>
