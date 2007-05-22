@@ -55,7 +55,7 @@ MessageIter& MessageIter::operator ++()
 MessageIter MessageIter::operator ++(int)
 {
 	MessageIter copy(*this);
-	(*this)++;
+	++(*this);
 	return copy;
 }
 
