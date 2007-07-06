@@ -85,6 +85,8 @@ public:
 
 	const char* unique_name() const;
 
+	bool register_bus();
+
 	bool connected() const;
 
 	void disconnect();

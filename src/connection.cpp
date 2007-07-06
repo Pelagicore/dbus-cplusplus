@@ -262,6 +262,17 @@ bool Connection::operator == ( const Connection& c ) const
 	return _pvt->conn == c._pvt->conn;
 }
 
+bool Connection::register_bus()
+{
+	InternalError e;
+
+	bool r = dbus_bus_register(_pvt->conn, e);
+  
+	if(e)	throw (e);
+
+	return r;
+}
+
 bool Connection::connected() const
 {
 	return dbus_connection_get_is_connected(_pvt->conn);
@@ -396,3 +407,4 @@ bool Connection::start_service( const char* name, unsigned long flags )
 	
 	return b;
 }
+
