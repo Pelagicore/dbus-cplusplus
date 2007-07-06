@@ -59,7 +59,7 @@ Server::Server( const char* address )
 	InternalError e;
 	DBusServer* server = dbus_server_listen(address, e);
 
-	if(e)	throw Error(e);
+	if(e) throw Error(e);
 
 	debug_log("server 0x%08x listening on %s", server, address);
 

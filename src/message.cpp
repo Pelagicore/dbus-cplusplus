@@ -43,15 +43,18 @@ bool MessageIter::at_end()
 {
 	return type() == DBUS_TYPE_INVALID;
 }
+
 bool MessageIter::has_next()
 {
 	return dbus_message_iter_has_next((DBusMessageIter*)&_iter);
 }
+
 MessageIter& MessageIter::operator ++()
 {
 	dbus_message_iter_next((DBusMessageIter*)&_iter);
 	return (*this);
 }
+
 MessageIter MessageIter::operator ++(int)
 {
 	MessageIter copy(*this);
@@ -244,11 +247,6 @@ int MessageIter::get_array( void* ptr )
 	int length;
 	dbus_message_iter_get_fixed_array((DBusMessageIter*)&_iter, ptr, &length);
 	return length;
-}
-
-int MessageIter::array_length()
-{
-	return dbus_message_iter_get_array_len((DBusMessageIter*)&_iter);
 }
 
 bool MessageIter::is_array()

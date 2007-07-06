@@ -58,13 +58,13 @@ int main( int argc, char** argv )
 		{
 			systembus = false;
 			path = argv[1];
-			service = argc > 1 ? argv[2] : 0;
+			service = argc > 2 ? argv[2] : 0;
 		}
 		else
 		{
 			systembus = true;
 			path = argv[2];
-			service = argc > 2 ? argv[3] : 0;
+			service = argc > 3 ? argv[3] : 0;
 		}
 
 		DBus::default_dispatcher = &dispatcher;

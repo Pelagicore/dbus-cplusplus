@@ -153,8 +153,6 @@ DBusHandlerResult Connection::Private::message_filter_stub( DBusConnection* conn
 {
 	MessageSlot* slot = static_cast<MessageSlot*>(data);
 
-	debug_log("incoming message on connection %p", conn);
-
 	Message msg = Message(new Message::Private(dmsg));
 
 	return slot && !slot->empty() && slot->call(msg) 
@@ -268,7 +266,7 @@ bool Connection::register_bus()
 
 	bool r = dbus_bus_register(_pvt->conn, e);
   
-	if(e)	throw (e);
+	if(e) throw (e);
 
 	return r;
 }
@@ -369,7 +367,7 @@ void Connection::request_name( const char* name, int flags )
 
 	dbus_bus_request_name(_pvt->conn, name, flags, e);	//we deliberately don't check return value
 
-	if(e)	throw Error(e);
+	if(e) throw Error(e);
 
 //	this->remove_match("destination");
 

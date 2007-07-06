@@ -87,7 +87,7 @@ void HalDeviceProxy::PropertyModifiedCb( const DBus::SignalMessage& sig )
 
 		arr >> hp;
 
-		std::cout << "modified property " << hp._1 << std::endl;
+		std::cout << "modified property " << hp._1 << " in " << path() << std::endl;
 	}
 }
 
@@ -98,7 +98,7 @@ void HalDeviceProxy::ConditionCb( const DBus::SignalMessage& sig )
 
 	it >> condition;
 
-	std::cout << "encountered condition " << condition << std::endl;
+	std::cout << "encountered condition " << condition << " in " << path() << std::endl;
 }
 
 DBus::BusDispatcher dispatcher;

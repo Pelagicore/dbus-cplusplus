@@ -327,9 +327,12 @@ bool ObjectProxy::handle_message( const Message& msg )
 			const SignalMessage& smsg = reinterpret_cast<const SignalMessage&>(msg);
 			const char* interface	= smsg.interface();
 			const char* member	= smsg.member();
+			const char* objpath	= smsg.path();
 
-			debug_log("filtered signal %s(in %s) from remote object %s",
-				member, interface, msg.sender());
+			if( objpath != path() ) return false;
+
+			debug_log("filtered signal %s(in %s) from %s to object %s",
+				member, interface, msg.sender(), objpath);
 
 			InterfaceProxy* ii = find_interface(interface);
 			if( ii )
@@ -340,20 +343,6 @@ bool ObjectProxy::handle_message( const Message& msg )
 			{
 				return false;
 			}
-		}
-		case DBUS_MESSAGE_TYPE_METHOD_RETURN:
-		{
-			debug_log("filtered method return from remote object %s", msg.sender());
-
-			//TODO?
-			return false;
-		}
-		case DBUS_MESSAGE_TYPE_ERROR:
-		{
-			debug_log("filtered error from remote object %s", msg.sender());
-
-			//TODO?
-			return false;
 		}
 		default:
 		{

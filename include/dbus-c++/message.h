@@ -117,8 +117,6 @@ public:
 
 	int get_array( void* ptr );
 
-	int array_length();
-
 	bool is_array();
 
 	bool is_dict();
