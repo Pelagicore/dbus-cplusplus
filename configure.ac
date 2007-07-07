@@ -81,7 +81,7 @@ AM_CONDITIONAL(HAVE_GTKMM, test 0 = 1)
 fi
 
 AC_CHECK_LIB([expat], XML_ParserCreate_MM,
-    [ AC_CHECK_HEADERS(expat.h, have_expat=true, have_expat=false) ],
+   	[AC_CHECK_HEADERS(expat.h, have_expat=true, have_expat=false)],
 	have_expat=false)
 
 if ! $have_expat; then
@@ -94,6 +94,12 @@ xml_LIBS=-lexpat
 
 AC_SUBST(xml_CFLAGS)
 AC_SUBST(xml_LIBS)
+
+AC_CHECK_LIB([pthread], pthread_create,
+	[AC_CHECK_HEADERS(pthread.h, have_pthread=true, have_pthread=false)],
+	have_pthread=false)
+
+AM_CONDITIONAL(HAVE_PTHREAD, test x$have_pthread = xtrue)
 
 if test x$enable_debug = xyes ; then
 	CXXFLAGS="-Wall -ggdb -O0 -DDEBUG"

@@ -168,6 +168,11 @@ void Dispatcher::dispatch_pending()
 	}
 }
 
+void DBus::_init_threading()
+{
+	dbus_threads_init_default();
+}
+
 void DBus::_init_threading(
 	MutexNewFn m1,
 	MutexFreeFn m2,

@@ -2,7 +2,7 @@
 #define __DEMO_ECHO_SERVER_H
 
 #include <dbus-c++/dbus.h>
-#include "echo-glue.h"
+#include "echo-server-glue.h"
 
 class EchoServer
 : public org::freedesktop::DBus::EchoDemo,

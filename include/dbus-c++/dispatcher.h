@@ -181,6 +181,8 @@ typedef bool (*CondVarWaitTimeoutFn)( CondVar* cv, Mutex* mx, int timeout );
 typedef void (*CondVarWakeOneFn)( CondVar* cv );
 typedef void (*CondVarWakeAllFn)( CondVar* cv );
 
+void _init_threading();
+
 void _init_threading(
 	MutexNewFn, MutexFreeFn, MutexLockFn, MutexUnlockFn,
 	CondVarNewFn, CondVarFreeFn, CondVarWaitFn, CondVarWaitTimeoutFn, CondVarWakeOneFn, CondVarWakeAllFn

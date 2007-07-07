@@ -282,6 +282,11 @@ void Connection::disconnect()
 	dbus_connection_close(_pvt->conn);
 }
 
+void Connection::exit_on_disconnect( bool exit )
+{
+	dbus_connection_set_exit_on_disconnect(_pvt->conn, exit);
+}
+
 bool Connection::unique_name( const char* n )
 {
 	return dbus_bus_set_unique_name(_pvt->conn, n);

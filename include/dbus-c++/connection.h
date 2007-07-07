@@ -91,6 +91,8 @@ public:
 
 	void disconnect();
 
+	void exit_on_disconnect( bool exit );
+
 	void flush();
 
 	bool send( const Message&, unsigned int* serial = NULL );
