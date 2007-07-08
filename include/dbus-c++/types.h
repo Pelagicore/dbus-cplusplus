@@ -503,7 +503,7 @@ inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Struct<T1
 
 	sit >> val._1 >> val._2 >> val._3 >> val._4 >> val._5 >> val._6 >> val._7 >> val._8;
 
-	return iter;
+	return ++iter;
 }
 
 DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Variant& val );
