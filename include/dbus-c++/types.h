@@ -145,6 +145,7 @@ struct type
 	}
 };
 
+template <> struct type<Variant>	{ static std::string sig(){ return "v"; } };
 template <> struct type<Byte>           { static std::string sig(){ return "y"; } };
 template <> struct type<Bool>           { static std::string sig(){ return "b"; } };
 template <> struct type<Int16>          { static std::string sig(){ return "n"; } };
@@ -157,7 +158,7 @@ template <> struct type<Double>         { static std::string sig(){ return "d"; 
 template <> struct type<String>         { static std::string sig(){ return "s"; } };
 template <> struct type<Path>           { static std::string sig(){ return "o"; } };
 template <> struct type<Signature>      { static std::string sig(){ return "g"; } };
-template <> struct type<Invalid>        { static std::string sig(){ return ""; } };
+template <> struct type<Invalid>        { static std::string sig(){ return "";  } };
 
 template <typename E> 
 struct type< std::vector<E> >
