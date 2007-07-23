@@ -168,10 +168,12 @@ void Dispatcher::dispatch_pending()
 	}
 }
 
+#ifdef DBUS_HAS_THREADS_INIT_DEFAULT
 void DBus::_init_threading()
 {
 	dbus_threads_init_default();
 }
+#endif//DBUS_HAS_THREADS_INIT_DEFAULT
 
 void DBus::_init_threading(
 	MutexNewFn m1,

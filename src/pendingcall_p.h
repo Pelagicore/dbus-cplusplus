@@ -36,7 +36,7 @@
 
 namespace DBus {
 
-struct PendingCall::Private
+struct DXXAPILOCAL PendingCall::Private
 {
 	DBusPendingCall* call;
 	int dataslot;

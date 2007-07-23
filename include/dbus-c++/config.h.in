@@ -6,6 +6,12 @@
 /* DBus supports recursive mutexes (needs DBus >= 0.95) */
 #undef DBUS_HAS_RECURSIVE_MUTEX
 
+/* dbus_threads_init_default (needs DBus >= 0.93) */
+#undef DBUS_HAS_THREADS_INIT_DEFAULT
+
+/* to enable hidden symbols */
+#undef GCC_HASCLASSVISIBILITY
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 

@@ -29,11 +29,12 @@
 #include "config.h"
 #endif
 
+#include "api.h"
 #include "connection.h"
 
 namespace DBus {
 
-class Timeout
+class DXXAPI Timeout
 {
 public:
 
@@ -53,14 +54,14 @@ public:
 
 private:
 
-	Timeout( const Timeout& );
+	DXXAPILOCAL Timeout( const Timeout& );
 
 private:
 
 	Internal* _int;
 };
 
-class Watch
+class DXXAPI Watch
 {
 public:
 
@@ -82,14 +83,14 @@ public:
 
 private:
 
-	Watch( const Watch& );
+	DXXAPILOCAL Watch( const Watch& );
 
 private:
 
 	Internal* _int;
 };
 
-class Dispatcher
+class DXXAPI Dispatcher
 {
 public:
 
@@ -119,12 +120,12 @@ private:
 	Connection::PrivatePList _pending_queue;
 };
 
-extern Dispatcher* default_dispatcher;
+extern DXXAPI Dispatcher* default_dispatcher;
 
 /* classes for multithreading support
 */
 
-class Mutex
+class DXXAPI Mutex
 {
 public:
 
@@ -141,7 +142,7 @@ protected:
 	Internal* _int;
 };
 
-class CondVar
+class DXXAPI CondVar
 {
 public:
 
@@ -181,9 +182,11 @@ typedef bool (*CondVarWaitTimeoutFn)( CondVar* cv, Mutex* mx, int timeout );
 typedef void (*CondVarWakeOneFn)( CondVar* cv );
 typedef void (*CondVarWakeAllFn)( CondVar* cv );
 
-void _init_threading();
+#ifdef DBUS_HAS_THREADS_INIT_DEFAULT
+void DXXAPI _init_threading();
+#endif//DBUS_HAS_THREADS_INIT_DEFAULT
 
-void _init_threading(
+void DXXAPI _init_threading(
 	MutexNewFn, MutexFreeFn, MutexLockFn, MutexUnlockFn,
 	CondVarNewFn, CondVarFreeFn, CondVarWaitFn, CondVarWaitTimeoutFn, CondVarWakeOneFn, CondVarWakeAllFn
 );

@@ -1,6 +1,5 @@
 AM_CPPFLAGS = \
 	$(dbus_CFLAGS) \
-	$(xml_CFLAGS) \
 	$(glib_CFLAGS) \
 	-I$(top_srcdir)/include
 
@@ -28,16 +27,16 @@ HEADER_FILES = \
 	$(HEADER_DIR)/debug.h \
 	$(HEADER_DIR)/util.h \
 	$(HEADER_DIR)/refptr_impl.h \
-	$(HEADER_DIR)/xml.h \
 	$(HEADER_DIR)/introspection.h \
+	$(HEADER_DIR)/api.h \
 	$(GLIB_H)
 
 lib_includedir=$(includedir)/dbus-c++-1/dbus-c++/
 lib_include_HEADERS = $(HEADER_FILES)
 
 lib_LTLIBRARIES = libdbus-c++-1.la
-libdbus_c___1_la_SOURCES = $(HEADER_FILES) interface.cpp object.cpp introspection.cpp debug.cpp eventloop.cpp xml.cpp types.cpp connection.cpp connection_p.h property.cpp dispatcher.cpp dispatcher_p.h pendingcall.cpp pendingcall_p.h error.cpp internalerror.h message.cpp message_p.h server.cpp server_p.h $(GLIB_CPP)
-libdbus_c___1_la_LIBADD = $(dbus_LIBS) $(xml_LIBS) $(glib_LIBS)
+libdbus_c___1_la_SOURCES = $(HEADER_FILES) interface.cpp object.cpp introspection.cpp debug.cpp eventloop.cpp types.cpp connection.cpp connection_p.h property.cpp dispatcher.cpp dispatcher_p.h pendingcall.cpp pendingcall_p.h error.cpp internalerror.h message.cpp message_p.h server.cpp server_p.h $(GLIB_CPP)
+libdbus_c___1_la_LIBADD = $(dbus_LIBS) $(glib_LIBS)
 
 MAINTAINERCLEANFILES = \
 	Makefile.in

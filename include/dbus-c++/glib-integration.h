@@ -31,6 +31,7 @@
 
 #include <glib.h>
 
+#include "api.h"
 #include "eventloop.h"
 
 namespace DBus {
@@ -39,7 +40,7 @@ namespace Glib {
 
 class BusDispatcher;
 
-class BusTimeout : public Timeout
+class DXXAPI BusTimeout : public Timeout
 {
 private:
 
@@ -63,7 +64,7 @@ private:
 friend class BusDispatcher;
 };
 
-class BusWatch : public Watch
+class DXXAPI BusWatch : public Watch
 {
 private:
 
@@ -87,7 +88,7 @@ private:
 friend class BusDispatcher;
 };
 
-class BusDispatcher : public Dispatcher
+class DXXAPI BusDispatcher : public Dispatcher
 {
 public:
 	BusDispatcher() : _ctx(NULL) {}

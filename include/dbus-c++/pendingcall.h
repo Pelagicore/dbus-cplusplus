@@ -29,13 +29,14 @@
 #include "config.h"
 #endif
 
+#include "api.h"
 #include "util.h"
 
 namespace DBus {
 
 class Connection;
 
-class PendingCall
+class DXXAPI PendingCall
 {
 public:
 
@@ -59,7 +60,7 @@ public:
 
 private:
 
-	PendingCall( const PendingCall& );
+	DXXAPILOCAL PendingCall( const PendingCall& );
 
 private:
 

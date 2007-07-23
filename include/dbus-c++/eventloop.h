@@ -31,6 +31,7 @@
 
 #include <list>
 
+#include "api.h"
 #include "dispatcher.h"
 #include "util.h"
 
@@ -38,7 +39,7 @@ namespace DBus {
 
 class EepleMainLoop;
 
-class EepleTimeout
+class DXXAPI EepleTimeout
 {
 public:
 
@@ -78,7 +79,7 @@ friend class EepleMainLoop;
 
 typedef std::list< EepleTimeout* > Timeouts;
 
-class EepleWatch
+class DXXAPI EepleWatch
 {
 public:
 
@@ -118,7 +119,7 @@ friend class EepleMainLoop;
 
 typedef std::list< EepleWatch* > Watches;
 
-class EepleMainLoop
+class DXXAPI EepleMainLoop
 {
 public:
 
@@ -145,7 +146,7 @@ friend class EepleWatch;
 
 class BusDispatcher;
 
-class BusTimeout : public Timeout, public EepleTimeout
+class DXXAPI BusTimeout : public Timeout, public EepleTimeout
 {
 	BusTimeout( Timeout::Internal*, BusDispatcher* );
 
@@ -154,7 +155,7 @@ class BusTimeout : public Timeout, public EepleTimeout
 friend class BusDispatcher;
 };
 
-class BusWatch : public Watch, public EepleWatch
+class DXXAPI BusWatch : public Watch, public EepleWatch
 {
 	BusWatch( Watch::Internal*, BusDispatcher* );
 
@@ -163,7 +164,7 @@ class BusWatch : public Watch, public EepleWatch
 friend class BusDispatcher;
 };
 
-class BusDispatcher : public Dispatcher, public EepleMainLoop
+class DXXAPI BusDispatcher : public Dispatcher, public EepleMainLoop
 {
 public:
 

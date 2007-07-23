@@ -29,6 +29,7 @@
 #include "config.h"
 #endif
 
+#include "api.h"
 #include "debug.h"
 
 namespace DBus {
@@ -37,7 +38,7 @@ namespace DBus {
  *   Very simple reference counting
  */
 
-class RefCnt
+class DXXAPI RefCnt
 {
 public:
 
@@ -78,11 +79,11 @@ public:
 
 private:
 
-	void ref() const
+	DXXAPILOCAL void ref() const
 	{
 		++ (*__ref);
 	}
-	void unref() const
+	DXXAPILOCAL void unref() const
 	{
 		-- (*__ref);
 

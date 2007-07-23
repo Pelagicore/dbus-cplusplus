@@ -36,7 +36,7 @@
 
 namespace DBus {
 
-struct Message::Private
+struct DXXAPILOCAL Message::Private
 {
 	DBusMessage* msg;
 

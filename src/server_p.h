@@ -37,7 +37,7 @@
 
 namespace DBus {
 
-struct Server::Private 
+struct DXXAPILOCAL Server::Private 
 {
 	DBusServer* server;
 

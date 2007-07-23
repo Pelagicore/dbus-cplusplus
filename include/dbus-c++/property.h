@@ -29,6 +29,7 @@
 #include "config.h"
 #endif
 
+#include "api.h"
 #include "types.h"
 #include "interface.h"
 
@@ -67,7 +68,7 @@ private:
 
 struct IntrospectedInterface;
 
-class PropertiesAdaptor : public InterfaceAdaptor
+class DXXAPI PropertiesAdaptor : public InterfaceAdaptor
 {
 public:
 
@@ -88,7 +89,7 @@ protected:
 	IntrospectedInterface* const introspect() const;
 };
 
-class PropertiesProxy : public InterfaceProxy
+class DXXAPI PropertiesProxy : public InterfaceProxy
 {
 public:
 

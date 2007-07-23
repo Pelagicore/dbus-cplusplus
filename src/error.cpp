@@ -55,6 +55,10 @@ Error::Error( Message& m )
 	dbus_set_error_from_message(&(_int->error), m._pvt->msg);
 }
 
+Error::~Error() throw()
+{
+}
+
 const char* Error::name() const
 {
 	return _int->error.name;

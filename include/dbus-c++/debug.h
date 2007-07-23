@@ -29,11 +29,13 @@
 #include "config.h"
 #endif
 
+#include "api.h"
+
 namespace DBus {
 
 typedef void (*LogFunction)(const char* format, ...);
 
-extern LogFunction debug_log;
+extern DXXAPI LogFunction debug_log;
 
 } /* namespace DBus */
 

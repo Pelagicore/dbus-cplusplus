@@ -31,6 +31,7 @@
 
 #include <list>
 
+#include "api.h"
 #include "error.h"
 #include "connection.h"
 #include "util.h"
@@ -42,7 +43,7 @@ class Server;
 
 typedef std::list<Server> ServerList;
 
-class Server
+class DXXAPI Server
 {
 public:
 

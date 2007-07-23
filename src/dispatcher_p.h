@@ -37,7 +37,7 @@
 
 namespace DBus {
 
-struct Dispatcher::Private
+struct DXXAPILOCAL Dispatcher::Private
 {
 	static dbus_bool_t on_add_watch( DBusWatch* watch, void* data );
 

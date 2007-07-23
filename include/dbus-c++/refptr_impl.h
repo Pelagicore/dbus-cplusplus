@@ -29,6 +29,7 @@
 #include "config.h"
 #endif
 
+#include "api.h"
 #include "util.h"
 
 namespace DBus {

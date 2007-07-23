@@ -33,6 +33,7 @@
 #include <vector>
 #include <map>
 
+#include "api.h"
 #include "util.h"
 #include "message.h"
 #include "error.h"
@@ -50,7 +51,7 @@ typedef unsigned long long UInt64;
 typedef double Double;
 typedef std::string String;
 
-struct Path : public std::string
+struct DXXAPI Path : public std::string
 { 
 	Path() {}
 	Path( const std::string& s ) : std::string(s) {}
@@ -62,7 +63,7 @@ struct Path : public std::string
 	}
 };
 
-struct Signature : public std::string
+struct DXXAPI Signature : public std::string
 { 
 	Signature() {}
 	Signature( const std::string& s ) : std::string(s) {}
@@ -74,9 +75,9 @@ struct Signature : public std::string
 	}
 };
 
-struct Invalid {};
+struct DXXAPI Invalid {};
 
-class Variant
+class DXXAPI Variant
 {
 public:
 
@@ -344,7 +345,7 @@ inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Str
 	return iter;
 }
 
-DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Variant& val );
+extern DXXAPI DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Variant& val );
 
 /*
  */
@@ -507,7 +508,7 @@ inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Struct<T1
 	return ++iter;
 }
 
-DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Variant& val );
+extern DXXAPI DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Variant& val );
 	
 #endif//__DBUSXX_TYPES_H
 

@@ -3,6 +3,10 @@
 #include <pthread.h>
 #include <signal.h>
 
+#ifdef HAVE_CONFIG_H
+#include <dbus-c++/config.h>
+#endif
+
 using namespace std;
 
 static const char* ECHO_SERVER_NAME = "org.freedesktop.DBus.Examples.Echo";
@@ -58,7 +62,11 @@ int main()
 	signal(SIGTERM, niam);
 	signal(SIGINT, niam);
 
+#ifdef DBUS_HAS_THREADS_INIT_DEFAULT
 	DBus::_init_threading();
+#else
+	cerr << "Thread support is not enabled! your D-Bus version is too old" << endl;
+#endif
 
 	DBus::default_dispatcher = &dispatcher;
 

@@ -29,24 +29,25 @@
 #include "config.h"
 #endif
 
+#include "api.h"
 #include "interface.h"
 
 namespace DBus {
 
-struct IntrospectedArgument
+struct DXXAPI IntrospectedArgument
 {
 	const char* name;
 	const char* type;
 	const bool  in;
 };
 
-struct IntrospectedMethod
+struct DXXAPI IntrospectedMethod
 {
 	const char* name;
 	const IntrospectedArgument* args;
 };
 
-struct IntrospectedProperty
+struct DXXAPI IntrospectedProperty
 {
 	const char* name;
 	const char* type;
@@ -54,7 +55,7 @@ struct IntrospectedProperty
 	const bool  write;
 };
 
-struct IntrospectedInterface
+struct DXXAPI IntrospectedInterface
 {
 	const char* name;
 	const IntrospectedMethod* methods;
@@ -62,7 +63,7 @@ struct IntrospectedInterface
 	const IntrospectedProperty* properties;
 };
 
-class IntrospectableAdaptor : public InterfaceAdaptor
+class DXXAPI IntrospectableAdaptor : public InterfaceAdaptor
 {
 public:
 
@@ -75,7 +76,7 @@ protected:
 	IntrospectedInterface* const introspect() const;
 };
 
-class IntrospectableProxy : public InterfaceProxy
+class DXXAPI IntrospectableProxy : public InterfaceProxy
 {
 public:
 

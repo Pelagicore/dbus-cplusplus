@@ -40,7 +40,7 @@
 
 namespace DBus {
 
-struct Connection::Private
+struct DXXAPILOCAL Connection::Private
 {
 	DBusConnection*	conn;
 

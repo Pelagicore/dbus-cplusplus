@@ -32,6 +32,7 @@
 #include <string>
 #include <map>
 
+#include "api.h"
 #include "util.h"
 
 namespace DBus {
@@ -43,7 +44,7 @@ class ReturnMessage;
 class Error;
 class Connection;
 
-class MessageIter
+class DXXAPI MessageIter
 {
 public:
 
@@ -140,11 +141,11 @@ public:
 
 private:
 
-	MessageIter(Message& msg) : _msg(&msg) {}
+	DXXAPILOCAL MessageIter(Message& msg) : _msg(&msg) {}
 
-	bool append_basic( int type_id, void* value );
+	DXXAPILOCAL bool append_basic( int type_id, void* value );
 
-	void get_basic( int type_id, void* ptr );
+	DXXAPILOCAL void get_basic( int type_id, void* ptr );
 
 private:
 
@@ -157,7 +158,7 @@ private:
 friend class Message;
 };
 
-class Message
+class DXXAPI Message
 {
 public:
 	
@@ -221,7 +222,7 @@ friend class Connection;
 /*
 */
 
-class ErrorMessage : public Message
+class DXXAPI ErrorMessage : public Message
 {
 public:
 	
@@ -239,7 +240,7 @@ public:
 /*
 */
 
-class SignalMessage : public Message
+class DXXAPI SignalMessage : public Message
 {
 public:
 
@@ -267,7 +268,7 @@ public:
 /*
 */
 
-class CallMessage : public Message
+class DXXAPI CallMessage : public Message
 {
 public:
 	
@@ -297,7 +298,7 @@ public:
 /*
 */
 
-class ReturnMessage : public Message
+class DXXAPI ReturnMessage : public Message
 {
 public:
 	

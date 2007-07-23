@@ -31,6 +31,7 @@
 
 #include <list>
 
+#include "api.h"
 #include "types.h"
 #include "util.h"
 #include "message.h"
@@ -47,7 +48,7 @@ typedef std::list<Connection>	ConnectionList;
 class ObjectAdaptor;
 class Dispatcher;
 
-class Connection
+class DXXAPI Connection
 {
 public:
 
@@ -111,7 +112,7 @@ public:
 
 private:
 
-	void init();
+	DXXAPILOCAL void init();
 
 private:
 

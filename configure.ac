@@ -14,19 +14,22 @@ AC_CANONICAL_HOST
 AC_ARG_ENABLE(debug,
 	AS_HELP_STRING([--enable-debug],
 		[enable debugging support]),
-	enable_debug=$enableval,enable_debug=auto
+	[enable_debug=$enableval],
+	[enable_debug=no]
 )
 
 AC_ARG_ENABLE(glib,
 	AS_HELP_STRING([--enable-glib],
 		[enable glib integration]),
-	enable_glib=$enableval,enable_debug=auto
+	[enable_glib=$enableval],
+	[enable_glib=no]
 )
 
 AC_ARG_ENABLE(doxygen-docs,
 	AS_HELP_STRING([--enable-doxygen-docs],
 		[build DOXYGEN documentation (requires Doxygen)]),
-	enable_doxygen_docs=$enableval,enable_doxygen_docs=auto
+	[enable_doxygen_docs=$enableval],
+ 	[enable_doxygen_docs=no]
 )
 
 # Check for programs
@@ -44,10 +47,24 @@ AM_PROG_LIBTOOL
 PKG_PROG_PKG_CONFIG
 
 
+AC_MSG_CHECKING([whether $CXX supports symbol visibility])
+
+vtest=`$CXX --help --verbose 2>&1 | grep fvisibility`
+
+if test -n "$vtest"; then
+	AC_MSG_RESULT(yes)
+
+	AC_DEFINE(GCC_HASCLASSVISIBILITY, 1, [to enable hidden symbols])
+	CXXFLAGS="-fvisibility=hidden"
+else
+	AC_MSG_RESULT(no)
+fi 
+
+
 # Check for dependencies
 
 DBUS_REQUIRED_VERSION=0.60
-PKG_CHECK_MODULES([dbus], dbus-1 >= $DBUS_REQUIRED_VERSION,,
+PKG_CHECK_MODULES(dbus, [dbus-1 >= $DBUS_REQUIRED_VERSION],,
 	AC_MSG_ERROR([You need the DBus libraries (version 0.6 or better)]
 	[http://www.freedesktop.org/wiki/Software_2fdbus])
 )
@@ -55,16 +72,22 @@ AC_SUBST(dbus_CFLAGS)
 AC_SUBST(dbus_LIBS)
 
 DBUS_API_STABLE_VERSION=1.0.0
-PKG_CHECK_EXISTS(dbus-1 < $DBUS_API_STABLE_VERSION,
-	AC_DEFINE(DBUS_API_SUBJECT_TO_CHANGE, , [unstable DBus])
+PKG_CHECK_EXISTS([dbus-1 < $DBUS_API_STABLE_VERSION],
+	[AC_DEFINE(DBUS_API_SUBJECT_TO_CHANGE, , [unstable DBus])]
+)
+
+DBUS_THREADS_INIT_DEFAULT_VERSION=0.93
+PKG_CHECK_EXISTS([dbus-1 >= $DBUS_THREADS_INIT_DEFAULT_VERSION],
+	[AC_DEFINE(DBUS_HAS_THREADS_INIT_DEFAULT, , [dbus_threads_init_default (needs DBus >= 0.93)])]
 )
 
 DBUS_RECURSIVE_MUTEX_VERSION=0.95
-PKG_CHECK_EXISTS(dbus-1 >= $DBUS_RECURSIVE_MUTEX_VERSION,
-	AC_DEFINE(DBUS_HAS_RECURSIVE_MUTEX, , [DBus supports recursive mutexes (needs DBus >= 0.95)])
+PKG_CHECK_EXISTS([dbus-1 >= $DBUS_RECURSIVE_MUTEX_VERSION],
+	[AC_DEFINE(DBUS_HAS_RECURSIVE_MUTEX, , [DBus supports recursive mutexes (needs DBus >= 0.95)])]
 )
 
-if test x$enable_glib = xyes ; then
+
+if test "$enable_glib" = "yes" ; then
 PKG_CHECK_MODULES([glib], glib-2.0)
 AC_SUBST(glib_CFLAGS)
 AC_SUBST(glib_LIBS)
@@ -99,12 +122,12 @@ AC_CHECK_LIB([pthread], pthread_create,
 	[AC_CHECK_HEADERS(pthread.h, have_pthread=true, have_pthread=false)],
 	have_pthread=false)
 
-AM_CONDITIONAL(HAVE_PTHREAD, test x$have_pthread = xtrue)
+AM_CONDITIONAL(HAVE_PTHREAD, test "$have_pthread" = "true")
 
-if test x$enable_debug = xyes ; then
-	CXXFLAGS="-Wall -ggdb -O0 -DDEBUG"
+if test "$enable_debug" = "yes" ; then
+	CXXFLAGS="$CXXFLAGS -Wall -ggdb -O0 -DDEBUG"
 else
-	CXXFLAGS="-Wall -O3"
+	CXXFLAGS="$CXXFLAGS -Wall -O3"
 fi
 
 
@@ -114,35 +137,37 @@ AC_PATH_PROG(DOXYGEN, doxygen, no)
 
 AC_MSG_CHECKING([whether to build Doxygen documentation])
 
-if test x$DOXYGEN = xno ; then
-    have_doxygen=no
+if test "$DOXYGEN" = "no" ; then
+	have_doxygen=no
 else
-    have_doxygen=yes
+	have_doxygen=yes
 fi
 
-if test x$enable_doxygen_docs = xauto ; then
-    enable_doxygen_docs=no
+if test "$enable_doxygen_docs" = "auto" ; then
+	enable_doxygen_docs=no
+
+	AC_MSG_RESULT(no)
 fi
 
-if test x$enable_doxygen_docs = xyes ; then
-    if test x$have_doxygen = xno; then
-	AC_MSG_ERROR([Building Doxygen docs explicitly required, but Doxygen not found])
-    fi
+if test "$enable_doxygen_docs" = "yes" ; then
+	if test "$have_doxygen" = "no"; then
+		AC_MSG_ERROR([Building Doxygen docs explicitly required, but Doxygen not found])
+	fi
+
+	AC_MSG_RESULT(yes)
 fi
 
-AM_CONDITIONAL(DBUS_DOXYGEN_DOCS_ENABLED, test x$enable_doxygen_docs = xyes)
-AC_MSG_RESULT(yes)
-
+AM_CONDITIONAL(DBUS_DOXYGEN_DOCS_ENABLED, test "$enable_doxygen_docs" = "yes")
 
 # For the tools/, we need libdbus-c++ for the "build" architecture as well
 
-AM_CONDITIONAL(CROSS_COMPILING, test $cross_compiling = yes)
+AM_CONDITIONAL(CROSS_COMPILING, test "$cross_compiling" = "yes")
 
 AC_ARG_WITH(build-libdbus-cxx,
-    AS_HELP_STRING([--with-build-libdbus-cxx],[For cross compilation: path to
-    libdbus-cxx which was compiled for the 'build' system.]),
-    [ BUILD_LIBDBUS_CXX_DIR=${withval} ],
-    [ BUILD_LIBDBUS_CXX_DIR="\$(top_builddir)" ]
+	AS_HELP_STRING([--with-build-libdbus-cxx],
+	[For cross compilation: path to libdbus-cxx which was compiled for the 'build' system.]),
+	[ BUILD_LIBDBUS_CXX_DIR=${withval} ],
+	[ BUILD_LIBDBUS_CXX_DIR="\$(top_builddir)" ]
 )
 AC_SUBST(BUILD_LIBDBUS_CXX_DIR)
 

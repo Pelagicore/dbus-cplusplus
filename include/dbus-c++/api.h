@@ -22,56 +22,21 @@
  */
 
 
-#ifndef __DBUSXX_INTERNALERROR_H
-#define __DBUSXX_INTERNALERROR_H
+#ifndef __DBUSXX_API_H
+#define __DBUSXX_API_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include <dbus-c++/error.h>
+#ifdef GCC_HASCLASSVISIBILITY
+# define DXXAPILOCAL __attribute__ ((visibility("hidden")))
+# define DXXAPIPUBLIC __attribute__ ((visibility("default")))
+#else
+# define DXXAPILOCAL
+# define DXXAPIPUBLIC
+#endif
 
-#include <dbus/dbus.h>
+#define DXXAPI DXXAPIPUBLIC
 
-namespace DBus {
-
-struct DXXAPI InternalError
-{
-	DBusError	error;
-
-	InternalError()
-	{
-		dbus_error_init(&error);
-	}
-
-	explicit InternalError( DBusError* e )
-	{
-		dbus_error_init(&error);
-		dbus_move_error(e, &error);
-	}
-
-	InternalError(const InternalError& ie)
-	{
-		dbus_error_init(&error);
-		dbus_move_error(const_cast<DBusError*>(&(ie.error)), &error);
-	}
-	
-	~InternalError()
-	{
-		dbus_error_free(&error);
-	}
-
-	operator DBusError*()
-	{
-		return &error;
-	}
-
-	operator bool()
-	{
-		return dbus_error_is_set(&error);
-	}
-};
-
-} /* namespace DBus */
-
-#endif//__DBUSXX_INTERNALERROR_H
+#endif//__DBUSXX_API_H

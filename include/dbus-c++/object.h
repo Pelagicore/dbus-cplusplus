@@ -32,6 +32,7 @@
 #include <string>
 #include <list>
 
+#include "api.h"
 #include "interface.h"
 #include "connection.h"
 #include "message.h"
@@ -39,7 +40,7 @@
 
 namespace DBus {
 
-class Object
+class DXXAPI Object
 {
 protected:
 
@@ -57,9 +58,9 @@ public:
 
 private:
 
-	virtual bool handle_message( const Message& ) = 0;
-	virtual void register_obj() = 0;
-	virtual void unregister_obj() = 0;
+	DXXAPILOCAL virtual bool handle_message( const Message& ) = 0;
+	DXXAPILOCAL virtual void register_obj() = 0;
+	DXXAPILOCAL virtual void unregister_obj() = 0;
 
 private:
 
@@ -89,7 +90,7 @@ const std::string& Object::service() const
 /*
 */
 
-class Tag
+class DXXAPI Tag
 {
 public:
 
@@ -104,7 +105,7 @@ class ObjectAdaptor;
 
 typedef std::list<ObjectAdaptor*> ObjectAdaptorPList;
 
-class ObjectAdaptor : public Object, public virtual AdaptorBase
+class DXXAPI ObjectAdaptor : public Object, public virtual AdaptorBase
 {
 public:
 
@@ -122,7 +123,7 @@ public:
 
 protected:
 
-	class Continuation
+	class DXXAPI Continuation
 	{
 	public:
 
@@ -188,7 +189,7 @@ class ObjectProxy;
 
 typedef std::list<ObjectProxy*> ObjectProxyPList;
 
-class ObjectProxy : public Object, public virtual ProxyBase
+class DXXAPI ObjectProxy : public Object, public virtual ProxyBase
 {
 public:
 

@@ -4,6 +4,7 @@ CXX = $(CXX_FOR_BUILD)
 
 AM_CPPFLAGS = \
 	$(dbus_CFLAGS) \
+	$(xml_CFLAGS) \
 	-I$(top_srcdir)/include
 
 if CROSS_COMPILING
@@ -14,7 +15,7 @@ endif
 
 bin_PROGRAMS = dbusxx-xml2cpp dbusxx-introspect
 
-dbusxx_xml2cpp_SOURCES = xml2cpp.h xml2cpp.cpp
+dbusxx_xml2cpp_SOURCES = xml.h xml.cpp xml2cpp.h xml2cpp.cpp
 dbusxx_xml2cpp_LDADD = $(libdbus_cxx_la)
 
 dbusxx_introspect_SOURCES = introspect.h introspect.cpp

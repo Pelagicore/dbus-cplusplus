@@ -31,6 +31,7 @@
 
 #include <string>
 #include <map>
+#include "api.h"
 #include "util.h"
 #include "types.h"
 
@@ -39,7 +40,7 @@
 namespace DBus {
 
 //todo: this should belong to to properties.h
-struct PropertyData
+struct DXXAPI PropertyData
 {
 	bool		read;
 	bool		write;
@@ -57,7 +58,7 @@ class SignalMessage;
 
 typedef std::map<std::string, InterfaceAdaptor*> InterfaceAdaptorTable;
 
-class AdaptorBase
+class DXXAPI AdaptorBase
 {
 public:
 
@@ -84,7 +85,7 @@ class CallMessage;
 
 typedef std::map<std::string, InterfaceProxy*> InterfaceProxyTable;
 
-class ProxyBase
+class DXXAPI ProxyBase
 {
 public:
 
@@ -102,7 +103,7 @@ protected:
 	InterfaceProxyTable _interfaces;
 };
 
-class Interface
+class DXXAPI Interface
 {
 public:
 	
@@ -130,7 +131,7 @@ const std::string& Interface::name() const
 
 typedef std::map< std::string, Slot<Message, const CallMessage&> > MethodTable;
 
-class InterfaceAdaptor : public Interface, public virtual AdaptorBase
+class DXXAPI InterfaceAdaptor : public Interface, public virtual AdaptorBase
 {
 public:
 
@@ -160,7 +161,7 @@ protected:
 
 typedef std::map< std::string, Slot<void, const SignalMessage&> > SignalTable;
 
-class InterfaceProxy : public Interface, public virtual ProxyBase
+class DXXAPI InterfaceProxy : public Interface, public virtual ProxyBase
 {
 public:
 
