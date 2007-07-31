@@ -164,7 +164,7 @@ public:
 	
 	struct Private;
 
-	Message( Private* );
+	Message( Private*, bool incref = true );
 
 	Message( const Message& m );
 

@@ -350,7 +350,7 @@ Message Connection::send_blocking( Message& msg, int timeout )
 
 	if(e) throw Error(e);
 
-	return Message(new Message::Private(reply));
+	return Message(new Message::Private(reply), false);
 }
 
 PendingCall Connection::send_async( Message& msg, int timeout )

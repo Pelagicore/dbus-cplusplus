@@ -365,10 +365,10 @@ Message::Message()
 {
 }
 
-Message::Message( Message::Private* p )
+Message::Message( Message::Private* p, bool incref )
 : _pvt(p)
 {
-	if(_pvt->msg) dbus_message_ref(_pvt->msg);
+	if(_pvt->msg && incref) dbus_message_ref(_pvt->msg);
 }
 
 Message::Message( const Message& m )
