@@ -8,6 +8,8 @@ AM_CONFIG_HEADER([include/dbus-c++/config.h])
 
 AC_CANONICAL_HOST
 
+AC_SUBST(PACKAGE_VERSION)
+
 
 # Set configuration options
 
@@ -187,4 +189,5 @@ AC_OUTPUT(
 	examples/hal/Makefile
 	examples/glib/Makefile
 	dbus-c++-1.pc
+	libdbus-c++.spec
 )

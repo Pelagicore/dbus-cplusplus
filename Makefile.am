@@ -1,6 +1,6 @@
 SUBDIRS = src tools data doc examples
 
-EXTRA_DIST = autogen.sh
+EXTRA_DIST = autogen.sh libdbus-c++.spec libdbus-c++.spec.in
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = dbus-c++-1.pc
@@ -17,5 +17,6 @@ MAINTAINERCLEANFILES = \
 	ltmain.sh \
 	mdate-sh \
 	missing \
-	mkinstalldirs
+	mkinstalldirs \
+	libdbus-c++.spec
 
