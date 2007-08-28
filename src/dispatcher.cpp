@@ -143,11 +143,15 @@ void Dispatcher::Private::on_toggle_timeout( DBusTimeout* timeout, void* data )
 
 void Dispatcher::queue_connection( Connection::Private* cp )
 {
+	_mutex_p.lock();
 	_pending_queue.push_back(cp);
+	_mutex_p.unlock();
 }
 
 void Dispatcher::dispatch_pending()
 {
+	_mutex_p.lock();
+
 	while(_pending_queue.size() > 0)
 	{
 		Connection::PrivatePList::iterator i, j;
@@ -166,6 +170,7 @@ void Dispatcher::dispatch_pending()
 			i = j;
 		}
 	}
+	_mutex_p.unlock();
 }
 
 #ifdef DBUS_HAS_THREADS_INIT_DEFAULT

@@ -37,7 +37,7 @@ static double millis( timeval tv )
 	return (tv.tv_sec*1000.0 + tv.tv_usec/1000.0);
 }
 	
-EepleTimeout::EepleTimeout( int interval, bool repeat, EepleMainLoop* ed )
+DefaultTimeout::DefaultTimeout( int interval, bool repeat, DefaultMainLoop* ed )
 : _enabled(true), _interval(interval), _repeat(repeat), _expiration(0), _data(0), _disp(ed)
 {
 	timeval now;
@@ -45,57 +45,113 @@ EepleTimeout::EepleTimeout( int interval, bool repeat, EepleMainLoop* ed )
 
 	_expiration = millis(now) + interval;
 
+	_disp->_mutex_t.lock();
 	_disp->_timeouts.push_back(this);
+	_disp->_mutex_t.unlock();
 }
 
-EepleTimeout::~EepleTimeout()
+DefaultTimeout::~DefaultTimeout()
 {
+	_disp->_mutex_t.lock();
 	_disp->_timeouts.remove(this);
+	_disp->_mutex_t.unlock();
 }
 
-EepleWatch::EepleWatch( int fd, int flags, EepleMainLoop* ed )
+DefaultWatch::DefaultWatch( int fd, int flags, DefaultMainLoop* ed )
 : _enabled(true), _fd(fd), _flags(flags), _state(0), _data(0), _disp(ed)
 {
+	_disp->_mutex_w.lock();
 	_disp->_watches.push_back(this);
+	_disp->_mutex_w.unlock();
 }
 
-EepleWatch::~EepleWatch()
+DefaultWatch::~DefaultWatch()
 {
+	_disp->_mutex_w.lock();
 	_disp->_watches.remove(this);
+	_disp->_mutex_w.unlock();
 }
 
-EepleMainLoop::EepleMainLoop()
+DefaultMutex::DefaultMutex()
+{
+#if defined HAVE_PTHREAD
+
+	pthread_mutex_init(&_mutex, NULL);
+
+#elif defined HAVE_WIN32
+#endif
+}
+
+DefaultMutex::~DefaultMutex()
+{
+#if defined HAVE_PTHREAD
+
+	pthread_mutex_destroy(&_mutex);
+
+#elif defined HAVE_WIN32
+#endif
+}
+
+void DefaultMutex::lock()
+{
+#if defined HAVE_PTHREAD
+
+	pthread_mutex_lock(&_mutex);
+
+#elif defined HAVE_WIN32
+#endif
+}
+
+void DefaultMutex::unlock()
+{
+#if defined HAVE_PTHREAD
+
+	pthread_mutex_unlock(&_mutex);
+
+#elif defined HAVE_WIN32
+#endif
+}
+
+DefaultMainLoop::DefaultMainLoop()
 {
 }
 
-EepleMainLoop::~EepleMainLoop()
+DefaultMainLoop::~DefaultMainLoop()
 {
-	Watches::iterator wi = _watches.begin();
+	_mutex_w.lock();
+
+	DefaultWatches::iterator wi = _watches.begin();
 	while(wi != _watches.end())
 	{
-		Watches::iterator wmp = wi;
+		DefaultWatches::iterator wmp = wi;
 		++wmp;
 		delete (*wi);
 		wi = wmp;
 	}
+	_mutex_w.unlock();
 
-	Timeouts::iterator ti = _timeouts.begin();
+	_mutex_t.lock();
+
+	DefaultTimeouts::iterator ti = _timeouts.begin();
 	while(ti != _timeouts.end())
 	{
-		Timeouts::iterator tmp = ti;
+		DefaultTimeouts::iterator tmp = ti;
 		++tmp;
 		delete (*ti);
 		ti = tmp;
 	}
+	_mutex_t.unlock();
 }
 
-void EepleMainLoop::dispatch()
+void DefaultMainLoop::dispatch()
 {
+	_mutex_w.lock();
+
 	int nfd = _watches.size();
 
 	pollfd fds[nfd];
 
-	Watches::iterator wi = _watches.begin();
+	DefaultWatches::iterator wi = _watches.begin();
 
 	for(nfd = 0; wi != _watches.end(); ++wi)
 	{
@@ -108,10 +164,13 @@ void EepleMainLoop::dispatch()
 			++nfd;
 		}
 	}
+	_mutex_w.unlock();
 
 	int wait_min = 10000;
 
-	Timeouts::iterator ti;
+	DefaultTimeouts::iterator ti;
+
+	_mutex_t.lock();
 
 	for(ti = _timeouts.begin(); ti != _timeouts.end(); ++ti)
 	{
@@ -119,8 +178,7 @@ void EepleMainLoop::dispatch()
 			wait_min = (*ti)->interval();
 	}
 
-	//int rfd = poll(fds, nfd, wait_min);
-	//if(rfd) debug_log("%d descriptors ready");
+	_mutex_t.unlock();
 
 	poll(fds, nfd, wait_min);
 
@@ -129,11 +187,13 @@ void EepleMainLoop::dispatch()
 
 	double now_millis = millis(now);
 
+	_mutex_t.lock();
+
 	ti = _timeouts.begin();
 
 	while(ti != _timeouts.end())
 	{
-		Timeouts::iterator tmp = ti;
+		DefaultTimeouts::iterator tmp = ti;
 		++tmp;
 
 		if((*ti)->enabled() && now_millis >= (*ti)->_expiration)
@@ -150,13 +210,17 @@ void EepleMainLoop::dispatch()
 		ti = tmp;
 	}
 
+	_mutex_t.unlock();
+
+	_mutex_w.lock();
+
 	for(int j = 0; j < nfd; ++j)
 	{
-		Watches::iterator wi;
+		DefaultWatches::iterator wi;
 
 		for(wi = _watches.begin(); wi != _watches.end();)
 		{
-			Watches::iterator tmp = wi;
+			DefaultWatches::iterator tmp = wi;
 			++tmp;
 
 			if((*wi)->enabled() && (*wi)->_fd == fds[j].fd)
@@ -174,138 +238,6 @@ void EepleMainLoop::dispatch()
 			wi = tmp;
 		}
 	}
-}
-
-/*
-*/
-
-BusTimeout::BusTimeout( Timeout::Internal* ti, BusDispatcher* bd )
-: Timeout(ti), EepleTimeout(Timeout::interval(), true, bd)
-{
-	EepleTimeout::enabled(Timeout::enabled());
-}
-
-void BusTimeout::toggle()
-{
-	debug_log("timeout %p toggled (%s)", this, Timeout::enabled() ? "on":"off");
-
-	EepleTimeout::enabled(Timeout::enabled());
-}
-
-BusWatch::BusWatch( Watch::Internal* wi, BusDispatcher* bd )
-: Watch(wi), EepleWatch(Watch::descriptor(), 0, bd)
-{
-	int flags = POLLHUP | POLLERR;
-
-	if(Watch::flags() & DBUS_WATCH_READABLE)
-		flags |= POLLIN;
-	if(Watch::flags() & DBUS_WATCH_WRITABLE)
-		flags |= POLLOUT;
-
-	EepleWatch::flags(flags);
-	EepleWatch::enabled(Watch::enabled());
-}
-
-void BusWatch::toggle()
-{
-	debug_log("watch %p toggled (%s)", this, Watch::enabled() ? "on":"off");
-
-	EepleWatch::enabled(Watch::enabled());
-}
-
-void BusDispatcher::enter()
-{
-	debug_log("entering dispatcher %p", this);
-
-	_running = true;
-
-	while(_running)
-	{
-		do_iteration();
-	}
-
-	debug_log("leaving dispatcher %p", this);
-}
-
-void BusDispatcher::leave()
-{
-	_running = false;
-}
-
-void BusDispatcher::do_iteration()
-{
-	dispatch_pending();
-	dispatch();
-}
-
-Timeout* BusDispatcher::add_timeout( Timeout::Internal* ti )
-{
-	BusTimeout* bt = new BusTimeout(ti, this);
-
-	bt->expired = new Callback<BusDispatcher, void, EepleTimeout&>(this, &BusDispatcher::timeout_expired);
-	bt->data(bt);
-
-	debug_log("added timeout %p (%s)", bt, ((Timeout*)bt)->enabled() ? "on":"off");
-
-	return bt;
-}
-
-void BusDispatcher::rem_timeout( Timeout* t )
-{
-	debug_log("removed timeout %p", t);
-
-	delete t;
-}
-
-Watch* BusDispatcher::add_watch( Watch::Internal* wi )
-{
-	BusWatch* bw = new BusWatch(wi, this);
-
-	bw->ready = new Callback<BusDispatcher, void, EepleWatch&>(this, &BusDispatcher::watch_ready);
-	bw->data(bw);
-
-	debug_log("added watch %p (%s) fd=%d flags=%d",
-		bw, ((Watch*)bw)->enabled() ? "on":"off", ((Watch*)bw)->descriptor(), ((Watch*)bw)->flags()
-	);
-
-	return bw;
-}
-
-void BusDispatcher::rem_watch( Watch* w )
-{
-	debug_log("removed watch %p", w);
-
-	delete w;
-}
-
-void BusDispatcher::timeout_expired( EepleTimeout& et )
-{
-	debug_log("timeout %p expired", &et);
-
-	BusTimeout* timeout = reinterpret_cast<BusTimeout*>(et.data());
-
-	timeout->handle();
-}
-
-void BusDispatcher::watch_ready( EepleWatch& ew )
-{
-	BusWatch* watch = reinterpret_cast<BusWatch*>(ew.data());
-
-	debug_log("watch %p ready, flags=%d state=%d",
-		watch, ((Watch*)watch)->flags(), watch->state()
-	);
-
-	int flags = 0;
-
-	if(watch->state() & POLLIN)
-		flags |= DBUS_WATCH_READABLE;
-	if(watch->state() & POLLOUT)
-		flags |= DBUS_WATCH_WRITABLE;
-	if(watch->state() & POLLHUP)
-		flags |= DBUS_WATCH_HANGUP;
-	if(watch->state() & POLLERR)
-		flags |= DBUS_WATCH_ERROR;
-
-	watch->handle(flags);
+	_mutex_w.unlock();
 }
 

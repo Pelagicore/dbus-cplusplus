@@ -31,6 +31,7 @@
 
 #include "api.h"
 #include "connection.h"
+#include "eventloop.h"
 
 namespace DBus {
 
@@ -117,6 +118,7 @@ public:
 
 private:
 
+	DefaultMutex _mutex_p;
 	Connection::PrivatePList _pending_queue;
 };
 

@@ -22,28 +22,30 @@ void EchoClient::Echoed( const DBus::Variant& value )
 	cout << "!";
 }
 
-/* NOTE: using many threads is likely to trigger a race condition in the event loop
- * in fact access to the list of timeouts and watches inside the default dispatcher
- * implementation (DBus::BusDispatcher) is NOT serialized
- *
- * (yes, I'm well aware of how much this sucks)
+/*
+ * For some strange reason, libdbus frequently dies with an OOM
  */
-static const int THREADS = 1;
+
+static const int THREADS = 16;
 
 static bool spin = true;
 
-void* greeter_thread( void* )
+void* greeter_thread( void* arg )
 {
-	DBus::Connection conn = DBus::Connection::SessionBus();
+	DBus::Connection* conn = reinterpret_cast<DBus::Connection*>(arg);
 
-	EchoClient client(conn, ECHO_SERVER_PATH, ECHO_SERVER_NAME);
+	EchoClient client(*conn, ECHO_SERVER_PATH, ECHO_SERVER_NAME);
 
-	while(spin)
+	char idstr[16];
+
+	snprintf(idstr, sizeof(idstr), "%lu", pthread_self());
+
+	for(int i = 0; i < 100 && spin; ++i)
 	{
-		client.Hello("client");
-
-		cout << "*";
+		cout << client.Hello(idstr) << endl;
 	}
+
+	cout << idstr << " done " << endl;
 
 	return NULL;
 }
@@ -70,14 +72,18 @@ int main()
 
 	DBus::default_dispatcher = &dispatcher;
 
+	DBus::Connection conn = DBus::Connection::SessionBus();
+
 	pthread_t threads[THREADS];
 
 	for(int i = 0; i < THREADS; ++i)
 	{
-		pthread_create(threads+i, NULL, greeter_thread, NULL);
+		pthread_create(threads+i, NULL, greeter_thread, &conn);
 	}
 
 	dispatcher.enter();
+
+	cout << "terminating" << endl;
 
 	for(int i = 0; i < THREADS; ++i)
 	{

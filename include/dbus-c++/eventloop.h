@@ -29,23 +29,33 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_PTHREAD
+#include <pthread.h>
+#endif
+
 #include <list>
 
 #include "api.h"
-#include "dispatcher.h"
 #include "util.h"
 
 namespace DBus {
 
-class EepleMainLoop;
+/*
+ * these Default* classes implement a very simple event loop which
+ * is used here as the default main loop, if you want to hook
+ * a different one use the Bus* classes in eventloop-integration.h
+ * or the Glib::Bus* classes as a reference
+ */
 
-class DXXAPI EepleTimeout
+class DefaultMainLoop;
+
+class DXXAPI DefaultTimeout
 {
 public:
 
-	EepleTimeout( int interval, bool repeat, EepleMainLoop* );
+	DefaultTimeout( int interval, bool repeat, DefaultMainLoop* );
 
-	virtual ~EepleTimeout();
+	virtual ~DefaultTimeout();
 
 	bool enabled(){ return _enabled; }
 	void enabled(bool e){ _enabled = e; }
@@ -59,7 +69,7 @@ public:
 	void* data(){ return _data; }
 	void data(void* d){ _data = d; }
 
-	Slot<void, EepleTimeout&> expired;
+	Slot<void, DefaultTimeout&> expired;
 	
 private:
 
@@ -72,20 +82,20 @@ private:
 
 	void* _data;
 	
-	EepleMainLoop* _disp;
+	DefaultMainLoop* _disp;
 
-friend class EepleMainLoop;
+friend class DefaultMainLoop;
 };
 
-typedef std::list< EepleTimeout* > Timeouts;
+typedef std::list< DefaultTimeout* > DefaultTimeouts;
 
-class DXXAPI EepleWatch
+class DXXAPI DefaultWatch
 {
 public:
 
-	EepleWatch( int fd, int flags, EepleMainLoop* );
+	DefaultWatch( int fd, int flags, DefaultMainLoop* );
 
-	virtual ~EepleWatch();
+	virtual ~DefaultWatch();
 
 	bool enabled(){ return _enabled; }
 	void enabled(bool e){ _enabled = e; }
@@ -100,7 +110,7 @@ public:
 	void* data(){ return _data; }
 	void data(void* d){ _data = d; }
 
-	Slot<void, EepleWatch&> ready;
+	Slot<void, DefaultWatch&> ready;
 
 private:
 
@@ -112,89 +122,58 @@ private:
 
 	void* _data;
 
-	EepleMainLoop* _disp;
+	DefaultMainLoop* _disp;
 
-friend class EepleMainLoop;
+friend class DefaultMainLoop;
 };
 
-typedef std::list< EepleWatch* > Watches;
+typedef std::list< DefaultWatch* > DefaultWatches;
 
-class DXXAPI EepleMainLoop
+class DXXAPI DefaultMutex
 {
 public:
 
-	EepleMainLoop();
+	DefaultMutex();
 
-	virtual ~EepleMainLoop();
+	~DefaultMutex();
+
+	void lock();
+
+	void unlock();
+
+private:
+
+#if defined HAVE_PTHREAD
+
+	pthread_mutex _mutex;
+
+#elif defined HAVE_WIN32
+
+//TODO: use a critical section
+
+#endif
+};
+
+class DXXAPI DefaultMainLoop
+{
+public:
+
+	DefaultMainLoop();
+
+	virtual ~DefaultMainLoop();
 
 	virtual void dispatch();
 
 private:
 
-	Timeouts _timeouts;
-	Watches _watches;
+	DefaultMutex _mutex_t;
+	DefaultTimeouts _timeouts;
 
-friend class EepleTimeout;
-friend class EepleWatch;
-};
+	DefaultMutex _mutex_w;
+	DefaultWatches _watches;
 
-/* the classes below are those you are going to implement if you
- * want to use another event loop (Qt, Glib, boost, whatever).
- *
- * Don't forget to set 'default_dispatcher' accordingly!
- */
-
-class BusDispatcher;
-
-class DXXAPI BusTimeout : public Timeout, public EepleTimeout
-{
-	BusTimeout( Timeout::Internal*, BusDispatcher* );
-
-	void toggle();
-
-friend class BusDispatcher;
-};
-
-class DXXAPI BusWatch : public Watch, public EepleWatch
-{
-	BusWatch( Watch::Internal*, BusDispatcher* );
-
-	void toggle();
-
-friend class BusDispatcher;
-};
-
-class DXXAPI BusDispatcher : public Dispatcher, public EepleMainLoop
-{
-public:
-
-	BusDispatcher() : _running(false)
-	{}
-
-	~BusDispatcher()
-	{}
-
-	virtual void enter();
-
-	virtual void leave();
-
-	virtual void do_iteration();
-
-	virtual Timeout* add_timeout( Timeout::Internal* );
-
-	virtual void rem_timeout( Timeout* );
-
-	virtual Watch* add_watch( Watch::Internal* );
-
-	virtual void rem_watch( Watch* );
-
-	void watch_ready( EepleWatch& );
-
-	void timeout_expired( EepleTimeout& );
-
-private:
-
-	bool _running;
+friend class DefaultTimeout;
+friend class DefaultWatch;
 };
 
 } /* namespace DBus */

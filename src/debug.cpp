@@ -32,9 +32,7 @@ static void _debug_log_default(const char* format, ...)
 {
 #ifdef DEBUG
 
-	static int debug_env = -1;
-
-	if(debug_env < 0) debug_env = getenv("DBUSXX_VERBOSE") ? 1 : 0;
+	static int debug_env = getenv("DBUSXX_VERBOSE") ? 1 : 0;
 
 	if(debug_env)
 	{
