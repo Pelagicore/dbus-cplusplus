@@ -28,6 +28,7 @@
 
 #include "internalerror.h"
 #include "pendingcall_p.h"
+#include "message_p.h"
 
 using namespace DBus;
 
@@ -40,13 +41,6 @@ PendingCall::Private::Private( DBusPendingCall* dpc )
 	}
 }
 
-void PendingCall::Private::notify_stub( DBusPendingCall* dpc, void* data )
-{
-	PendingCall* pc = static_cast<PendingCall*>(data);
-
-	pc->slot(*pc);
-}
-
 PendingCall::Private::~Private()
 {
 	if(dataslot != -1)
@@ -55,10 +49,18 @@ PendingCall::Private::~Private()
 	}
 }
 
+void PendingCall::Private::notify_stub( DBusPendingCall* dpc, void* data )
+{
+	PendingCall::Private* pvt = static_cast<PendingCall::Private*>(data);
+
+	PendingCall pc(pvt);
+	pvt->slot(pc);
+}
+
 PendingCall::PendingCall( PendingCall::Private* p )
 : _pvt(p)
 {
-	if(!dbus_pending_call_set_notify(_pvt->call, Private::notify_stub, this, NULL))
+	if(!dbus_pending_call_set_notify(_pvt->call, Private::notify_stub, p, NULL))
 	{
 		throw ErrorNoMemory("Unable to initialize pending call");
 	}
@@ -73,6 +75,17 @@ PendingCall::PendingCall( const PendingCall& c )
 PendingCall::~PendingCall()
 {
 	dbus_pending_call_unref(_pvt->call);
+}
+
+PendingCall& PendingCall::operator = ( const PendingCall& c )
+{
+	if(&c != this)
+	{
+		dbus_pending_call_unref(_pvt->call);
+		_pvt = c._pvt;
+		dbus_pending_call_ref(_pvt->call);
+	}
+	return *this;
 }
 
 bool PendingCall::completed()
@@ -101,5 +114,26 @@ void PendingCall::data( void* p )
 void* PendingCall::data()
 {
 	return dbus_pending_call_get_data(_pvt->call, _pvt->dataslot);
+}
+
+Slot<void, PendingCall&>& PendingCall::slot()
+{
+	return _pvt->slot;
+}
+
+Message PendingCall::steal_reply()
+{
+	DBusMessage* dmsg = dbus_pending_call_steal_reply(_pvt->call);
+	if(!dmsg)
+	{
+		dbus_bool_t callComplete = dbus_pending_call_get_completed(_pvt->call);
+
+		if(callComplete)
+			throw ErrorNoReply("No reply available");
+		else
+			throw ErrorNoReply("Call not complete");
+	}
+
+	return Message( new Message::Private(dmsg) );
 }
 

@@ -31,6 +31,7 @@
 
 #include "api.h"
 #include "util.h"
+#include "message.h"
 
 namespace DBus {
 
@@ -44,7 +45,11 @@ public:
 
 	PendingCall( Private* );
 
+	PendingCall( const PendingCall& );
+
 	virtual ~PendingCall();
+
+	PendingCall& operator = ( const PendingCall& );
 
 	bool completed();
 	
@@ -56,11 +61,9 @@ public:
 
 	void* data();
 
-	Slot<void, PendingCall&> slot;
+	Slot<void, PendingCall&>& slot();
 
-private:
-
-	DXXAPILOCAL PendingCall( const PendingCall& );
+	Message steal_reply();
 
 private:
 
