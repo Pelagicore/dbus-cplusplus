@@ -29,7 +29,7 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_PTHREAD
+#ifdef HAVE_PTHREAD_H
 #include <pthread.h>
 #endif
 
@@ -143,9 +143,9 @@ public:
 
 private:
 
-#if defined HAVE_PTHREAD
+#if defined HAVE_PTHREAD_H
 
-	pthread_mutex _mutex;
+	pthread_mutex_t _mutex;
 
 #elif defined HAVE_WIN32
 

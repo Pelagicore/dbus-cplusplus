@@ -74,7 +74,7 @@ DefaultWatch::~DefaultWatch()
 
 DefaultMutex::DefaultMutex()
 {
-#if defined HAVE_PTHREAD
+#if defined HAVE_PTHREAD_H
 
 	pthread_mutex_init(&_mutex, NULL);
 
@@ -84,7 +84,7 @@ DefaultMutex::DefaultMutex()
 
 DefaultMutex::~DefaultMutex()
 {
-#if defined HAVE_PTHREAD
+#if defined HAVE_PTHREAD_H
 
 	pthread_mutex_destroy(&_mutex);
 
@@ -94,7 +94,7 @@ DefaultMutex::~DefaultMutex()
 
 void DefaultMutex::lock()
 {
-#if defined HAVE_PTHREAD
+#if defined HAVE_PTHREAD_H
 
 	pthread_mutex_lock(&_mutex);
 
@@ -104,7 +104,7 @@ void DefaultMutex::lock()
 
 void DefaultMutex::unlock()
 {
-#if defined HAVE_PTHREAD
+#if defined HAVE_PTHREAD_H
 
 	pthread_mutex_unlock(&_mutex);
 

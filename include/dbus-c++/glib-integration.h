@@ -32,7 +32,7 @@
 #include <glib.h>
 
 #include "api.h"
-#include "eventloop.h"
+#include "dispatcher.h"
 
 namespace DBus {
 

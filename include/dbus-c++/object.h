@@ -104,6 +104,7 @@ public:
 class ObjectAdaptor;
 
 typedef std::list<ObjectAdaptor*> ObjectAdaptorPList;
+typedef std::list<std::string> ObjectPathList;
 
 class DXXAPI ObjectAdaptor : public Object, public virtual AdaptorBase
 {
@@ -112,6 +113,8 @@ public:
 	static ObjectAdaptor* from_path( const Path& path );
 
 	static ObjectAdaptorPList from_path_prefix( const std::string& prefix );
+
+	static ObjectPathList child_nodes_from_prefix( const std::string& prefix );
 
 	struct Private;
 

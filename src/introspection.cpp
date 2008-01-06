@@ -61,7 +61,7 @@ Message IntrospectableAdaptor::Introspect( const CallMessage& call )
 		IntrospectedInterface* const intro = iti->second->introspect();
 		if(intro)
 		{
-			xml << "<interface name=\"" << intro->name << "\">";
+			xml << "\n\t<interface name=\"" << intro->name << "\">";
 
 			for(const IntrospectedProperty* p = intro->properties; p->name; ++p)
 			{
@@ -70,18 +70,18 @@ Message IntrospectableAdaptor::Introspect( const CallMessage& call )
 				if(p->read)  access += "read";
 				if(p->write) access += "write";
 
-				xml << "<property name=\"" << p->name << "\""
+				xml << "\n\t\t<property name=\"" << p->name << "\""
 				    << " type=\"" << p->type << "\""
 				    << " access=\"" << access << "\"/>";
 			}
 
 			for(const IntrospectedMethod* m = intro->methods; m->args; ++m)
 			{
-				xml << "<method name=\"" << m->name << "\">";
+				xml << "\n\t\t<method name=\"" << m->name << "\">";
 
 				for(const IntrospectedArgument* a = m->args; a->type; ++a)
 				{
-					xml << "<arg direction=\"" << (a->in ? "in" : "out") << "\""
+					xml << "\n\t\t\t<arg direction=\"" << (a->in ? "in" : "out") << "\""
 					    << " type=\"" << a->type << "\"";
 
 					if(a->name) xml << " name=\"" << a->name << "\"";
@@ -89,12 +89,12 @@ Message IntrospectableAdaptor::Introspect( const CallMessage& call )
 					xml << "/>";
 				}
 
-				xml << "</method>";
+				xml << "\n\t\t</method>";
 			}
 
 			for(const IntrospectedMethod* m = intro->signals; m->args; ++m)
 			{
-				xml << "<signal name=\"" << m->name << "\">";
+				xml << "\n\t\t<signal name=\"" << m->name << "\">";
 
 				for(const IntrospectedArgument* a = m->args; a->type; ++a)
 				{
@@ -104,12 +104,22 @@ Message IntrospectableAdaptor::Introspect( const CallMessage& call )
 
 					xml << "/>";
 				}
-				xml << "</signal>";
+				xml << "\n\t\t</signal>";
 			}
 
-			xml << "</interface>";
+			xml << "\n\t</interface>";
 		}
 	}
+
+	const ObjectPathList nodes = ObjectAdaptor::child_nodes_from_prefix(path + '/');
+	ObjectPathList::const_iterator oni;
+
+	for(oni = nodes.begin(); oni != nodes.end(); ++oni) 
+	{
+		xml << "\n\t<node name=\"" << (*oni) << "\"/>";
+	}
+
+	/* broken
 	const ObjectAdaptorPList children = ObjectAdaptor::from_path_prefix(path + '/');
 
 	ObjectAdaptorPList::const_iterator oci;
@@ -121,8 +131,9 @@ Message IntrospectableAdaptor::Introspect( const CallMessage& call )
 
 		xml << "<node name=\"" << name << "\"/>";
 	}
+	*/
 
-	xml << "</node>";
+	xml << "\n</node>";
 
 	ReturnMessage reply(call);
 	MessageIter wi = reply.writer();

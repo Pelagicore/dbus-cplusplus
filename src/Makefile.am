@@ -8,9 +8,11 @@ GLIB_H = $(HEADER_DIR)/glib-integration.h
 GLIB_CPP = glib-integration.cpp
 endif
 
+CONFIG_H = $(top_builddir)/include/dbus-c++/config.h
+
 HEADER_DIR  = $(top_srcdir)/include/dbus-c++
 HEADER_FILES = \
-	$(HEADER_DIR)/config.h \
+	$(CONFIG_H) \
 	$(HEADER_DIR)/dbus.h \
 	$(HEADER_DIR)/types.h \
 	$(HEADER_DIR)/connection.h \

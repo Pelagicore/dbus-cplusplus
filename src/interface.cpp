@@ -131,7 +131,11 @@ bool InterfaceProxy::dispatch_signal( const SignalMessage& msg )
 	if( si != _signals.end() )
 	{
 		si->second.call( msg );
-		return true;
+		// Here we always return false because there might be
+		// another InterfaceProxy listening for the same signal.
+		// This way we instruct libdbus-1 to go on dispatching
+		// the signal.
+		return false;
 	}
 	else	
 	{

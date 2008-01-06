@@ -119,6 +119,31 @@ ObjectAdaptorPList ObjectAdaptor::from_path_prefix( const std::string& prefix )
 	return ali;
 }
 
+ObjectPathList ObjectAdaptor::child_nodes_from_prefix( const std::string& prefix )
+{
+	ObjectPathList ali;
+
+	ObjectAdaptorTable::iterator ati = _adaptor_table.begin();
+
+	size_t plen = prefix.length();
+
+	while(ati != _adaptor_table.end())
+	{
+	  if(!strncmp(ati->second->path().c_str(), prefix.c_str(), plen))
+		{
+				std::string p = ati->second->path().substr(plen);
+				p = p.substr(0,p.find('/'));
+				ali.push_back(p);
+		}
+		++ati;
+	}
+
+	ali.sort();
+	ali.unique();
+
+	return ali;
+}
+
 ObjectAdaptor::ObjectAdaptor( Connection& conn, const Path& path )
 :	Object(conn, path, conn.unique_name())
 {
@@ -138,16 +163,6 @@ void ObjectAdaptor::register_obj()
 	{
  		throw ErrorNoMemory("unable to register object path");
 	}
-	else
-	{
-		InterfaceAdaptorTable::const_iterator ii = _interfaces.begin();
-		while( ii != _interfaces.end() )
-		{
-			std::string im = "type='method_call',interface='"+ii->first+"',path='"+path()+"'";
-			conn().add_match(im.c_str());
-			++ii;
-		}
-	}
 
 	_adaptor_table[path()] = this;
 }
@@ -159,14 +174,6 @@ void ObjectAdaptor::unregister_obj()
 	debug_log("unregistering local object %s", path().c_str());
 
 	dbus_connection_unregister_object_path(conn()._pvt->conn, path().c_str());
-
-	InterfaceAdaptorTable::const_iterator ii = _interfaces.begin();
-	while( ii != _interfaces.end() )
-	{
-		std::string im = "type='method_call',interface='"+ii->first+"',path='"+path()+"'";
-		conn().remove_match(im.c_str());
-		++ii;
-	}
 }
 
 void ObjectAdaptor::_emit_signal( SignalMessage& sig )
