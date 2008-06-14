@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <stdio.h>
+#include <limits.h>
 
 static const char* ECHO_SERVER_NAME = "org.freedesktop.DBus.Examples.Echo";
 static const char* ECHO_SERVER_PATH = "/org/freedesktop/DBus/Examples/Echo";

@@ -26,6 +26,8 @@
 
 #include <dbus/dbus.h>
 
+#include <cstdlib>
+#include <cstring>
 #include <string>
 #include <map>
 #include <iostream>

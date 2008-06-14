@@ -26,6 +26,7 @@
 #include <dbus-c++/object.h>
 #include "internalerror.h"
 
+#include <cstring>
 #include <map>
 #include <dbus/dbus.h>
 

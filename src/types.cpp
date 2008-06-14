@@ -25,6 +25,7 @@
 #include <dbus-c++/types.h>
 #include <dbus-c++/object.h>
 #include <dbus/dbus.h>
+#include <cstdlib>
 #include <stdarg.h>
 
 #include "message_p.h"

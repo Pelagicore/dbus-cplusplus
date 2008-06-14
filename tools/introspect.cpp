@@ -21,6 +21,7 @@
  *
  */
 
+#include <cstring>
 #include <signal.h>
 #include <unistd.h>
 #include <iostream>
