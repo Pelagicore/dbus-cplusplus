@@ -98,7 +98,7 @@ public:
 
 	bool send( const Message&, unsigned int* serial = NULL );
 
-	Message send_blocking( Message& msg, int timeout );
+	Message send_blocking( Message& msg, int timeout = -1);
 
 	PendingCall send_async( Message& msg, int timeout );
 

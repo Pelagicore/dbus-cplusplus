@@ -323,7 +323,7 @@ Message ObjectProxy::_invoke_method( CallMessage& call )
 	call.path(path().c_str());
 	call.destination(service().c_str());
 
-	return conn().send_blocking(call, 2000);
+	return conn().send_blocking(call);
 }
 
 bool ObjectProxy::handle_message( const Message& msg )
