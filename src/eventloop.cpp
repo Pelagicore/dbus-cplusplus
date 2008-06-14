@@ -125,7 +125,9 @@ DefaultMainLoop::~DefaultMainLoop()
 	{
 		DefaultWatches::iterator wmp = wi;
 		++wmp;
+		_mutex_w.unlock();
 		delete (*wi);
+		_mutex_w.lock();
 		wi = wmp;
 	}
 	_mutex_w.unlock();
@@ -137,7 +139,9 @@ DefaultMainLoop::~DefaultMainLoop()
 	{
 		DefaultTimeouts::iterator tmp = ti;
 		++tmp;
+		_mutex_t.unlock();
 		delete (*ti);
+		_mutex_t.lock();
 		ti = tmp;
 	}
 	_mutex_t.unlock();
