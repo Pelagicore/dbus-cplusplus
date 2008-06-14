@@ -1,7 +1,8 @@
 AM_CPPFLAGS = \
 	$(dbus_CFLAGS) \
 	$(glib_CFLAGS) \
-	-I$(top_srcdir)/include
+	-I$(top_srcdir)/include \
+	-I$(top_builddir)/include
 
 if ENABLE_GLIB
 GLIB_H = $(HEADER_DIR)/glib-integration.h
