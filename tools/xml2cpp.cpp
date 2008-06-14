@@ -155,6 +155,10 @@ void _parse_signature( const string& signature, string& type, unsigned int& i )
 				++i;
 				_parse_signature(signature, type, i);
 				type += " >";
+				if(signature[i+1])
+				{
+					type += ", ";
+				}
 				continue;
 			}
 			case ')':
