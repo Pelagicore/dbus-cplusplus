@@ -57,6 +57,8 @@ int Ecore::BusTimeout::timeout_handler( void *data )
 {
 	Ecore::BusTimeout* t = reinterpret_cast<Ecore::BusTimeout*>(data);
 
+	debug_log("Ecore::BusTimeout::timeout_handler( void *data )");
+
 	t->handle();
 
 	return 1; // 1 -> reshedule for next timer interval
@@ -67,6 +69,7 @@ void Ecore::BusTimeout::_enable()
   // TODO: port
   // _source => Ecore_Timer
   // g_source_set_callback => EcoreDispatcher init()
+  debug_log("Ecore::BusTimeout::_enable()");
   
   _etimer = ecore_timer_add (((double)Timeout::interval())/1000, timeout_handler, this);
   
@@ -78,6 +81,7 @@ void Ecore::BusTimeout::_enable()
 void Ecore::BusTimeout::_disable()
 {
   // TODO: port
+  debug_log("Ecore::BusTimeout::_disable()");
   // need to enhance Dispatcher with close
   ecore_timer_del (_etimer);
 	//g_source_destroy(_source);
@@ -109,11 +113,11 @@ static bool watch_check( /*GSource *source*/ )
 // TODO: port parameters
 static bool watch_dispatch(/* GSource *source, GSourceFunc callback, */void *data )
 {
-	/*debug_log("ecore: watch_handler");
+	debug_log("ecore: watch_dispatch");
 
-	bool cb = callback(data);
+	/*bool cb = callback(data);
 	DBus::default_dispatcher->dispatch_pending(); //TODO: won't work in case of multiple dispatchers*/
-	return 0;//cb;
+	return 1;//cb;
 }
 
 // TODO: needed?
@@ -148,6 +152,8 @@ void Ecore::BusWatch::watch_handler( void *data )
 {
 	Ecore::BusWatch* w = reinterpret_cast<Ecore::BusWatch*>(data);
 
+	debug_log("ecore: watch_handler");
+
 	//BusSource* io = (BusSource*)(w->_source);
 
 	int flags = 0;
@@ -167,6 +173,8 @@ void Ecore::BusWatch::watch_handler( void *data )
 
 void Ecore::BusWatch::_enable()
 {
+  debug_log("Ecore::BusWatch::_enable()");
+
   ecore_dispatcher_init (&_edispatcher, watch_handler);
   
   // TODO: port this

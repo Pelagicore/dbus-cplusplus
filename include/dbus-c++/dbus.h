@@ -25,6 +25,7 @@
 #ifndef __DBUSXX_DBUS_H
 #define __DBUSXX_DBUS_H
 
+#include "dbus-c++-config.h"
 #include "types.h"
 #include "interface.h"
 #include "object.h"
