@@ -1,11 +1,11 @@
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "echo-client.h"
 #include <iostream>
 #include <pthread.h>
 #include <signal.h>
-
-#ifdef HAVE_CONFIG_H
-#include <dbus-c++/config.h>
-#endif
 
 using namespace std;
 

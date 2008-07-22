@@ -15,7 +15,8 @@ noinst_PROGRAMS += echo-client-mt
 endif
 
 echo_client_mt_SOURCES = echo-client-glue.h echo-client.h echo-client.cpp
-echo_client_mt_LDADD = $(top_builddir)/src/libdbus-c++-1.la -lpthread
+echo_client_mt_LDADD = $(top_builddir)/src/libdbus-c++-1.la @PTHREAD_LIBS@
+echo_client_mt_CXXFLAGS = @PTHREAD_CFLAGS@
 
 echo-client-glue.h: echo-introspect.xml
 	$(top_builddir)/tools/dbusxx-xml2cpp $^ --proxy=$@

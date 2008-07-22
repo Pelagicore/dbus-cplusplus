@@ -21,6 +21,12 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#ifdef HAVE_DBUSPP_CONFIG_H
+#include <dbus-c++/dbus-c++-config.h>
+#endif
 
 #include <dbus-c++/debug.h>
 

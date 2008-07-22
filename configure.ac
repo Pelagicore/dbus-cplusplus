@@ -4,7 +4,8 @@ AC_PREREQ(2.59)
 AC_INIT([libdbus-c++], 0.5.0, [shackan@gmail.com])
 
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
-AM_CONFIG_HEADER([include/dbus-c++/config.h])
+AM_CONFIG_HEADER([config.h])
+AX_CONFIG_PRIVATE_HEADER(include/dbus-c++/dbus-c++-config.h, dbus-c++,HAVE_DBUSPP_CONFIG_H)
 
 AC_CANONICAL_HOST
 
@@ -18,6 +19,13 @@ AC_ARG_ENABLE(debug,
 		[enable debugging support]),
 	[enable_debug=$enableval],
 	[enable_debug=no]
+)
+
+AC_ARG_ENABLE(ecore,
+	AS_HELP_STRING([--enable-ecore],
+		[enable ecore integration]),
+	[enable_ecore=$enableval],
+	[enable_ecore=no]
 )
 
 AC_ARG_ENABLE(glib,
@@ -75,17 +83,17 @@ AC_SUBST(dbus_LIBS)
 
 DBUS_API_STABLE_VERSION=1.0.0
 PKG_CHECK_EXISTS([dbus-1 < $DBUS_API_STABLE_VERSION],
-	[AC_DEFINE(DBUS_API_SUBJECT_TO_CHANGE, , [unstable DBus])]
+	[AX_DEFINE_PRIVATE(DBUS_API_SUBJECT_TO_CHANGE, , [unstable DBus])]
 )
 
 DBUS_THREADS_INIT_DEFAULT_VERSION=0.93
 PKG_CHECK_EXISTS([dbus-1 >= $DBUS_THREADS_INIT_DEFAULT_VERSION],
-	[AC_DEFINE(DBUS_HAS_THREADS_INIT_DEFAULT, , [dbus_threads_init_default (needs DBus >= 0.93)])]
+	[AX_DEFINE_PRIVATE(DBUS_HAS_THREADS_INIT_DEFAULT, , [dbus_threads_init_default (needs DBus >= 0.93)])]
 )
 
 DBUS_RECURSIVE_MUTEX_VERSION=0.95
 PKG_CHECK_EXISTS([dbus-1 >= $DBUS_RECURSIVE_MUTEX_VERSION],
-	[AC_DEFINE(DBUS_HAS_RECURSIVE_MUTEX, , [DBus supports recursive mutexes (needs DBus >= 0.95)])]
+	[AX_DEFINE_PRIVATE(DBUS_HAS_RECURSIVE_MUTEX, , [DBus supports recursive mutexes (needs DBus >= 0.95)])]
 )
 
 
@@ -105,6 +113,15 @@ AM_CONDITIONAL(ENABLE_GLIB, test 0 = 1)
 AM_CONDITIONAL(HAVE_GTKMM, test 0 = 1)
 fi
 
+if test "$enable_ecore" = "yes" ; then
+PKG_CHECK_MODULES([ecore], ecore)
+AC_SUBST(ecore_CFLAGS)
+AC_SUBST(ecore_LIBS)
+AM_CONDITIONAL(ENABLE_ECORE, test 1 = 1)
+else
+AM_CONDITIONAL(ENABLE_ECORE, test 0 = 1)
+fi
+
 AC_CHECK_LIB([expat], XML_ParserCreate_MM,
    	[AC_CHECK_HEADERS(expat.h, have_expat=true, have_expat=false)],
 	have_expat=false)
@@ -120,14 +137,15 @@ xml_LIBS=-lexpat
 AC_SUBST(xml_CFLAGS)
 AC_SUBST(xml_LIBS)
 
-AC_CHECK_LIB([pthread], pthread_create,
-	[AC_CHECK_HEADERS(pthread.h, have_pthread=true, have_pthread=false)],
-	have_pthread=false)
-
-AM_CONDITIONAL(HAVE_PTHREAD, test "$have_pthread" = "true")
+ACX_PTHREAD
+if test x"$acx_pthread_ok" = xyes; then
+  AC_DEFINE(HAVE_PTHREAD_H, 1, [Define to enable pthread support])
+  AM_CONDITIONAL(HAVE_PTHREAD, test x"$acx_pthread_ok" = xyes)
+fi
 
 if test "$enable_debug" = "yes" ; then
-	CXXFLAGS="$CXXFLAGS -Wall -ggdb -O0 -DDEBUG"
+	CXXFLAGS="$CXXFLAGS -Wall -ggdb -O0"
+	AC_DEFINE(DEBUG, 1, [Define to enable debug build])
 else
 	CXXFLAGS="$CXXFLAGS -Wall -O3"
 fi
@@ -173,7 +191,6 @@ AC_ARG_WITH(build-libdbus-cxx,
 )
 AC_SUBST(BUILD_LIBDBUS_CXX_DIR)
 
-
 # Save processed files
 
 AC_OUTPUT(
@@ -189,5 +206,6 @@ AC_OUTPUT(
 	examples/hal/Makefile
 	examples/glib/Makefile
 	dbus-c++-1.pc
+	dbus-c++-1-uninstalled.pc
 	libdbus-c++.spec
 )

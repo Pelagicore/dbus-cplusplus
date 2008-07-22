@@ -25,8 +25,8 @@
 #ifndef __DBUSXX_DISPATCHER_H
 #define __DBUSXX_DISPATCHER_H
 
-#ifdef HAVE_CONFIG_H
-#include <dbus-c++/config.h>
+#ifdef HAVE_DBUSPP_CONFIG_H
+#include <dbus-c++/dbus-c++-config.h>
 #endif
 
 #include "api.h"
@@ -45,6 +45,9 @@ public:
 
 	virtual ~Timeout(){}
 
+	/*!
+	 * return The dbus timeout interval in miliseconds.
+	 */
 	int interval() const;
 
 	bool enabled() const;

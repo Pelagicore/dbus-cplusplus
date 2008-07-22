@@ -25,8 +25,8 @@
 #ifndef __DBUSXX_DEBUG_H
 #define __DBUSXX_DEBUG_H
 
-#ifdef HAVE_CONFIG_H
-#include <dbus-c++/config.h>
+#ifdef HAVE_DBUSPP_CONFIG_H
+#include <dbus-c++/dbus-c++-config.h>
 #endif
 
 #include "api.h"
