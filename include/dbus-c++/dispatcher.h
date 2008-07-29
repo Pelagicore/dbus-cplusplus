@@ -25,10 +25,7 @@
 #ifndef __DBUSXX_DISPATCHER_H
 #define __DBUSXX_DISPATCHER_H
 
-#ifdef HAVE_DBUSPP_CONFIG_H
-#include <dbus-c++/dbus-c++-config.h>
-#endif
-
+#include "dbus-c++-config.h"
 #include "api.h"
 #include "connection.h"
 #include "eventloop.h"

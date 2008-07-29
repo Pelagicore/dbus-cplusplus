@@ -25,9 +25,7 @@
 #ifndef __DBUSXX_INTROSPECTION_H
 #define __DBUSXX_INTROSPECTION_H
 
-#ifdef HAVE_DBUSPP_CONFIG_H
-#include <dbus-c++/dbus-c++-config.h>
-#endif
+#include "dbus-c++-config.h"
 
 #include "api.h"
 #include "interface.h"

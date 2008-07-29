@@ -25,10 +25,7 @@
 #ifndef __DBUSXX_ECORE_INTEGRATION_H
 #define __DBUSXX_ECORE_INTEGRATION_H
 
-#ifdef HAVE_DBUSPP_CONFIG_H
-#include <dbus-c++/dbus-c++-config.h>
-#endif
-
+#include "dbus-c++-config.h"
 #include <Ecore.h>
 
 #include "api.h"

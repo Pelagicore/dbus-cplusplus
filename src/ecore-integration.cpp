@@ -24,9 +24,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#ifdef HAVE_DBUSPP_CONFIG_H
 #include <dbus-c++/dbus-c++-config.h>
-#endif
 
 #include <dbus-c++/ecore-integration.h>
 
@@ -80,9 +78,8 @@ void Ecore::BusTimeout::_enable()
 
 void Ecore::BusTimeout::_disable()
 {
-  // TODO: port
   debug_log("Ecore::BusTimeout::_disable()");
-  // need to enhance Dispatcher with close
+
   ecore_timer_del (_etimer);
 	//g_source_destroy(_source);
 }
@@ -96,7 +93,7 @@ struct BusSource
 
 static bool watch_prepare( /*GSource *source,*/ int *timeout )
 {
-//	debug_log("ecore: watch_prepare");
+	debug_log("ecore: watch_prepare");
 
 	*timeout = -1;
 	return false;
@@ -104,10 +101,10 @@ static bool watch_prepare( /*GSource *source,*/ int *timeout )
 
 static bool watch_check( /*GSource *source*/ )
 {
-//	debug_log("ecore: watch_check");
+	debug_log("ecore: watch_check");
 
 	//BusSource* io = (BusSource*)source;
-	return 0;//io->poll.revents ? true : false;
+	return true;//io->poll.revents ? true : false;
 }
 
 // TODO: port parameters
@@ -115,9 +112,9 @@ static bool watch_dispatch(/* GSource *source, GSourceFunc callback, */void *dat
 {
 	debug_log("ecore: watch_dispatch");
 
-	/*bool cb = callback(data);
-	DBus::default_dispatcher->dispatch_pending(); //TODO: won't work in case of multiple dispatchers*/
-	return 1;//cb;
+	bool cb = true;//callback(data);
+	DBus::default_dispatcher->dispatch_pending(); //TODO: won't work in case of multiple dispatchers
+	return cb;
 }
 
 // TODO: needed?

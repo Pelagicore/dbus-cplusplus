@@ -24,10 +24,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#ifdef HAVE_DBUSPP_CONFIG_H
 #include <dbus-c++/dbus-c++-config.h>
-#endif
-
 #include <dbus-c++/glib-integration.h>
 
 #include <dbus/dbus.h> // for DBUS_WATCH_*
