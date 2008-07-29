@@ -30,7 +30,7 @@
 
 #include "api.h"
 #include "dispatcher.h"
-#include "Ecore_Dispatcher.h"
+#include "Ecore.h"
 
 namespace DBus {
 
@@ -72,16 +72,19 @@ private:
 
 	void toggle();
 
-	static void watch_handler( void* );
+	static int watch_handler_read ( void*, Ecore_Fd_Handler *fdh);
+    
+  static int watch_handler_error ( void*, Ecore_Fd_Handler *fdh);
 
 	void _enable();
 
 	void _disable();
 
 private:
-  Ecore_Dispatcher _edispatcher;
   //GSource* _source;
 	//GMainContext* _ctx;
+  Ecore_Fd_Handler *fd_handler_read;
+  Ecore_Fd_Handler *fd_handler_error;
 
 friend class BusDispatcher;
 };

@@ -59,7 +59,7 @@ int Ecore::BusTimeout::timeout_handler( void *data )
 
 	t->handle();
 
-	return 1; // 1 -> reshedule for next timer interval
+	return 1; // 1 -> reshedule in ecore for next timer interval
 }
 
 void Ecore::BusTimeout::_enable()
@@ -145,50 +145,71 @@ void Ecore::BusWatch::toggle()
 	else			_disable();
 }
 
-void Ecore::BusWatch::watch_handler( void *data )
+int Ecore::BusWatch::watch_handler_read( void *data, Ecore_Fd_Handler *fdh  )
 {
 	Ecore::BusWatch* w = reinterpret_cast<Ecore::BusWatch*>(data);
 
-	debug_log("ecore: watch_handler");
-
-	//BusSource* io = (BusSource*)(w->_source);
-
-	int flags = 0;
-	/*if(io->poll.revents & G_IO_IN)
-	     flags |= DBUS_WATCH_READABLE;
-	if(io->poll.revents & G_IO_OUT)
-	     flags |= DBUS_WATCH_WRITABLE;
-	if(io->poll.revents & G_IO_ERR)
-	     flags |= DBUS_WATCH_ERROR;
-	if(io->poll.revents & G_IO_HUP)
-	     flags |= DBUS_WATCH_HANGUP;*/
+	debug_log("ecore: watch_handler_read");
+  
+	int flags = DBUS_WATCH_READABLE;
 
 	w->handle(flags);
 
-	//return true;
+	return 1;
+}
+
+int Ecore::BusWatch::watch_handler_error( void *data, Ecore_Fd_Handler *fdh  )
+{
+	Ecore::BusWatch* w = reinterpret_cast<Ecore::BusWatch*>(data);
+
+	debug_log("ecore: watch_handler_error");
+
+	int flags = DBUS_WATCH_ERROR;
+
+	//w->handle(flags);
+
+	return 1;
 }
 
 void Ecore::BusWatch::_enable()
 {
   debug_log("Ecore::BusWatch::_enable()");
+  
+  //int flags = Watch::flags();
+  //Ecore_Fd_Handler_Flags condition = ECORE_FD_READ;
+  
+  // TODO: create second handler for ECORE_FD_ERROR case
 
-  ecore_dispatcher_init (&_edispatcher, watch_handler);
+	/*if(flags & DBUS_WATCH_READABLE)
+		condition |= ECORE_FD_READ;
+//	if(flags & DBUS_WATCH_WRITABLE)
+//		condition |= G_IO_OUT;
+	if(flags & DBUS_WATCH_ERROR)
+		condition |= ECORE_FD_ERROR;
+	//if(flags & DBUS_WATCH_HANGUP)
+		//condition |= G_IO_HUP;*/
+  
+  fd_handler_read = ecore_main_fd_handler_add (Watch::descriptor(),
+                                                            ECORE_FD_READ,
+                                                            watch_handler_read,
+                                                            this,
+                                                            NULL, NULL);
+  
+  ecore_main_fd_handler_active_set(fd_handler_read, ECORE_FD_READ);
+  
+  fd_handler_error = ecore_main_fd_handler_add (Watch::descriptor(),
+                                                            ECORE_FD_ERROR,
+                                                            watch_handler_error,
+                                                            this,
+                                                            NULL, NULL);
+  
+  ecore_main_fd_handler_active_set(fd_handler_error, ECORE_FD_ERROR);
   
   // TODO: port this
 	/*_source = g_source_new(&watch_funcs, sizeof(BusSource));
 	g_source_set_callback(_source, watch_handler, this, NULL);
 
-	int flags = Watch::flags();
-	int condition = 0;
 
-	if(flags & DBUS_WATCH_READABLE)
-		condition |= G_IO_IN;
-//	if(flags & DBUS_WATCH_WRITABLE)
-//		condition |= G_IO_OUT;
-	if(flags & DBUS_WATCH_ERROR)
-		condition |= G_IO_ERR;
-	if(flags & DBUS_WATCH_HANGUP)
-		condition |= G_IO_HUP;
 
 	GPollFD* poll = &(((BusSource*)_source)->poll);
 	poll->fd = Watch::descriptor();
@@ -201,6 +222,9 @@ void Ecore::BusWatch::_enable()
 
 void Ecore::BusWatch::_disable()
 {
+  ecore_main_fd_handler_del (fd_handler_read);
+  ecore_main_fd_handler_del (fd_handler_error);
+  
   // TODO: port this
 	/*GPollFD* poll = &(((BusSource*)_source)->poll);
 	g_source_remove_poll(_source, poll);
