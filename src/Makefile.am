@@ -12,8 +12,8 @@ GLIB_CPP = glib-integration.cpp
 endif
 
 if ENABLE_ECORE
-ECORE_H = $(HEADER_DIR)/ecore-integration.h $(HEADER_DIR)/Ecore_Dispatcher.h
-ECORE_CPP = ecore-integration.cpp Ecore_Dispatcher.cpp
+ECORE_H = $(HEADER_DIR)/ecore-integration.h
+ECORE_CPP = ecore-integration.cpp
 endif
 
 CONFIG_H = $(top_builddir)/include/dbus-c++/dbus-c++-config.h
