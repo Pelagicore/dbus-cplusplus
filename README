@@ -6,3 +6,4 @@ Hints
 -----
 Your applications based on dbus-c++ have to support PTHREAD and to export the variable HAVE_PTHREAD_H. This is a work in progress and my change.
 
+test
