@@ -71,7 +71,7 @@ Watch::Watch( Watch::Internal* i )
 int Watch::descriptor() const
 {
 #if HAVE_WIN32
-  return dbus_watch_get_socket((DBusWatch*)_int);
+	return dbus_watch_get_socket((DBusWatch*)_int);
 #else
 	return dbus_watch_get_unix_fd((DBusWatch*)_int);
 #endif

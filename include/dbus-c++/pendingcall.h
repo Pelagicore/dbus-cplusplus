@@ -93,7 +93,7 @@ public:
    * \param data The data to store.
    * \throw ErrorNoMemory
    */
-	void data( void* );
+	void data( void* data );
 
   /*!
    * \brief Retrieves data previously set with dbus_pending_call_set_data().

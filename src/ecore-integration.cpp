@@ -152,6 +152,8 @@ int Ecore::BusWatch::watch_handler_read( void *data, Ecore_Fd_Handler *fdh  )
 	debug_log("ecore: watch_handler_read");
   
 	int flags = DBUS_WATCH_READABLE;
+  
+  watch_dispatch(NULL);// test
 
 	w->handle(flags);
 
@@ -175,7 +177,7 @@ void Ecore::BusWatch::_enable()
 {
   debug_log("Ecore::BusWatch::_enable()");
   
-  //int flags = Watch::flags();
+  int flags = Watch::flags();
   //Ecore_Fd_Handler_Flags condition = ECORE_FD_READ;
   
   // TODO: create second handler for ECORE_FD_ERROR case
