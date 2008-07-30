@@ -91,6 +91,7 @@ public:
    * The slot is allocated automatic.
    *
    * \param data The data to store.
+   * \throw ErrorNoMemory
    */
 	void data( void* );
 
@@ -116,6 +117,7 @@ public:
    * the caller.
    *
    * \return The reply Message.
+   * \throw ErrorNoReply
 	 */
    Message steal_reply();
 
