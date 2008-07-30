@@ -153,7 +153,7 @@ int Ecore::BusWatch::watch_handler_read( void *data, Ecore_Fd_Handler *fdh  )
   
 	int flags = DBUS_WATCH_READABLE;
   
-  watch_dispatch(NULL);// test
+  watch_dispatch(NULL);
 
 	w->handle(flags);
 
@@ -167,6 +167,8 @@ int Ecore::BusWatch::watch_handler_error( void *data, Ecore_Fd_Handler *fdh  )
 	debug_log("ecore: watch_handler_error");
 
 	int flags = DBUS_WATCH_ERROR;
+  
+  watch_dispatch(NULL);
 
 	//w->handle(flags);
 
