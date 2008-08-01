@@ -28,8 +28,8 @@
 
 using namespace DBus;
 
-Glib::BusTimeout::BusTimeout( Timeout::Internal* ti, GMainContext* ctx )
-: Timeout(ti), _ctx(ctx)
+Glib::BusTimeout::BusTimeout( Timeout::Internal* ti, GMainContext* ctx, int priority )
+: Timeout(ti), _ctx(ctx), _priority(priority)
 {
 	_enable();
 }
@@ -59,6 +59,7 @@ gboolean Glib::BusTimeout::timeout_handler( gpointer data )
 void Glib::BusTimeout::_enable()
 {
 	_source = g_timeout_source_new(Timeout::interval());
+	g_source_set_priority(_source, _priority);
 	g_source_set_callback(_source, timeout_handler, this, NULL);
 	g_source_attach(_source, _ctx);
 }
@@ -106,8 +107,8 @@ static GSourceFuncs watch_funcs = {
 	NULL
 };
 
-Glib::BusWatch::BusWatch( Watch::Internal* wi, GMainContext* ctx )
-: Watch(wi), _ctx(ctx)
+Glib::BusWatch::BusWatch( Watch::Internal* wi, GMainContext* ctx, int priority )
+: Watch(wi), _ctx(ctx), _priority(priority)
 {
 	_enable();
 }
@@ -149,6 +150,7 @@ gboolean Glib::BusWatch::watch_handler( gpointer data )
 void Glib::BusWatch::_enable()
 {
 	_source = g_source_new(&watch_funcs, sizeof(BusSource));
+	g_source_set_priority(_source, _priority);
 	g_source_set_callback(_source, watch_handler, this, NULL);
 
 	int flags = Watch::flags();
@@ -186,7 +188,7 @@ void Glib::BusDispatcher::attach( GMainContext* ctx )
 
 Timeout* Glib::BusDispatcher::add_timeout( Timeout::Internal* wi )
 {
-	Timeout* t = new Glib::BusTimeout(wi, _ctx);
+	Timeout* t = new Glib::BusTimeout(wi, _ctx, _priority);
 
 	debug_log("glib: added timeout %p (%s)", t, t->enabled() ? "on":"off");
 
@@ -202,7 +204,7 @@ void Glib::BusDispatcher::rem_timeout( Timeout* t )
 
 Watch* Glib::BusDispatcher::add_watch( Watch::Internal* wi )
 {
-	Watch* w = new Glib::BusWatch(wi, _ctx);
+	Watch* w = new Glib::BusWatch(wi, _ctx, _priority);
 
 	debug_log("glib: added watch %p (%s) fd=%d flags=%d",
 		w, w->enabled() ? "on":"off", w->descriptor(), w->flags()
@@ -215,4 +217,9 @@ void Glib::BusDispatcher::rem_watch( Watch* w )
 	debug_log("glib: removed watch %p", w);
 
 	delete w;
+}
+
+void Glib::BusDispatcher::set_priority(int priority)
+{
+	_priority = priority;
 }

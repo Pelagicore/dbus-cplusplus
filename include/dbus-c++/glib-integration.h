@@ -44,7 +44,7 @@ class DXXAPI BusTimeout : public Timeout
 {
 private:
 
-	BusTimeout( Timeout::Internal*, GMainContext* );
+	BusTimeout( Timeout::Internal*, GMainContext*, int );
 
 	~BusTimeout();
 
@@ -60,6 +60,7 @@ private:
 
 	GSource* _source;
 	GMainContext* _ctx;
+	int _priority;
 
 friend class BusDispatcher;
 };
@@ -68,7 +69,7 @@ class DXXAPI BusWatch : public Watch
 {
 private:
 
-	BusWatch( Watch::Internal*, GMainContext* );
+	BusWatch( Watch::Internal*, GMainContext*, int );
 
 	~BusWatch();
 
@@ -84,6 +85,7 @@ private:
 
 	GSource* _source;
 	GMainContext* _ctx;
+	int _priority;
 
 friend class BusDispatcher;
 };
@@ -91,7 +93,8 @@ friend class BusDispatcher;
 class DXXAPI BusDispatcher : public Dispatcher
 {
 public:
-	BusDispatcher() : _ctx(NULL) {}
+
+	BusDispatcher() : _ctx(NULL), _priority(G_PRIORITY_DEFAULT) {}
 
 	void attach( GMainContext* );
 
@@ -107,9 +110,12 @@ public:
 
 	void rem_watch( Watch* );
 
+	void set_priority( int priority );
+
 private:
 
 	GMainContext* _ctx;
+	int _priority;
 };
 
 } /* namespace Glib */
