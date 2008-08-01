@@ -54,9 +54,9 @@ typedef std::string String;
 struct DXXAPI Path : public std::string
 { 
 	Path() {}
-	Path( const std::string& s ) : std::string(s) {}
-	Path( const char* c ) : std::string(c) {}
-	Path& operator = ( std::string& s )
+	Path(const std::string &s) : std::string(s) {}
+	Path(const char *c) : std::string(c) {}
+	Path &operator = (std::string &s)
 	{
 		std::string::operator = (s);
 		return *this;
@@ -66,9 +66,9 @@ struct DXXAPI Path : public std::string
 struct DXXAPI Signature : public std::string
 { 
 	Signature() {}
-	Signature( const std::string& s ) : std::string(s) {}
-	Signature( const char* c ) : std::string(c) {}
-	Signature& operator = ( std::string& s )
+	Signature(const std::string &s) : std::string(s) {}
+	Signature(const char *c) : std::string(c) {}
+	Signature &operator = (std::string &s)
 	{
 		std::string::operator = (s);
 		return *this;
@@ -83,9 +83,9 @@ public:
 
 	Variant();
 
-	Variant( MessageIter& it );
+	Variant(MessageIter &it);
 
-	Variant& operator = ( const Variant& v );
+	Variant &operator = (const Variant &v);
 
 	const Signature signature() const;
 
@@ -131,7 +131,7 @@ struct Struct
 };
 
 template<typename K, typename V>
-inline bool dict_has_key( const std::map<K,V>& map, const K& key )
+inline bool dict_has_key(const std::map<K,V>& map, const K &key)
 {
 	return map.find(key) != map.end();
 }
@@ -198,91 +198,91 @@ struct type< Struct<T1,T2,T3,T4,T5,T6,T7,T8> >
 
 } /* namespace DBus */
 
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Invalid& )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Invalid &)
 {
 	return iter;
 }
 
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Byte& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Byte &val)
 {
 	iter.append_byte(val);
 	return iter;
 }
 
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Bool& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Bool &val)
 {
 	iter.append_bool(val);
 	return iter;
 }
 
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Int16& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Int16& val)
 {
 	iter.append_int16(val);
 	return iter;
 }
 
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::UInt16& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::UInt16& val)
 {
 	iter.append_uint16(val);
 	return iter;
 }
 
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Int32& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Int32& val)
 {
 	iter.append_int32(val);
 	return iter;
 }
 
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::UInt32& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::UInt32& val)
 {
 	iter.append_uint32(val);
 	return iter;
 }
 
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Int64& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Int64& val)
 {
 	iter.append_int64(val);
 	return iter;
 }
 
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::UInt64& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::UInt64& val)
 {
 	iter.append_uint64(val);
 	return iter;
 }
 
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Double& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Double &val)
 {
 	iter.append_double(val);
 	return iter;
 }
 
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::String& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::String &val)
 {
 	iter.append_string(val.c_str());
 	return iter;
 }
 
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Path& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Path &val)
 {
 	iter.append_path(val.c_str());
 	return iter;
 }
 
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Signature& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Signature &val)
 {
 	iter.append_signature(val.c_str());
 	return iter;
 }
 
 template<typename E>
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const std::vector<E>& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const std::vector<E>& val)
 {
 	const std::string sig = DBus::type<E>::sig();
 	DBus::MessageIter ait = iter.new_array(sig.c_str());
 
 	typename std::vector<E>::const_iterator vit;
-	for(vit = val.begin(); vit != val.end(); ++vit)
+	for (vit = val.begin(); vit != val.end(); ++vit)
 	{
 		ait << *vit;
 	}
@@ -292,7 +292,7 @@ inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const std::vect
 }
 
 template<>
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const std::vector<DBus::Byte>& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const std::vector<DBus::Byte>& val)
 {
 	DBus::MessageIter ait = iter.new_array("y");
 	ait.append_array('y', &val.front(), val.size());
@@ -301,13 +301,13 @@ inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const std::vect
 }
 
 template<typename K, typename V>
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const std::map<K,V>& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const std::map<K,V>& val)
 {
 	const std::string sig = "{" + DBus::type<K>::sig() + DBus::type<V>::sig() + "}";
 	DBus::MessageIter ait = iter.new_array(sig.c_str());
 
 	typename std::map<K,V>::const_iterator mit;
-	for(mit = val.begin(); mit != val.end(); ++mit)
+	for (mit = val.begin(); mit != val.end(); ++mit)
 	{
 		DBus::MessageIter eit = ait.new_dict_entry();
 
@@ -330,7 +330,7 @@ template <
 	typename T7,
 	typename T8
 >
-inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Struct<T1,T2,T3,T4,T5,T6,T7,T8>& val )
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Struct<T1,T2,T3,T4,T5,T6,T7,T8>& val)
 {
 /*	const std::string sig = 
 		DBus::type<T1>::sig() + DBus::type<T2>::sig() + DBus::type<T3>::sig() + DBus::type<T4>::sig() +
@@ -345,97 +345,97 @@ inline DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Str
 	return iter;
 }
 
-extern DXXAPI DBus::MessageIter& operator << ( DBus::MessageIter& iter, const DBus::Variant& val );
+extern DXXAPI DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Variant &val);
 
 /*
  */
 
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Invalid& )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Invalid &)
 {
 	return iter;
 }
 
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Byte& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Byte &val)
 {
 	val = iter.get_byte();
 	return ++iter;
 }
 
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Bool& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Bool &val)
 {
 	val = iter.get_bool();
 	return ++iter;
 }
 
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Int16& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Int16& val)
 {
 	val = iter.get_int16();
 	return ++iter;
 }
 
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::UInt16& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::UInt16& val)
 {
 	val = iter.get_uint16();
 	return ++iter;
 }
 
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Int32& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Int32& val)
 {
 	val = iter.get_int32();
 	return ++iter;
 }
 
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::UInt32& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::UInt32& val)
 {
 	val = iter.get_uint32();
 	return ++iter;
 }
 
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Int64& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Int64& val)
 {
 	val = iter.get_int64();
 	return ++iter;
 }
 
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::UInt64& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::UInt64& val)
 {
 	val = iter.get_uint64();
 	return ++iter;
 }
 
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Double& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Double &val)
 {
 	val = iter.get_double();
 	return ++iter;
 }
 
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::String& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::String &val)
 {
 	val = iter.get_string();
 	return ++iter;
 }
 
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Path& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Path &val)
 {
 	val = iter.get_path();
 	return ++iter;
 }
 
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Signature& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Signature &val)
 {
 	val = iter.get_signature();
 	return ++iter;
 }
 
 template<typename E>
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, std::vector<E>& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, std::vector<E>& val)
 {
-	if(!iter.is_array())
+	if (!iter.is_array())
 		throw DBus::ErrorInvalidArgs("array expected");
 
 	DBus::MessageIter ait = iter.recurse();
 
-	while(!ait.at_end())
+	while (!ait.at_end())
 	{
 		E elem;
 
@@ -447,17 +447,17 @@ inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, std::vector<E>&
 }
 
 template<>
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, std::vector<DBus::Byte>& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, std::vector<DBus::Byte>& val)
 {
-	if(!iter.is_array())
+	if (!iter.is_array())
 		throw DBus::ErrorInvalidArgs("array expected");
 
-	if(iter.array_type() != 'y')
+	if (iter.array_type() != 'y')
 		throw DBus::ErrorInvalidArgs("byte-array expected");
 
 	DBus::MessageIter ait = iter.recurse();
 
-	DBus::Byte* array;
+	DBus::Byte *array;
 	size_t length = ait.get_array(&array);
 
 	val.insert(val.end(), array, array+length);
@@ -466,14 +466,14 @@ inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, std::vector<DBu
 }
 
 template<typename K, typename V>
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, std::map<K,V>& val )
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, std::map<K,V>& val)
 {
-	if(!iter.is_dict())
+	if (!iter.is_dict())
 		throw DBus::ErrorInvalidArgs("dictionary value expected");
 
 	DBus::MessageIter mit = iter.recurse();
 
-	while(!mit.at_end())
+	while (!mit.at_end())
 	{
 		K key; V value;
 
@@ -499,7 +499,7 @@ template <
 	typename T7,
 	typename T8
 >
-inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Struct<T1,T2,T3,T4,T5,T6,T7,T8>& val)
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Struct<T1,T2,T3,T4,T5,T6,T7,T8>& val)
 {
 	DBus::MessageIter sit = iter.recurse();
 
@@ -508,7 +508,7 @@ inline DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Struct<T1
 	return ++iter;
 }
 
-extern DXXAPI DBus::MessageIter& operator >> ( DBus::MessageIter& iter, DBus::Variant& val );
+extern DXXAPI DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Variant &val);
 	
 #endif//__DBUSXX_TYPES_H
 

@@ -13,7 +13,7 @@ class DBusInspector
 {
 public:
 
-	DBusInspector( DBus::Connection& conn, const char* path, const char* service )
+	DBusInspector(DBus::Connection &conn, const char *path, const char *service)
 	: DBus::ObjectProxy(conn, path, service)
 	{}
 };
@@ -26,19 +26,19 @@ class DBusBrowser
 {
 public:
 
-	DBusBrowser( ::DBus::Connection& );
+	DBusBrowser(::DBus::Connection &);
 
 private:
 
-	void NameOwnerChanged( const ::DBus::String&, const ::DBus::String&, const ::DBus::String& );
+	void NameOwnerChanged(const ::DBus::String &, const ::DBus::String &, const ::DBus::String &);
 
-	void NameLost( const ::DBus::String& );
+	void NameLost(const ::DBus::String &);
 
-	void NameAcquired( const ::DBus::String& );
+	void NameAcquired(const ::DBus::String &);
 
 	void on_select_busname();
 
-	void _inspect_append( Gtk::TreeModel::Row*, const std::string&, const std::string& );
+	void _inspect_append(Gtk::TreeModel::Row *, const std::string &, const std::string &);
 
 private:
 

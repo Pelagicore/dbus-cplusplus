@@ -5,10 +5,10 @@
 
 using namespace std;
 
-static const char* DBUS_SERVER_NAME = "org.freedesktop.DBus";
-static const char* DBUS_SERVER_PATH = "/org/freedesktop/DBus";
+static const char *DBUS_SERVER_NAME = "org.freedesktop.DBus";
+static const char *DBUS_SERVER_PATH = "/org/freedesktop/DBus";
 
-DBusBrowser::DBusBrowser( ::DBus::Connection& conn )
+DBusBrowser::DBusBrowser(::DBus::Connection &conn)
 : ::DBus::ObjectProxy(conn, DBUS_SERVER_PATH, DBUS_SERVER_NAME)
 {
 	set_title("D-Bus Browser");
@@ -19,12 +19,12 @@ DBusBrowser::DBusBrowser( ::DBus::Connection& conn )
 
 	Names names = ListNames();
 
-	for(Names::iterator it = names.begin(); it != names.end(); ++it)
+	for (Names::iterator it = names.begin(); it != names.end(); ++it)
 	{
 		_cb_busnames.append_text(*it);
 	}
 
-	_cb_busnames.signal_changed().connect( sigc::mem_fun(*this, &DBusBrowser::on_select_busname) );
+	_cb_busnames.signal_changed().connect(sigc::mem_fun(*this, &DBusBrowser::on_select_busname));
 
 	_tm_inspect = Gtk::TreeStore::create(_records);
 	_tv_inspect.set_model(_tm_inspect);
@@ -42,17 +42,17 @@ DBusBrowser::DBusBrowser( ::DBus::Connection& conn )
 }
 
 void DBusBrowser::NameOwnerChanged(
-	const ::DBus::String& name, const ::DBus::String& old_owner, const ::DBus::String& new_owner )
+	const ::DBus::String &name, const ::DBus::String &old_owner, const ::DBus::String &new_owner)
 {
 	cout << name << ": " << old_owner << " -> " << new_owner << endl;
 }
 
-void DBusBrowser::NameLost( const ::DBus::String& name )
+void DBusBrowser::NameLost(const ::DBus::String &name)
 {
 	cout << name << " lost" << endl;
 }
 
-void DBusBrowser::NameAcquired( const ::DBus::String& name )
+void DBusBrowser::NameAcquired(const ::DBus::String &name)
 {
 	cout << name << " acquired" << endl;
 }
@@ -60,24 +60,24 @@ void DBusBrowser::NameAcquired( const ::DBus::String& name )
 void DBusBrowser::on_select_busname()
 {
 	Glib::ustring busname = _cb_busnames.get_active_text();
-	if(busname.empty()) return;
+	if (busname.empty()) return;
 
 	_tm_inspect->clear();
 	_inspect_append(NULL, "", busname);
 }
 
-void DBusBrowser::_inspect_append( Gtk::TreeModel::Row* row, const std::string& buspath, const std::string& busname )
+void DBusBrowser::_inspect_append(Gtk::TreeModel::Row *row, const std::string &buspath, const std::string &busname)
 {
 	DBusInspector inspector(conn(), buspath.empty() ? "/" : buspath.c_str(), busname.c_str());
 
 	::DBus::Xml::Document doc(inspector.Introspect());
-	::DBus::Xml::Node& root = *(doc.root);
+	::DBus::Xml::Node &root = *(doc.root);
 
 	::DBus::Xml::Nodes ifaces = root["interface"];
 
-	for(::DBus::Xml::Nodes::iterator ii = ifaces.begin(); ii != ifaces.end(); ++ii)
+	for (::DBus::Xml::Nodes::iterator ii = ifaces.begin(); ii != ifaces.end(); ++ii)
 	{
-		::DBus::Xml::Node& iface = **ii;
+		::DBus::Xml::Node &iface = **ii;
 
 		Gtk::TreeModel::Row i_row = row
 			? *(_tm_inspect->append(row->children()))
@@ -86,7 +86,7 @@ void DBusBrowser::_inspect_append( Gtk::TreeModel::Row* row, const std::string& 
 
 		::DBus::Xml::Nodes methods = iface["method"];
 
-		for(::DBus::Xml::Nodes::iterator im = methods.begin(); im != methods.end(); ++im)
+		for (::DBus::Xml::Nodes::iterator im = methods.begin(); im != methods.end(); ++im)
 		{
 			Gtk::TreeModel::Row m_row = *(_tm_inspect->append(i_row.children()));
 			m_row[_records.name] = "method: " + (*im)->get("name");
@@ -94,7 +94,7 @@ void DBusBrowser::_inspect_append( Gtk::TreeModel::Row* row, const std::string& 
 
 		::DBus::Xml::Nodes signals = iface["signal"];
 
-		for(::DBus::Xml::Nodes::iterator is = signals.begin(); is != signals.end(); ++is)
+		for (::DBus::Xml::Nodes::iterator is = signals.begin(); is != signals.end(); ++is)
 		{
 			Gtk::TreeModel::Row s_row = *(_tm_inspect->append(i_row.children()));
 			s_row[_records.name] = "signal: " + (*is)->get("name");
@@ -103,7 +103,7 @@ void DBusBrowser::_inspect_append( Gtk::TreeModel::Row* row, const std::string& 
 
 	::DBus::Xml::Nodes nodes = root["node"];
 
-	for(::DBus::Xml::Nodes::iterator in = nodes.begin(); in != nodes.end(); ++in)
+	for (::DBus::Xml::Nodes::iterator in = nodes.begin(); in != nodes.end(); ++in)
 	{
 		std::string name = (*in)->get("name");
 
@@ -118,7 +118,7 @@ void DBusBrowser::_inspect_append( Gtk::TreeModel::Row* row, const std::string& 
 
 DBus::Glib::BusDispatcher dispatcher;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	Gtk::Main kit(argc, argv);
 

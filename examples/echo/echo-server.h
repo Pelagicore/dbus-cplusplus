@@ -11,17 +11,17 @@ class EchoServer
 {
 public:
 
-	EchoServer( DBus::Connection& connection );
+	EchoServer(DBus::Connection &connection);
 
 	DBus::Int32 Random();
 
-	DBus::String Hello( const DBus::String & name );
+	DBus::String Hello(const DBus::String &name);
 
-	DBus::Variant Echo( const DBus::Variant & value );
+	DBus::Variant Echo(const DBus::Variant &value);
 
-	std::vector< DBus::Byte > Cat( const DBus::String & file );
+	std::vector< DBus::Byte > Cat(const DBus::String &file);
 
-	DBus::Int32 Sum( const std::vector<DBus::Int32> & ints );
+	DBus::Int32 Sum(const std::vector<DBus::Int32> & ints);
 
 	std::map< DBus::String, DBus::String > Info();
 };

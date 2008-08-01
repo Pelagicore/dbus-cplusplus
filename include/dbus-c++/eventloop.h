@@ -41,10 +41,10 @@
 namespace DBus {
 
 /*
- * these Default* classes implement a very simple event loop which
+ * these Default *classes implement a very simple event loop which
  * is used here as the default main loop, if you want to hook
- * a different one use the Bus* classes in eventloop-integration.h
- * or the Glib::Bus* classes as a reference
+ * a different one use the Bus *classes in eventloop-integration.h
+ * or the Glib::Bus *classes as a reference
  */
 
 class DefaultMainLoop;
@@ -53,7 +53,7 @@ class DXXAPI DefaultTimeout
 {
 public:
 
-	DefaultTimeout( int interval, bool repeat, DefaultMainLoop* );
+	DefaultTimeout(int interval, bool repeat, DefaultMainLoop *);
 
 	virtual ~DefaultTimeout();
 
@@ -66,10 +66,10 @@ public:
 	bool repeat(){ return _repeat; }
 	void repeat(bool r){ _repeat = r; }
 
-	void* data(){ return _data; }
-	void data(void* d){ _data = d; }
+	void *data(){ return _data; }
+	void data(void *d){ _data = d; }
 
-	Slot<void, DefaultTimeout&> expired;
+	Slot<void, DefaultTimeout &> expired;
 	
 private:
 
@@ -80,20 +80,20 @@ private:
 
 	double _expiration;
 
-	void* _data;
+	void *_data;
 	
-	DefaultMainLoop* _disp;
+	DefaultMainLoop *_disp;
 
 friend class DefaultMainLoop;
 };
 
-typedef std::list< DefaultTimeout* > DefaultTimeouts;
+typedef std::list< DefaultTimeout *> DefaultTimeouts;
 
 class DXXAPI DefaultWatch
 {
 public:
 
-	DefaultWatch( int fd, int flags, DefaultMainLoop* );
+	DefaultWatch(int fd, int flags, DefaultMainLoop *);
 
 	virtual ~DefaultWatch();
 
@@ -103,14 +103,14 @@ public:
 	int descriptor(){ return _fd; }
 
 	int flags(){ return _flags; }
-	void flags( int f ){ _flags = f; }
+	void flags(int f){ _flags = f; }
 
 	int state(){ return _state; }
 
-	void* data(){ return _data; }
-	void data(void* d){ _data = d; }
+	void *data(){ return _data; }
+	void data(void *d){ _data = d; }
 
-	Slot<void, DefaultWatch&> ready;
+	Slot<void, DefaultWatch &> ready;
 
 private:
 
@@ -120,14 +120,14 @@ private:
 	int _flags;
 	int _state;
 
-	void* _data;
+	void *_data;
 
-	DefaultMainLoop* _disp;
+	DefaultMainLoop *_disp;
 
 friend class DefaultMainLoop;
 };
 
-typedef std::list< DefaultWatch* > DefaultWatches;
+typedef std::list< DefaultWatch *> DefaultWatches;
 
 class DXXAPI DefaultMutex
 {

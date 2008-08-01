@@ -43,7 +43,7 @@ public:
 	PropertyAdaptor() : _data(0)
 	{}
 
-	void bind( PropertyData& data )
+	void bind(PropertyData &data)
 	{
 		_data = &data;
 	}
@@ -53,7 +53,7 @@ public:
 		return (T)_data->value;
 	}
 
-	PropertyAdaptor& operator = ( const T& t )
+	PropertyAdaptor &operator = (const T &t)
 	{
 		_data->value.clear();
 		MessageIter wi = _data->value.writer();
@@ -63,7 +63,7 @@ public:
 
 private:
 
-	PropertyData* _data;
+	PropertyData *_data;
 };
 
 struct IntrospectedInterface;
@@ -74,19 +74,19 @@ public:
 
 	PropertiesAdaptor();
 
-	Message Get( const CallMessage& );
+	Message Get(const CallMessage &);
 
-	Message Set( const CallMessage& );
+	Message Set(const CallMessage &);
 
 protected:
 
-	virtual void on_get_property( InterfaceAdaptor& interface, const String& property, Variant& value )
+	virtual void on_get_property(InterfaceAdaptor &interface, const String &property, Variant &value)
 	{}
 
-	virtual void on_set_property( InterfaceAdaptor& interface, const String& property, const Variant& value )
+	virtual void on_set_property(InterfaceAdaptor &interface, const String &property, const Variant &value)
 	{}
 
-	IntrospectedInterface* const introspect() const;
+	IntrospectedInterface *const introspect() const;
 };
 
 class DXXAPI PropertiesProxy : public InterfaceProxy
@@ -95,9 +95,9 @@ public:
 
 	PropertiesProxy();
 
-	Variant Get( const String& interface, const String& property );
+	Variant Get(const String &interface, const String &property);
 
-	void Set( const String& interface, const String& property, const Variant& value );
+	void Set(const String &interface, const String &property, const Variant &value);
 };
 
 } /* namespace DBus */

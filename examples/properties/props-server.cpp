@@ -1,10 +1,10 @@
 #include "props-server.h"
 #include <signal.h>
 
-static const char* PROPS_SERVER_NAME = "org.freedesktop.DBus.Examples.Properties";
-static const char* PROPS_SERVER_PATH = "/org/freedesktop/DBus/Examples/Properties";
+static const char *PROPS_SERVER_NAME = "org.freedesktop.DBus.Examples.Properties";
+static const char *PROPS_SERVER_PATH = "/org/freedesktop/DBus/Examples/Properties";
 
-PropsServer::PropsServer( DBus::Connection& connection )
+PropsServer::PropsServer(DBus::Connection &connection)
 : DBus::ObjectAdaptor(connection, PROPS_SERVER_PATH)
 {
 	Version = 1;
@@ -12,9 +12,9 @@ PropsServer::PropsServer( DBus::Connection& connection )
 }
 
 void PropsServer::on_set_property
-	( DBus::InterfaceAdaptor& interface, const DBus::String& property, const DBus::Variant& value )
+	(DBus::InterfaceAdaptor &interface, const DBus::String &property, const DBus::Variant &value)
 {
-	if(property == "Message")
+	if (property == "Message")
 	{
 		DBus::String msg = value;
 		this->MessageChanged(msg);
@@ -23,7 +23,7 @@ void PropsServer::on_set_property
 
 DBus::BusDispatcher dispatcher;
 
-void niam( int sig )
+void niam(int sig)
 {
 	dispatcher.leave();
 }

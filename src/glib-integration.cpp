@@ -28,7 +28,7 @@
 
 using namespace DBus;
 
-Glib::BusTimeout::BusTimeout( Timeout::Internal* ti, GMainContext* ctx, int priority )
+Glib::BusTimeout::BusTimeout(Timeout::Internal *ti, GMainContext *ctx, int priority)
 : Timeout(ti), _ctx(ctx), _priority(priority)
 {
 	_enable();
@@ -43,13 +43,13 @@ void Glib::BusTimeout::toggle()
 {
 	debug_log("glib: timeout %p toggled (%s)", this, Timeout::enabled() ? "on":"off");
 
-	if(Timeout::enabled())	_enable();
+	if (Timeout::enabled())	_enable();
 	else			_disable();
 }
 
-gboolean Glib::BusTimeout::timeout_handler( gpointer data )
+gboolean Glib::BusTimeout::timeout_handler(gpointer data)
 {
-	Glib::BusTimeout* t = reinterpret_cast<Glib::BusTimeout*>(data);
+	Glib::BusTimeout *t = reinterpret_cast<Glib::BusTimeout *>(data);
 
 	t->handle();
 
@@ -75,7 +75,7 @@ struct BusSource
 	GPollFD poll;
 };
 
-static gboolean watch_prepare( GSource *source, gint *timeout )
+static gboolean watch_prepare(GSource *source, gint *timeout)
 {
 //	debug_log("glib: watch_prepare");
 
@@ -83,15 +83,15 @@ static gboolean watch_prepare( GSource *source, gint *timeout )
 	return FALSE;
 }
 
-static gboolean watch_check( GSource *source )
+static gboolean watch_check(GSource *source)
 {
 //	debug_log("glib: watch_check");
 
-	BusSource* io = (BusSource*)source;
+	BusSource *io = (BusSource *)source;
 	return io->poll.revents ? TRUE : FALSE;
 }
 
-static gboolean watch_dispatch( GSource *source, GSourceFunc callback, gpointer data )
+static gboolean watch_dispatch(GSource *source, GSourceFunc callback, gpointer data)
 {
 	debug_log("glib: watch_dispatch");
 
@@ -107,7 +107,7 @@ static GSourceFuncs watch_funcs = {
 	NULL
 };
 
-Glib::BusWatch::BusWatch( Watch::Internal* wi, GMainContext* ctx, int priority )
+Glib::BusWatch::BusWatch(Watch::Internal *wi, GMainContext *ctx, int priority)
 : Watch(wi), _ctx(ctx), _priority(priority)
 {
 	_enable();
@@ -122,24 +122,24 @@ void Glib::BusWatch::toggle()
 {
 	debug_log("glib: watch %p toggled (%s)", this, Watch::enabled() ? "on":"off");
 
-	if(Watch::enabled())	_enable();
+	if (Watch::enabled())	_enable();
 	else			_disable();
 }
 
-gboolean Glib::BusWatch::watch_handler( gpointer data )
+gboolean Glib::BusWatch::watch_handler(gpointer data)
 {
-	Glib::BusWatch* w = reinterpret_cast<Glib::BusWatch*>(data);
+	Glib::BusWatch *w = reinterpret_cast<Glib::BusWatch *>(data);
 
-	BusSource* io = (BusSource*)(w->_source);
+	BusSource *io = (BusSource *)(w->_source);
 
 	int flags = 0;
-	if(io->poll.revents & G_IO_IN)
+	if (io->poll.revents &G_IO_IN)
 	     flags |= DBUS_WATCH_READABLE;
-	if(io->poll.revents & G_IO_OUT)
+	if (io->poll.revents &G_IO_OUT)
 	     flags |= DBUS_WATCH_WRITABLE;
-	if(io->poll.revents & G_IO_ERR)
+	if (io->poll.revents &G_IO_ERR)
 	     flags |= DBUS_WATCH_ERROR;
-	if(io->poll.revents & G_IO_HUP)
+	if (io->poll.revents &G_IO_HUP)
 	     flags |= DBUS_WATCH_HANGUP;
 
 	w->handle(flags);
@@ -156,16 +156,16 @@ void Glib::BusWatch::_enable()
 	int flags = Watch::flags();
 	int condition = 0;
 
-	if(flags & DBUS_WATCH_READABLE)
+	if (flags &DBUS_WATCH_READABLE)
 		condition |= G_IO_IN;
-//	if(flags & DBUS_WATCH_WRITABLE)
+//	if (flags &DBUS_WATCH_WRITABLE)
 //		condition |= G_IO_OUT;
-	if(flags & DBUS_WATCH_ERROR)
+	if (flags &DBUS_WATCH_ERROR)
 		condition |= G_IO_ERR;
-	if(flags & DBUS_WATCH_HANGUP)
+	if (flags &DBUS_WATCH_HANGUP)
 		condition |= G_IO_HUP;
 
-	GPollFD* poll = &(((BusSource*)_source)->poll);
+	GPollFD *poll = &(((BusSource *)_source)->poll);
 	poll->fd = Watch::descriptor();
 	poll->events = condition;
 	poll->revents = 0;
@@ -176,35 +176,35 @@ void Glib::BusWatch::_enable()
 
 void Glib::BusWatch::_disable()
 {
-	GPollFD* poll = &(((BusSource*)_source)->poll);
+	GPollFD *poll = &(((BusSource *)_source)->poll);
 	g_source_remove_poll(_source, poll);
 	g_source_destroy(_source);
 }
 
-void Glib::BusDispatcher::attach( GMainContext* ctx )
+void Glib::BusDispatcher::attach(GMainContext *ctx)
 {
 	_ctx = ctx ? ctx : g_main_context_default();
 }
 
-Timeout* Glib::BusDispatcher::add_timeout( Timeout::Internal* wi )
+Timeout *Glib::BusDispatcher::add_timeout(Timeout::Internal *wi)
 {
-	Timeout* t = new Glib::BusTimeout(wi, _ctx, _priority);
+	Timeout *t = new Glib::BusTimeout(wi, _ctx, _priority);
 
 	debug_log("glib: added timeout %p (%s)", t, t->enabled() ? "on":"off");
 
 	return t;
 }
 
-void Glib::BusDispatcher::rem_timeout( Timeout* t )
+void Glib::BusDispatcher::rem_timeout(Timeout *t)
 {
 	debug_log("glib: removed timeout %p", t);
 
 	delete t;
 }
 
-Watch* Glib::BusDispatcher::add_watch( Watch::Internal* wi )
+Watch *Glib::BusDispatcher::add_watch(Watch::Internal *wi)
 {
-	Watch* w = new Glib::BusWatch(wi, _ctx, _priority);
+	Watch *w = new Glib::BusWatch(wi, _ctx, _priority);
 
 	debug_log("glib: added watch %p (%s) fd=%d flags=%d",
 		w, w->enabled() ? "on":"off", w->descriptor(), w->flags()
@@ -212,7 +212,7 @@ Watch* Glib::BusDispatcher::add_watch( Watch::Internal* wi )
 	return w;
 }
 
-void Glib::BusDispatcher::rem_watch( Watch* w )
+void Glib::BusDispatcher::rem_watch(Watch *w)
 {
 	debug_log("glib: removed watch %p", w);
 

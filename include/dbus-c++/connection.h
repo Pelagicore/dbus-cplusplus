@@ -41,7 +41,7 @@ namespace DBus {
 
 class Connection;
 
-typedef Slot<bool, const Message&> MessageSlot;
+typedef Slot<bool, const Message &> MessageSlot;
 
 typedef std::list<Connection>	ConnectionList;
 
@@ -60,31 +60,31 @@ public:
 
 	struct Private;
 
-	typedef std::list<Private*> PrivatePList;
+	typedef std::list<Private *> PrivatePList;
 
-	Connection( Private* );
+	Connection(Private *);
 
-	Connection( const char* address, bool priv = true );
+	Connection(const char *address, bool priv = true);
 
-	Connection( const Connection& c );
+	Connection(const Connection &c);
 
 	virtual ~Connection();
 
-	Dispatcher* setup( Dispatcher* );
+	Dispatcher *setup(Dispatcher *);
 
-	bool operator == ( const Connection& ) const;
+	bool operator == (const Connection &) const;
 
-	void add_match( const char* rule );
+	void add_match(const char *rule);
 
-	void remove_match( const char* rule );
+	void remove_match(const char *rule);
 
-	bool add_filter( MessageSlot& );
+	bool add_filter(MessageSlot &);
 
-	void remove_filter( MessageSlot& );
+	void remove_filter(MessageSlot &);
 
-	bool unique_name( const char* n );
+	bool unique_name(const char *n);
 
-	const char* unique_name() const;
+	const char *unique_name() const;
 
 	bool register_bus();
 
@@ -92,21 +92,21 @@ public:
 
 	void disconnect();
 
-	void exit_on_disconnect( bool exit );
+	void exit_on_disconnect(bool exit);
 
 	void flush();
 
-	bool send( const Message&, unsigned int* serial = NULL );
+	bool send(const Message &, unsigned int *serial = NULL);
 
-	Message send_blocking( Message& msg, int timeout = -1);
+	Message send_blocking(Message &msg, int timeout = -1);
 
-	PendingCall send_async( Message& msg, int timeout );
+	PendingCall send_async(Message &msg, int timeout);
 
-	void request_name( const char* name, int flags = 0 );
+	void request_name(const char *name, int flags = 0);
 
-	bool has_name( const char* name );
+	bool has_name(const char *name);
 
-	bool start_service( const char* name, unsigned long flags );
+	bool start_service(const char *name, unsigned long flags);
 
 	const std::vector<std::string>& names();
 

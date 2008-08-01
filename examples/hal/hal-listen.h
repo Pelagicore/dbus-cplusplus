@@ -13,15 +13,15 @@ class HalManagerProxy
 {
 public:
 
-	HalManagerProxy( DBus::Connection& connection );
+	HalManagerProxy(DBus::Connection &connection);
 
 	std::vector< DBus::String > GetAllDevices();
 
 private:
 
-	void DeviceAddedCb( const DBus::SignalMessage& sig );
+	void DeviceAddedCb(const DBus::SignalMessage &sig);
 
-	void DeviceRemovedCb( const DBus::SignalMessage& sig );
+	void DeviceRemovedCb(const DBus::SignalMessage &sig);
 
 	std::map< DBus::String, DBus::RefPtr< HalDeviceProxy > > _devices;
 };
@@ -32,13 +32,13 @@ class HalDeviceProxy
 {
 public:
 
-	HalDeviceProxy( DBus::Connection& connection, DBus::Path& udi );
+	HalDeviceProxy(DBus::Connection &connection, DBus::Path &udi);
 
 private:
 
-	void PropertyModifiedCb( const DBus::SignalMessage& sig );
+	void PropertyModifiedCb(const DBus::SignalMessage &sig);
 
-	void ConditionCb( const DBus::SignalMessage& sig );
+	void ConditionCb(const DBus::SignalMessage &sig);
 };
 
 #endif//__DEMO_HAL_LISTEN_H

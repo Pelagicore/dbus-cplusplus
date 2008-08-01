@@ -30,118 +30,118 @@
 #include "server_p.h"
 #include "connection_p.h"
 
-DBus::Dispatcher* DBus::default_dispatcher = NULL;
+DBus::Dispatcher *DBus::default_dispatcher = NULL;
 
 using namespace DBus;
 
-Timeout::Timeout( Timeout::Internal* i )
+Timeout::Timeout(Timeout::Internal *i)
 : _int(i)
 {
-	dbus_timeout_set_data((DBusTimeout*)i, this, NULL);
+	dbus_timeout_set_data((DBusTimeout *)i, this, NULL);
 }
 
 int Timeout::interval() const
 {
-	return dbus_timeout_get_interval((DBusTimeout*)_int);
+	return dbus_timeout_get_interval((DBusTimeout *)_int);
 }
 
 bool Timeout::enabled() const
 {
-	return dbus_timeout_get_enabled((DBusTimeout*)_int);
+	return dbus_timeout_get_enabled((DBusTimeout *)_int);
 }
 
 bool Timeout::handle()
 {
-	return dbus_timeout_handle((DBusTimeout*)_int);
+	return dbus_timeout_handle((DBusTimeout *)_int);
 }
 
 /*
 */
 
-Watch::Watch( Watch::Internal* i )
+Watch::Watch(Watch::Internal *i)
 : _int(i)
 {
-	dbus_watch_set_data((DBusWatch*)i, this, NULL);
+	dbus_watch_set_data((DBusWatch *)i, this, NULL);
 }
 
 int Watch::descriptor() const
 {
-	return dbus_watch_get_fd((DBusWatch*)_int);
+	return dbus_watch_get_fd((DBusWatch *)_int);
 }
 
 int Watch::flags() const
 {
-	return dbus_watch_get_flags((DBusWatch*)_int);
+	return dbus_watch_get_flags((DBusWatch *)_int);
 }
 
 bool Watch::enabled() const
 {
-	return dbus_watch_get_enabled((DBusWatch*)_int);
+	return dbus_watch_get_enabled((DBusWatch *)_int);
 }
 
-bool Watch::handle( int flags )
+bool Watch::handle(int flags)
 {
-	return dbus_watch_handle((DBusWatch*)_int, flags);
+	return dbus_watch_handle((DBusWatch *)_int, flags);
 }
 
 /*
 */
 
-dbus_bool_t Dispatcher::Private::on_add_watch( DBusWatch* watch, void* data )
+dbus_bool_t Dispatcher::Private::on_add_watch(DBusWatch *watch, void *data)
 {
-	Dispatcher* d = static_cast<Dispatcher*>(data);
+	Dispatcher *d = static_cast<Dispatcher *>(data);
 
-	Watch::Internal* w = reinterpret_cast<Watch::Internal*>(watch);
+	Watch::Internal *w = reinterpret_cast<Watch::Internal *>(watch);
 
 	d->add_watch(w);
 
 	return true;
 }
 
-void Dispatcher::Private::on_rem_watch( DBusWatch* watch, void* data )
+void Dispatcher::Private::on_rem_watch(DBusWatch *watch, void *data)
 {
-	Dispatcher* d = static_cast<Dispatcher*>(data);
+	Dispatcher *d = static_cast<Dispatcher *>(data);
 
-	Watch* w = static_cast<Watch*>(dbus_watch_get_data(watch));
+	Watch *w = static_cast<Watch *>(dbus_watch_get_data(watch));
 
 	d->rem_watch(w);
 }
 
-void Dispatcher::Private::on_toggle_watch( DBusWatch* watch, void* data )
+void Dispatcher::Private::on_toggle_watch(DBusWatch *watch, void *data)
 {
-	Watch* w = static_cast<Watch*>(dbus_watch_get_data(watch));
+	Watch *w = static_cast<Watch *>(dbus_watch_get_data(watch));
 
 	w->toggle();
 }
 
-dbus_bool_t Dispatcher::Private::on_add_timeout( DBusTimeout* timeout, void* data )
+dbus_bool_t Dispatcher::Private::on_add_timeout(DBusTimeout *timeout, void *data)
 {
-	Dispatcher* d = static_cast<Dispatcher*>(data);
+	Dispatcher *d = static_cast<Dispatcher *>(data);
 
-	Timeout::Internal* t = reinterpret_cast<Timeout::Internal*>(timeout);
+	Timeout::Internal *t = reinterpret_cast<Timeout::Internal *>(timeout);
 
 	d->add_timeout(t);
 
 	return true;
 }
 
-void Dispatcher::Private::on_rem_timeout( DBusTimeout* timeout, void* data )
+void Dispatcher::Private::on_rem_timeout(DBusTimeout *timeout, void *data)
 {
-	Dispatcher* d = static_cast<Dispatcher*>(data);
+	Dispatcher *d = static_cast<Dispatcher *>(data);
 
-	Timeout* t = static_cast<Timeout*>(dbus_timeout_get_data(timeout));
+	Timeout *t = static_cast<Timeout *>(dbus_timeout_get_data(timeout));
 
 	d->rem_timeout(t);
 }
 
-void Dispatcher::Private::on_toggle_timeout( DBusTimeout* timeout, void* data )
+void Dispatcher::Private::on_toggle_timeout(DBusTimeout *timeout, void *data)
 {
-	Timeout* t = static_cast<Timeout*>(dbus_timeout_get_data(timeout));
+	Timeout *t = static_cast<Timeout *>(dbus_timeout_get_data(timeout));
 
 	t->toggle();
 }
 
-void Dispatcher::queue_connection( Connection::Private* cp )
+void Dispatcher::queue_connection(Connection::Private *cp)
 {
 	_mutex_p.lock();
 	_pending_queue.push_back(cp);
@@ -152,19 +152,19 @@ void Dispatcher::dispatch_pending()
 {
 	_mutex_p.lock();
 
-	while(_pending_queue.size() > 0)
+	while (_pending_queue.size() > 0)
 	{
 		Connection::PrivatePList::iterator i, j;
 		
 		i = _pending_queue.begin();
 
-		while(i != _pending_queue.end())
+		while (i != _pending_queue.end())
 		{
 			j = i; 
 			
 			++j;
 
-			if((*i)->do_dispatch())
+			if ((*i)->do_dispatch())
 				_pending_queue.erase(i);
 
 			i = j;

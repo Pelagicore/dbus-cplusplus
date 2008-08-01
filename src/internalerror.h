@@ -44,16 +44,16 @@ struct DXXAPI InternalError
 		dbus_error_init(&error);
 	}
 
-	explicit InternalError( DBusError* e )
+	explicit InternalError(DBusError *e)
 	{
 		dbus_error_init(&error);
 		dbus_move_error(e, &error);
 	}
 
-	InternalError(const InternalError& ie)
+	InternalError(const InternalError &ie)
 	{
 		dbus_error_init(&error);
-		dbus_move_error(const_cast<DBusError*>(&(ie.error)), &error);
+		dbus_move_error(const_cast<DBusError *>(&(ie.error)), &error);
 	}
 	
 	~InternalError()
@@ -61,7 +61,7 @@ struct DXXAPI InternalError
 		dbus_error_free(&error);
 	}
 
-	operator DBusError*()
+	operator DBusError *()
 	{
 		return &error;
 	}

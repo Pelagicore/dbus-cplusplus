@@ -36,31 +36,31 @@ namespace DBus {
 
 struct DXXAPI IntrospectedArgument
 {
-	const char* name;
-	const char* type;
+	const char *name;
+	const char *type;
 	const bool  in;
 };
 
 struct DXXAPI IntrospectedMethod
 {
-	const char* name;
-	const IntrospectedArgument* args;
+	const char *name;
+	const IntrospectedArgument *args;
 };
 
 struct DXXAPI IntrospectedProperty
 {
-	const char* name;
-	const char* type;
+	const char *name;
+	const char *type;
 	const bool  read;
 	const bool  write;
 };
 
 struct DXXAPI IntrospectedInterface
 {
-	const char* name;
-	const IntrospectedMethod* methods;
-	const IntrospectedMethod* signals;
-	const IntrospectedProperty* properties;
+	const char *name;
+	const IntrospectedMethod *methods;
+	const IntrospectedMethod *signals;
+	const IntrospectedProperty *properties;
 };
 
 class DXXAPI IntrospectableAdaptor : public InterfaceAdaptor
@@ -69,11 +69,11 @@ public:
 
 	IntrospectableAdaptor();
 
-	Message Introspect( const CallMessage& );
+	Message Introspect(const CallMessage &);
 
 protected:
 
-	IntrospectedInterface* const introspect() const;
+	IntrospectedInterface *const introspect() const;
 };
 
 class DXXAPI IntrospectableProxy : public InterfaceProxy

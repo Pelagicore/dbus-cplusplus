@@ -44,21 +44,21 @@ class DXXAPI Object
 {
 protected:
 
-	Object( Connection& conn, const Path& path, const char* service );
+	Object(Connection &conn, const Path &path, const char *service);
 	
 public:
 
 	virtual ~Object();
 
-	inline const DBus::Path& path() const;
+	inline const DBus::Path &path() const;
 
-	inline const std::string& service() const;
+	inline const std::string &service() const;
 	
- 	inline Connection& conn();
+ 	inline Connection &conn();
 
 private:
 
-	DXXAPILOCAL virtual bool handle_message( const Message& ) = 0;
+	DXXAPILOCAL virtual bool handle_message(const Message &) = 0;
 	DXXAPILOCAL virtual void register_obj() = 0;
 	DXXAPILOCAL virtual void unregister_obj() = 0;
 
@@ -72,17 +72,17 @@ private:
 /*
 */
 
-Connection& Object::conn()
+Connection &Object::conn()
 {
 	return _conn;
 }
 
-const DBus::Path& Object::path() const
+const DBus::Path &Object::path() const
 {
 	return _path;
 }
 
-const std::string& Object::service() const
+const std::string &Object::service() const
 {
 	return _service;
 }
@@ -103,26 +103,26 @@ public:
 
 class ObjectAdaptor;
 
-typedef std::list<ObjectAdaptor*> ObjectAdaptorPList;
+typedef std::list<ObjectAdaptor *> ObjectAdaptorPList;
 typedef std::list<std::string> ObjectPathList;
 
 class DXXAPI ObjectAdaptor : public Object, public virtual AdaptorBase
 {
 public:
 
-	static ObjectAdaptor* from_path( const Path& path );
+	static ObjectAdaptor *from_path(const Path &path);
 
-	static ObjectAdaptorPList from_path_prefix( const std::string& prefix );
+	static ObjectAdaptorPList from_path_prefix(const std::string &prefix);
 
-	static ObjectPathList child_nodes_from_prefix( const std::string& prefix );
+	static ObjectPathList child_nodes_from_prefix(const std::string &prefix);
 
 	struct Private;
 
-	ObjectAdaptor( Connection& conn, const Path& path );
+	ObjectAdaptor(Connection &conn, const Path &path);
 
 	~ObjectAdaptor();
 
-	inline const ObjectAdaptor* object() const;
+	inline const ObjectAdaptor *object() const;
 
 protected:
 
@@ -130,57 +130,57 @@ protected:
 	{
 	public:
 
-		inline MessageIter& writer();
+		inline MessageIter &writer();
 
-		inline Tag* tag();
+		inline Tag *tag();
 
 	private:
 
-		Continuation( Connection& conn, const CallMessage& call, const Tag* tag );
+		Continuation(Connection &conn, const CallMessage &call, const Tag *tag);
 
 		Connection _conn;
 		CallMessage _call;
 		MessageIter _writer;
 		ReturnMessage _return;
-		const Tag* _tag;
+		const Tag *_tag;
 
 	friend class ObjectAdaptor;
 	};
 
-	void return_later( const Tag* tag );
+	void return_later(const Tag *tag);
 
-	void return_now( Continuation* ret );
+	void return_now(Continuation *ret);
 
-	void return_error( Continuation* ret, const Error error );
+	void return_error(Continuation *ret, const Error error);
 
-	Continuation* find_continuation( const Tag* tag );
+	Continuation *find_continuation(const Tag *tag);
 
 private:
 
-	void _emit_signal( SignalMessage& );
+	void _emit_signal(SignalMessage &);
 
-	bool handle_message( const Message& );
+	bool handle_message(const Message &);
 
 	void register_obj();
 	void unregister_obj();
 
-	typedef std::map<const Tag*, Continuation*> ContinuationMap;
+	typedef std::map<const Tag *, Continuation *> ContinuationMap;
 	ContinuationMap _continuations;
 
 friend struct Private;
 };
 
-const ObjectAdaptor* ObjectAdaptor::object() const
+const ObjectAdaptor *ObjectAdaptor::object() const
 {
 	return this;
 }
 
-Tag* ObjectAdaptor::Continuation::tag()
+Tag *ObjectAdaptor::Continuation::tag()
 {
-	return const_cast<Tag*>(_tag);
+	return const_cast<Tag *>(_tag);
 }
 
-MessageIter& ObjectAdaptor::Continuation::writer()
+MessageIter &ObjectAdaptor::Continuation::writer()
 {
 	return _writer;
 }
@@ -190,23 +190,23 @@ MessageIter& ObjectAdaptor::Continuation::writer()
 
 class ObjectProxy;
 
-typedef std::list<ObjectProxy*> ObjectProxyPList;
+typedef std::list<ObjectProxy *> ObjectProxyPList;
 
 class DXXAPI ObjectProxy : public Object, public virtual ProxyBase
 {
 public:
 
-	ObjectProxy( Connection& conn, const Path& path, const char* service = "" );
+	ObjectProxy(Connection &conn, const Path &path, const char *service = "");
 
 	~ObjectProxy();
 
-	inline const ObjectProxy* object() const;
+	inline const ObjectProxy *object() const;
 
 private:
 
-	Message _invoke_method( CallMessage& );
+	Message _invoke_method(CallMessage &);
 
-	bool handle_message( const Message& );
+	bool handle_message(const Message &);
 
 	void register_obj();
 	void unregister_obj();
@@ -216,7 +216,7 @@ private:
 	MessageSlot _filtered;
 };
 
-const ObjectProxy* ObjectProxy::object() const
+const ObjectProxy *ObjectProxy::object() const
 {
 	return this;
 }

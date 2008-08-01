@@ -42,30 +42,30 @@ namespace DBus {
 
 struct DXXAPILOCAL Connection::Private
 {
-	DBusConnection*	conn;
+	DBusConnection *	conn;
 
 	std::vector<std::string> names;
 
-	Dispatcher* dispatcher;
+	Dispatcher *dispatcher;
 	bool do_dispatch();
 
 	MessageSlot disconn_filter;
-	bool disconn_filter_function( const Message& );
+	bool disconn_filter_function(const Message &);
 
-	Server::Private* server;
+	Server::Private *server;
 	void detach_server();
 
-	Private( DBusConnection*, Server::Private* = NULL );
+	Private(DBusConnection *, Server::Private * = NULL);
 
-	Private( DBusBusType );
+	Private(DBusBusType);
 
 	~Private();
 
 	void init();
 
-	static void dispatch_status_stub( DBusConnection*, DBusDispatchStatus, void* );
+	static void dispatch_status_stub(DBusConnection *, DBusDispatchStatus, void *);
 
-	static DBusHandlerResult message_filter_stub( DBusConnection*, DBusMessage*, void* );
+	static DBusHandlerResult message_filter_stub(DBusConnection *, DBusMessage *, void *);
 };
 
 } /* namespace DBus */

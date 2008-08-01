@@ -5,10 +5,10 @@
 #include <stdio.h>
 #include <limits.h>
 
-static const char* ECHO_SERVER_NAME = "org.freedesktop.DBus.Examples.Echo";
-static const char* ECHO_SERVER_PATH = "/org/freedesktop/DBus/Examples/Echo";
+static const char *ECHO_SERVER_NAME = "org.freedesktop.DBus.Examples.Echo";
+static const char *ECHO_SERVER_PATH = "/org/freedesktop/DBus/Examples/Echo";
 
-EchoServer::EchoServer( DBus::Connection& connection )
+EchoServer::EchoServer(DBus::Connection &connection)
 : DBus::ObjectAdaptor(connection, ECHO_SERVER_PATH)
 {
 }
@@ -18,23 +18,24 @@ DBus::Int32 EchoServer::Random()
 	return rand();
 }
 
-DBus::String EchoServer::Hello( const DBus::String& name )
+DBus::String EchoServer::Hello(const DBus::String &name)
 {
+	sleep (10);
 	return "Hello " + name + "!";
 }
 
-DBus::Variant EchoServer::Echo( const DBus::Variant& value )
+DBus::Variant EchoServer::Echo(const DBus::Variant &value)
 {
 	this->Echoed(value);
 
 	return value;
 }
 
-std::vector< DBus::Byte > EchoServer::Cat( const DBus::String & file )
+std::vector< DBus::Byte > EchoServer::Cat(const DBus::String &file)
 {
-	FILE* handle = fopen(file.c_str(), "rb");
+	FILE *handle = fopen(file.c_str(), "rb");
 
-	if(!handle) throw DBus::Error("org.freedesktop.DBus.EchoDemo.ErrorFileNotFound", "file not found");
+	if (!handle) throw DBus::Error("org.freedesktop.DBus.EchoDemo.ErrorFileNotFound", "file not found");
 
 	DBus::Byte buff[1024];
 
@@ -45,11 +46,11 @@ std::vector< DBus::Byte > EchoServer::Cat( const DBus::String & file )
 	return std::vector< DBus::Byte > (buff, buff + nread);
 }
 
-DBus::Int32 EchoServer::Sum( const std::vector<DBus::Int32>& ints )
+DBus::Int32 EchoServer::Sum(const std::vector<DBus::Int32>& ints)
 {
 	DBus::Int32 sum = 0;
 
-	for(size_t i = 0; i < ints.size(); ++i) sum += ints[i];
+	for (size_t i = 0; i < ints.size(); ++i) sum += ints[i];
 
 	return sum;	
 }
@@ -69,7 +70,7 @@ std::map< DBus::String, DBus::String > EchoServer::Info()
 
 DBus::BusDispatcher dispatcher;
 
-void niam( int sig )
+void niam(int sig)
 {
 	dispatcher.leave();
 }

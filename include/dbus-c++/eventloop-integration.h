@@ -44,7 +44,7 @@ class BusDispatcher;
 
 class DXXAPI BusTimeout : public Timeout, public DefaultTimeout
 {
-	BusTimeout( Timeout::Internal*, BusDispatcher* );
+	BusTimeout(Timeout::Internal *, BusDispatcher *);
 
 	void toggle();
 
@@ -53,7 +53,7 @@ friend class BusDispatcher;
 
 class DXXAPI BusWatch : public Watch, public DefaultWatch
 {
-	BusWatch( Watch::Internal*, BusDispatcher* );
+	BusWatch(Watch::Internal *, BusDispatcher *);
 
 	void toggle();
 
@@ -76,17 +76,17 @@ public:
 
 	virtual void do_iteration();
 
-	virtual Timeout* add_timeout( Timeout::Internal* );
+	virtual Timeout *add_timeout(Timeout::Internal *);
 
-	virtual void rem_timeout( Timeout* );
+	virtual void rem_timeout(Timeout *);
 
-	virtual Watch* add_watch( Watch::Internal* );
+	virtual Watch *add_watch(Watch::Internal *);
 
-	virtual void rem_watch( Watch* );
+	virtual void rem_watch(Watch *);
 
-	void watch_ready( DefaultWatch& );
+	void watch_ready(DefaultWatch &);
 
-	void timeout_expired( DefaultTimeout& );
+	void timeout_expired(DefaultTimeout &);
 
 private:
 

@@ -38,12 +38,12 @@ namespace DBus {
 
 struct DXXAPILOCAL Message::Private
 {
-	DBusMessage* msg;
+	DBusMessage *msg;
 
 	Private() : msg(0)
 	{}
 
-	Private( DBusMessage* m ) : msg(m)
+	Private(DBusMessage *m) : msg(m)
 	{}
 };
 

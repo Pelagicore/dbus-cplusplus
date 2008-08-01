@@ -29,10 +29,10 @@
 
 DBus::BusDispatcher dispatcher;
 static bool systembus;
-static char* path;
-static char* service;
+static char *path;
+static char *service;
 
-void niam( int sig )
+void niam(int sig)
 {
 	DBus::Connection conn = systembus ? DBus::Connection::SystemBus() : DBus::Connection::SessionBus();
 
@@ -43,19 +43,19 @@ void niam( int sig )
 	dispatcher.leave();
 }
 
-int main( int argc, char** argv )
+int main(int argc, char ** argv)
 {
 	signal(SIGTERM, niam);
 	signal(SIGINT, niam);
 	signal(SIGALRM, niam);
 
-	if(argc == 1)
+	if (argc == 1)
 	{
 		std::cerr << std::endl << "Usage: " << argv[0] << " [--system] <object_path> [<destination>]" << std::endl << std::endl;
 	}
 	else
 	{
-		if(strcmp(argv[1], "--system"))
+		if (strcmp(argv[1], "--system"))
 		{
 			systembus = false;
 			path = argv[1];

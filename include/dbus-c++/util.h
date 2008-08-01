@@ -48,7 +48,7 @@ public:
 		(*__ref) = 1;
 	}
 
-	RefCnt( const RefCnt& rc )
+	RefCnt(const RefCnt &rc)
 	{
 		__ref = rc.__ref;
 		ref();
@@ -59,7 +59,7 @@ public:
 		unref();
 	}
 
-	RefCnt& operator = ( const RefCnt& ref )
+	RefCnt &operator = (const RefCnt &ref)
 	{
 		ref.ref();
 		unref();
@@ -87,12 +87,12 @@ private:
 	{
 		-- (*__ref);
 
-		if( (*__ref) < 0 )
+		if ((*__ref) < 0)
 		{
 			debug_log("%p: refcount dropped below zero!", __ref);
 		}
 
-		if( noref() )
+		if (noref())
 		{
 			delete __ref;
 		}
@@ -112,15 +112,15 @@ class RefPtrI		// RefPtr to incomplete type
 {
 public:
 
-	RefPtrI( T* ptr = 0 );
+	RefPtrI(T *ptr = 0);
 
 	~RefPtrI();
 
-	RefPtrI& operator = ( const RefPtrI& ref )
+	RefPtrI &operator = (const RefPtrI &ref)
 	{
-		if( this != &ref )
+		if (this != &ref)
 		{
-			if(__cnt.one()) delete __ptr;
+			if (__cnt.one()) delete __ptr;
 
 			__ptr = ref.__ptr;
 			__cnt = ref.__cnt;
@@ -128,28 +128,28 @@ public:
 		return *this;
 	}
 
-	T& operator *() const
+	T &operator *() const
 	{
 		return *__ptr;
 	}
 
-	T* operator ->() const
+	T *operator ->() const
 	{
-		if(__cnt.noref()) return 0;
+		if (__cnt.noref()) return 0;
 		
 		return __ptr;
 	}
 
-	T* get() const
+	T *get() const
 	{
-		if(__cnt.noref()) return 0;
+		if (__cnt.noref()) return 0;
 		
 		return __ptr;
 	}
 
 private:
 
-	T*     __ptr;
+	T *__ptr;
 	RefCnt __cnt;
 };
 
@@ -158,20 +158,20 @@ class RefPtr
 {
 public:
 
-	RefPtr( T* ptr = 0)
+	RefPtr(T *ptr = 0)
 	: __ptr(ptr)
 	{}
 
 	~RefPtr()
 	{
-		if(__cnt.one()) delete __ptr;
+		if (__cnt.one()) delete __ptr;
 	}
 
-	RefPtr& operator = ( const RefPtr& ref )
+	RefPtr &operator = (const RefPtr &ref)
 	{
-		if( this != &ref )
+		if (this != &ref)
 		{
-			if(__cnt.one()) delete __ptr;
+			if (__cnt.one()) delete __ptr;
 
 			__ptr = ref.__ptr;
 			__cnt = ref.__cnt;
@@ -179,28 +179,28 @@ public:
 		return *this;
 	}
 
-	T& operator *() const
+	T &operator *() const
 	{
 		return *__ptr;
 	}
 
-	T* operator ->() const
+	T *operator ->() const
 	{
-		if(__cnt.noref()) return 0;
+		if (__cnt.noref()) return 0;
 		
 		return __ptr;
 	}
 
-	T* get() const
+	T *get() const
 	{
-		if(__cnt.noref()) return 0;
+		if (__cnt.noref()) return 0;
 		
 		return __ptr;
 	}
 
 private:
 
-	T*     __ptr;
+	T *__ptr;
 	RefCnt __cnt;
 };
 
@@ -213,7 +213,7 @@ class Callback_Base
 {
 public:
 
-	virtual R call( P param ) const = 0;
+	virtual R call(P param) const = 0;
 
 	virtual ~Callback_Base()
 	{}
@@ -224,21 +224,21 @@ class Slot
 {
 public:
 
-	Slot& operator = ( Callback_Base<R,P>* s )
+	Slot &operator = (Callback_Base<R,P>* s)
 	{
 		_cb = s;
 
 		return *this;
 	}
 
-	R operator()( P param ) const
+	R operator()(P param) const
 	{
-		/*if(_cb.get())*/ return _cb->call(param);
+		/*if (_cb.get())*/ return _cb->call(param);
 	}
 
-	R call( P param ) const
+	R call(P param) const
 	{
-		/*if(_cb.get())*/ return _cb->call(param);
+		/*if (_cb.get())*/ return _cb->call(param);
 	}
 
 	bool empty()
@@ -258,18 +258,18 @@ public:
 
 	typedef R (C::*M)(P);
 
-	Callback( C* c, M m )
+	Callback(C *c, M m)
 	: _c(c), _m(m)
 	{}
 
-	R call( P param ) const
+	R call(P param) const
 	{
-		/*if(_c)*/ return (_c->*_m)(param);
+		/*if (_c)*/ return (_c->*_m)(param);
 	}
 
 private:
 
-	C* _c; M _m;
+	C *_c; M _m;
 };
 
 } /* namespace DBus */

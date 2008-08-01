@@ -41,7 +41,7 @@ public:
 
 	class Internal;
 
-	Timeout( Internal* i );
+	Timeout(Internal *i);
 
 	virtual ~Timeout(){}
 
@@ -55,11 +55,11 @@ public:
 
 private:
 
-	DXXAPILOCAL Timeout( const Timeout& );
+	DXXAPILOCAL Timeout(const Timeout &);
 
 private:
 
-	Internal* _int;
+	Internal *_int;
 };
 
 class DXXAPI Watch
@@ -68,7 +68,7 @@ public:
 
 	class Internal;
 
-	Watch( Internal* i );
+	Watch(Internal *i);
 
 	virtual ~Watch(){}
 
@@ -78,17 +78,17 @@ public:
 
 	bool enabled() const;
 
-	bool handle( int flags );
+	bool handle(int flags);
 
 	virtual void toggle() = 0;
 
 private:
 
-	DXXAPILOCAL Watch( const Watch& );
+	DXXAPILOCAL Watch(const Watch &);
 
 private:
 
-	Internal* _int;
+	Internal *_int;
 };
 
 class DXXAPI Dispatcher
@@ -98,7 +98,7 @@ public:
 	virtual ~Dispatcher()
 	{}
 
-	void queue_connection( Connection::Private* );
+	void queue_connection(Connection::Private *);
 
 	void dispatch_pending();
 
@@ -106,13 +106,13 @@ public:
 
 	virtual void leave() = 0;
 
-	virtual Timeout* add_timeout( Timeout::Internal* ) = 0;
+	virtual Timeout *add_timeout(Timeout::Internal *) = 0;
 
-	virtual void rem_timeout( Timeout* ) = 0;
+	virtual void rem_timeout(Timeout *) = 0;
 
-	virtual Watch* add_watch( Watch::Internal* ) = 0;
+	virtual Watch *add_watch(Watch::Internal *) = 0;
 
-	virtual void rem_watch( Watch* ) = 0;
+	virtual void rem_watch(Watch *) = 0;
 
 	struct Private;
 
@@ -122,7 +122,7 @@ private:
 	Connection::PrivatePList _pending_queue;
 };
 
-extern DXXAPI Dispatcher* default_dispatcher;
+extern DXXAPI Dispatcher *default_dispatcher;
 
 /* classes for multithreading support
 */
@@ -141,7 +141,7 @@ public:
 
 protected:
 
-	Internal* _int;
+	Internal *_int;
 };
 
 class DXXAPI CondVar
@@ -150,9 +150,9 @@ public:
 
 	virtual ~CondVar() {}
 
-	virtual void wait( Mutex* ) = 0;
+	virtual void wait(Mutex *) = 0;
 
-	virtual bool wait_timeout( Mutex*, int timeout ) = 0;
+	virtual bool wait_timeout(Mutex *, int timeout) = 0;
 
 	virtual void wake_one() = 0;
 
@@ -162,27 +162,27 @@ public:
 
 protected:
 
-	Internal* _int;
+	Internal *_int;
 };
 
 #ifndef DBUS_HAS_RECURSIVE_MUTEX
-typedef Mutex* (*MutexNewFn)();
-typedef bool (*MutexFreeFn)( Mutex* mx );
-typedef bool (*MutexLockFn)( Mutex* mx );
-typedef void (*MutexUnlockFn)( Mutex* mx );
+typedef Mutex *(*MutexNewFn)();
+typedef bool (*MutexFreeFn)(Mutex *mx);
+typedef bool (*MutexLockFn)(Mutex *mx);
+typedef void (*MutexUnlockFn)(Mutex *mx);
 #else
-typedef Mutex* (*MutexNewFn)();
-typedef void (*MutexFreeFn)( Mutex* mx );
-typedef void (*MutexLockFn)( Mutex* mx );
-typedef void (*MutexUnlockFn)( Mutex* mx );
+typedef Mutex *(*MutexNewFn)();
+typedef void (*MutexFreeFn)(Mutex *mx);
+typedef void (*MutexLockFn)(Mutex *mx);
+typedef void (*MutexUnlockFn)(Mutex *mx);
 #endif//DBUS_HAS_RECURSIVE_MUTEX
 
-typedef CondVar* (*CondVarNewFn)();
-typedef void (*CondVarFreeFn)( CondVar* cv );
-typedef void (*CondVarWaitFn)( CondVar* cv, Mutex* mx );
-typedef bool (*CondVarWaitTimeoutFn)( CondVar* cv, Mutex* mx, int timeout );
-typedef void (*CondVarWakeOneFn)( CondVar* cv );
-typedef void (*CondVarWakeAllFn)( CondVar* cv );
+typedef CondVar *(*CondVarNewFn)();
+typedef void (*CondVarFreeFn)(CondVar *cv);
+typedef void (*CondVarWaitFn)(CondVar *cv, Mutex *mx);
+typedef bool (*CondVarWaitTimeoutFn)(CondVar *cv, Mutex *mx, int timeout);
+typedef void (*CondVarWakeOneFn)(CondVar *cv);
+typedef void (*CondVarWakeAllFn)(CondVar *cv);
 
 #ifdef DBUS_HAS_THREADS_INIT_DEFAULT
 void DXXAPI _init_threading();
@@ -204,52 +204,52 @@ struct Threading
 		);
 	}
 
-	static Mutex* mutex_new()
+	static Mutex *mutex_new()
 	{
 		return new Mx;
 	}
 
-	static void mutex_free( Mutex* mx )
+	static void mutex_free(Mutex *mx)
 	{
 		delete mx;
 	}
 
-	static void mutex_lock( Mutex* mx )
+	static void mutex_lock(Mutex *mx)
 	{
 		mx->lock();
 	}
 
-	static void mutex_unlock( Mutex* mx )
+	static void mutex_unlock(Mutex *mx)
 	{
 		mx->unlock();
 	}
 
-	static CondVar* condvar_new()
+	static CondVar *condvar_new()
 	{
 		return new Cv;
 	}
 
-	static void condvar_free( CondVar* cv )
+	static void condvar_free(CondVar *cv)
 	{
 		delete cv;
 	}
 
-	static void condvar_wait( CondVar* cv, Mutex* mx )
+	static void condvar_wait(CondVar *cv, Mutex *mx)
 	{
 		cv->wait(mx);
 	}
 
-	static bool condvar_wait_timeout( CondVar* cv, Mutex* mx, int timeout )
+	static bool condvar_wait_timeout(CondVar *cv, Mutex *mx, int timeout)
 	{
 		return cv->wait_timeout(mx, timeout);
 	}
 
-	static void condvar_wake_one( CondVar* cv )
+	static void condvar_wake_one(CondVar *cv)
 	{
 		cv->wake_one();
 	}
 
-	static void condvar_wake_all( CondVar* cv )
+	static void condvar_wake_all(CondVar *cv)
 	{
 		cv->wake_all();
 	}

@@ -28,7 +28,7 @@
 
 using namespace DBus;
 
-static const char* properties_name = "org.freedesktop.DBus.Properties";
+static const char *properties_name = "org.freedesktop.DBus.Properties";
 
 PropertiesAdaptor::PropertiesAdaptor()
 : InterfaceAdaptor(properties_name)
@@ -37,7 +37,7 @@ PropertiesAdaptor::PropertiesAdaptor()
 	register_method(PropertiesAdaptor, Set, Set);
 }
 
-Message PropertiesAdaptor::Get( const CallMessage& call )
+Message PropertiesAdaptor::Get(const CallMessage &call)
 {
 	MessageIter ri = call.reader();
 
@@ -48,14 +48,14 @@ Message PropertiesAdaptor::Get( const CallMessage& call )
 
 	debug_log("requesting property %s on interface %s", property_name.c_str(), iface_name.c_str());
 
-	InterfaceAdaptor* interface = (InterfaceAdaptor*) find_interface(iface_name);
+	InterfaceAdaptor *interface = (InterfaceAdaptor *) find_interface(iface_name);
 
-	if(!interface)
+	if (!interface)
 		throw ErrorFailed("requested interface not found");
 
-	Variant* value = interface->get_property(property_name);
+	Variant *value = interface->get_property(property_name);
 
-	if(!value)
+	if (!value)
 		throw ErrorFailed("requested property not found");
 
 	on_get_property(*interface, property_name, *value);
@@ -68,7 +68,7 @@ Message PropertiesAdaptor::Get( const CallMessage& call )
 	return reply;
 }
 
-Message PropertiesAdaptor::Set( const CallMessage& call )
+Message PropertiesAdaptor::Set(const CallMessage &call)
 {
 	MessageIter ri = call.reader();
 
@@ -78,9 +78,9 @@ Message PropertiesAdaptor::Set( const CallMessage& call )
 
 	ri >> iface_name >> property_name >> value;
 
-	InterfaceAdaptor* interface = (InterfaceAdaptor*) find_interface(iface_name);
+	InterfaceAdaptor *interface = (InterfaceAdaptor *) find_interface(iface_name);
 
-	if(!interface)
+	if (!interface)
 		throw ErrorFailed("requested interface not found");
 
 	on_set_property(*interface, property_name, value);
@@ -92,7 +92,7 @@ Message PropertiesAdaptor::Set( const CallMessage& call )
 	return reply;
 }
 
-IntrospectedInterface* const PropertiesAdaptor::introspect() const
+IntrospectedInterface *const PropertiesAdaptor::introspect() const
 {
 	static IntrospectedArgument Get_args[] =
 	{
@@ -137,14 +137,14 @@ PropertiesProxy::PropertiesProxy()
 {
 }
 
-Variant PropertiesProxy::Get( const String& iface, const String& property )
+Variant PropertiesProxy::Get(const String &iface, const String &property)
 {
 //todo
 	Variant v;
 	return v;
 }
 
-void PropertiesProxy::Set( const String& iface, const String& property, const Variant& value )
+void PropertiesProxy::Set(const String &iface, const String &property, const Variant &value)
 {
 //todo
 }

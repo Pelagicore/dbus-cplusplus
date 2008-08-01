@@ -43,13 +43,13 @@ public:
 
 	struct Private;
 
-	PendingCall( Private* );
+	PendingCall(Private *);
 
-	PendingCall( const PendingCall& );
+	PendingCall(const PendingCall &);
 
 	virtual ~PendingCall();
 
-	PendingCall& operator = ( const PendingCall& );
+	PendingCall &operator = (const PendingCall &);
 
 	bool completed();
 	
@@ -57,11 +57,11 @@ public:
 
 	void block();
 
-	void data( void* );
+	void data(void *);
 
-	void* data();
+	void *data();
 
-	Slot<void, PendingCall&>& slot();
+	Slot<void, PendingCall &>& slot();
 
 	Message steal_reply();
 
