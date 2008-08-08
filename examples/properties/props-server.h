@@ -15,7 +15,7 @@ public:
 	PropsServer(DBus::Connection &connection);
 
 	void on_set_property
-		(DBus::InterfaceAdaptor &interface, const DBus::String &property, const DBus::Variant &value);
+		(DBus::InterfaceAdaptor &interface, const std::string &property, const DBus::Variant &value);
 };
 
 #endif//__DEMO_PROPS_SERVER_H

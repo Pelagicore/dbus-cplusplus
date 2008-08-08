@@ -80,10 +80,10 @@ public:
 
 protected:
 
-	virtual void on_get_property(InterfaceAdaptor &interface, const String &property, Variant &value)
+	virtual void on_get_property(InterfaceAdaptor &interface, const std::string &property, Variant &value)
 	{}
 
-	virtual void on_set_property(InterfaceAdaptor &interface, const String &property, const Variant &value)
+	virtual void on_set_property(InterfaceAdaptor &interface, const std::string &property, const Variant &value)
 	{}
 
 	IntrospectedInterface *const introspect() const;
@@ -95,9 +95,9 @@ public:
 
 	PropertiesProxy();
 
-	Variant Get(const String &interface, const String &property);
+	Variant Get(const std::string &interface, const std::string &property);
 
-	void Set(const String &interface, const String &property, const Variant &value);
+	void Set(const std::string &interface, const std::string &property, const Variant &value);
 };
 
 } /* namespace DBus */

@@ -15,7 +15,7 @@ public:
 
 	HalManagerProxy(DBus::Connection &connection);
 
-	std::vector< DBus::String > GetAllDevices();
+	std::vector< std::string > GetAllDevices();
 
 private:
 
@@ -23,7 +23,7 @@ private:
 
 	void DeviceRemovedCb(const DBus::SignalMessage &sig);
 
-	std::map< DBus::String, DBus::RefPtr< HalDeviceProxy > > _devices;
+	std::map< std::string, DBus::RefPtr< HalDeviceProxy > > _devices;
 };
 
 class HalDeviceProxy

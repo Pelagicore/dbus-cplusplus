@@ -13,17 +13,17 @@ public:
 
 	EchoServer(DBus::Connection &connection);
 
-	DBus::Int32 Random();
+	int32_t Random();
 
-	DBus::String Hello(const DBus::String &name);
+	std::string Hello(const std::string &name);
 
 	DBus::Variant Echo(const DBus::Variant &value);
 
-	std::vector< DBus::Byte > Cat(const DBus::String &file);
+	std::vector< uint8_t > Cat(const std::string &file);
 
-	DBus::Int32 Sum(const std::vector<DBus::Int32> & ints);
+	int32_t Sum(const std::vector<int32_t> & ints);
 
-	std::map< DBus::String, DBus::String > Info();
+	std::map< std::string, std::string > Info();
 };
 
 #endif//__DEMO_ECHO_SERVER_H

@@ -12,11 +12,11 @@ PropsServer::PropsServer(DBus::Connection &connection)
 }
 
 void PropsServer::on_set_property
-	(DBus::InterfaceAdaptor &interface, const DBus::String &property, const DBus::Variant &value)
+	(DBus::InterfaceAdaptor &interface, const std::string &property, const DBus::Variant &value)
 {
 	if (property == "Message")
 	{
-		DBus::String msg = value;
+		std::string msg = value;
 		this->MessageChanged(msg);
 	}
 }

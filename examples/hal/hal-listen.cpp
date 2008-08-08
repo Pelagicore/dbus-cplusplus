@@ -10,9 +10,9 @@ HalManagerProxy::HalManagerProxy(DBus::Connection &connection)
 	connect_signal(HalManagerProxy, DeviceAdded, DeviceAddedCb);
 	connect_signal(HalManagerProxy, DeviceRemoved, DeviceRemovedCb);
 
-	std::vector< DBus::String > devices = GetAllDevices();
+	std::vector< std::string > devices = GetAllDevices();
 
-	std::vector< DBus::String >::iterator it;
+	std::vector< std::string >::iterator it;
 	for (it = devices.begin(); it != devices.end(); ++it)
 	{
 		DBus::Path udi = *it;
@@ -23,9 +23,9 @@ HalManagerProxy::HalManagerProxy(DBus::Connection &connection)
 	}
 }
 
-std::vector< DBus::String > HalManagerProxy::GetAllDevices()
+std::vector< std::string > HalManagerProxy::GetAllDevices()
 {
-	std::vector< DBus::String > udis;
+	std::vector< std::string > udis;
 	DBus::CallMessage call;
 
 	call.member("GetAllDevices");
@@ -40,7 +40,7 @@ std::vector< DBus::String > HalManagerProxy::GetAllDevices()
 void HalManagerProxy::DeviceAddedCb(const DBus::SignalMessage &sig)
 {
 	DBus::MessageIter it = sig.reader();
-	DBus::String devname;
+	std::string devname;
 
 	it >> devname;
 
@@ -53,7 +53,7 @@ void HalManagerProxy::DeviceAddedCb(const DBus::SignalMessage &sig)
 void HalManagerProxy::DeviceRemovedCb(const DBus::SignalMessage &sig)
 {
 	DBus::MessageIter it = sig.reader();
-	DBus::String devname;
+	std::string devname;
 
 	it >> devname;
 
@@ -72,10 +72,10 @@ HalDeviceProxy::HalDeviceProxy(DBus::Connection &connection, DBus::Path &udi)
 
 void HalDeviceProxy::PropertyModifiedCb(const DBus::SignalMessage &sig)
 {
-	typedef DBus::Struct< DBus::String, DBus::Bool, DBus::Bool > HalProperty;
+	typedef DBus::Struct< std::string, bool, bool > HalProperty;
 
 	DBus::MessageIter it = sig.reader();
-	DBus::Int32 number;
+	int32_t number;
 
 	it >> number;
 
@@ -94,7 +94,7 @@ void HalDeviceProxy::PropertyModifiedCb(const DBus::SignalMessage &sig)
 void HalDeviceProxy::ConditionCb(const DBus::SignalMessage &sig)
 {
 	DBus::MessageIter it = sig.reader();
-	DBus::String condition;
+	std::string condition;
 
 	it >> condition;
 

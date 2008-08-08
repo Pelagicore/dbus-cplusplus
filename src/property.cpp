@@ -41,8 +41,8 @@ Message PropertiesAdaptor::Get(const CallMessage &call)
 {
 	MessageIter ri = call.reader();
 
-	String iface_name;
-	String property_name;
+	std::string iface_name;
+	std::string property_name;
 
 	ri >> iface_name >> property_name;
 
@@ -72,8 +72,8 @@ Message PropertiesAdaptor::Set(const CallMessage &call)
 {
 	MessageIter ri = call.reader();
 
-	String iface_name;
-	String property_name;
+	std::string iface_name;
+	std::string property_name;
 	Variant value;
 
 	ri >> iface_name >> property_name >> value;
@@ -137,14 +137,14 @@ PropertiesProxy::PropertiesProxy()
 {
 }
 
-Variant PropertiesProxy::Get(const String &iface, const String &property)
+Variant PropertiesProxy::Get(const std::string &iface, const std::string &property)
 {
 //todo
 	Variant v;
 	return v;
 }
 
-void PropertiesProxy::Set(const String &iface, const String &property, const Variant &value)
+void PropertiesProxy::Set(const std::string &iface, const std::string &property, const Variant &value)
 {
 //todo
 }

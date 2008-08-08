@@ -15,7 +15,7 @@ DBusBrowser::DBusBrowser(::DBus::Connection &conn)
 	set_border_width(5);
 	set_default_size(400, 500);
 
-	typedef std::vector< ::DBus::String > Names;
+	typedef std::vector< std::string > Names;
 
 	Names names = ListNames();
 
@@ -42,17 +42,17 @@ DBusBrowser::DBusBrowser(::DBus::Connection &conn)
 }
 
 void DBusBrowser::NameOwnerChanged(
-	const ::DBus::String &name, const ::DBus::String &old_owner, const ::DBus::String &new_owner)
+	const std::string &name, const std::string &old_owner, const std::string &new_owner)
 {
 	cout << name << ": " << old_owner << " -> " << new_owner << endl;
 }
 
-void DBusBrowser::NameLost(const ::DBus::String &name)
+void DBusBrowser::NameLost(const std::string &name)
 {
 	cout << name << " lost" << endl;
 }
 
-void DBusBrowser::NameAcquired(const ::DBus::String &name)
+void DBusBrowser::NameAcquired(const std::string &name)
 {
 	cout << name << " acquired" << endl;
 }

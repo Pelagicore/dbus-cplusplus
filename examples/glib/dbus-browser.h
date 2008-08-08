@@ -30,11 +30,11 @@ public:
 
 private:
 
-	void NameOwnerChanged(const ::DBus::String &, const ::DBus::String &, const ::DBus::String &);
+	void NameOwnerChanged(const std::string &, const std::string &, const std::string &);
 
-	void NameLost(const ::DBus::String &);
+	void NameLost(const std::string &);
 
-	void NameAcquired(const ::DBus::String &);
+	void NameAcquired(const std::string &);
 
 	void on_select_busname();
 
