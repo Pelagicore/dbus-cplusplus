@@ -44,12 +44,12 @@ class Error : public std::exception
 {
 public:
 
-	Error( const char* error, int line, int column );
+	Error(const char *error, int line, int column);
 
 	~Error() throw()
 	{}
 
-	const char* what() const throw()
+	const char *what() const throw()
 	{
 		return _error.c_str();
 	}
@@ -61,13 +61,13 @@ private:
 
 class Node;
 
-class Nodes : public std::vector<Node*>
+class Nodes : public std::vector<Node *>
 {
 public:
 
-	Nodes operator[]( const std::string& key );
+	Nodes operator[](const std::string &key);
 
-	Nodes select( const std::string& attr, const std::string& value );
+	Nodes select(const std::string &attr, const std::string &value);
 };
 
 class Node
@@ -82,21 +82,21 @@ public:
 	std::string cdata;
 	Children children;
 
-	Node( std::string& n, Attributes& a )
+	Node(std::string &n, Attributes &a)
 	: name(n), _attrs(a)
 	{}
 
-	Node( const char* n, const char** a = NULL );
+	Node(const char *n, const char ** a = NULL);
 
-	Nodes operator[]( const std::string& key );
+	Nodes operator[](const std::string &key);
 
-	std::string get( const std::string& attribute );
+	std::string get(const std::string &attribute);
 
-	void set( const std::string& attribute, std::string value );
+	void set(const std::string &attribute, std::string value);
 
 	std::string to_xml() const;
 
-	Node& add( Node child )
+	Node &add(Node child)
 	{
 		children.push_back(child);
 		return children.back();
@@ -104,7 +104,7 @@ public:
 
 private:
 
-	void _raw_xml( std::string& xml, int& depth ) const;
+	void _raw_xml(std::string &xml, int &depth) const;
 
 	Attributes _attrs;
 };
@@ -115,15 +115,15 @@ public:
 
 	struct Expat;
 
-	Node* root;
+	Node *root;
 
 	Document();
 
-	Document( const std::string& xml );
+	Document(const std::string &xml);
 
 	~Document();
 
-	void from_xml( const std::string& xml );
+	void from_xml(const std::string &xml);
 
 	std::string to_xml() const;
 
@@ -136,7 +136,7 @@ private:
 
 } /* namespace DBus */
 
-std::istream& operator >> ( std::istream&, DBus::Xml::Document& );
-std::ostream& operator << ( std::ostream&, DBus::Xml::Document& );
+std::istream &operator >> (std::istream &, DBus::Xml::Document &);
+std::ostream &operator << (std::ostream &, DBus::Xml::Document &);
 
 #endif//__DBUSXX_XML_H

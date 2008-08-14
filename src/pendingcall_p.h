@@ -39,15 +39,15 @@ namespace DBus {
 
 struct DXXAPILOCAL PendingCall::Private
 {
-	DBusPendingCall* call;
+	DBusPendingCall *call;
 	int dataslot;
-	Slot<void, PendingCall&> slot;
+	Slot<void, PendingCall &> slot;
 	
-	Private( DBusPendingCall* );
+	Private(DBusPendingCall *);
 
 	~Private();
 
-	static void notify_stub( DBusPendingCall* dpc, void* data );
+	static void notify_stub(DBusPendingCall *dpc, void *data);
 };
 
 } /* namespace DBus */

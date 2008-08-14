@@ -7,17 +7,17 @@
 #include <signal.h>
 #include <iostream>
 
-HalManagerProxy::HalManagerProxy( DBus::Connection& connection )
+HalManagerProxy::HalManagerProxy(DBus::Connection &connection)
 : DBus::InterfaceProxy("org.freedesktop.Hal.Manager"),
   DBus::ObjectProxy(connection, "/org/freedesktop/Hal/Manager", "org.freedesktop.Hal")
 {
 	connect_signal(HalManagerProxy, DeviceAdded, DeviceAddedCb);
 	connect_signal(HalManagerProxy, DeviceRemoved, DeviceRemovedCb);
 
-	std::vector< DBus::String > devices = GetAllDevices();
+	std::vector< std::string > devices = GetAllDevices();
 
-	std::vector< DBus::String >::iterator it;
-	for(it = devices.begin(); it != devices.end(); ++it)
+	std::vector< std::string >::iterator it;
+	for (it = devices.begin(); it != devices.end(); ++it)
 	{
 		DBus::Path udi = *it;
 
@@ -27,9 +27,9 @@ HalManagerProxy::HalManagerProxy( DBus::Connection& connection )
 	}
 }
 
-std::vector< DBus::String > HalManagerProxy::GetAllDevices()
+std::vector< std::string > HalManagerProxy::GetAllDevices()
 {
-	std::vector< DBus::String > udis;
+	std::vector< std::string > udis;
 	DBus::CallMessage call;
 
 	call.member("GetAllDevices");
@@ -41,10 +41,10 @@ std::vector< DBus::String > HalManagerProxy::GetAllDevices()
 	return udis;
 }
 
-void HalManagerProxy::DeviceAddedCb( const DBus::SignalMessage& sig )
+void HalManagerProxy::DeviceAddedCb(const DBus::SignalMessage &sig)
 {
 	DBus::MessageIter it = sig.reader();
-	DBus::String devname;
+	std::string devname;
 
 	it >> devname;
 
@@ -54,10 +54,10 @@ void HalManagerProxy::DeviceAddedCb( const DBus::SignalMessage& sig )
 	std::cout << "added device " << udi << std::endl;
 }
 
-void HalManagerProxy::DeviceRemovedCb( const DBus::SignalMessage& sig )
+void HalManagerProxy::DeviceRemovedCb(const DBus::SignalMessage &sig)
 {
 	DBus::MessageIter it = sig.reader();
-	DBus::String devname;
+	std::string devname;
 
 	it >> devname;
 
@@ -66,7 +66,7 @@ void HalManagerProxy::DeviceRemovedCb( const DBus::SignalMessage& sig )
 	_devices.erase(devname);
 }
 
-HalDeviceProxy::HalDeviceProxy( DBus::Connection& connection, DBus::Path& udi )
+HalDeviceProxy::HalDeviceProxy(DBus::Connection &connection, DBus::Path &udi)
 : DBus::InterfaceProxy("org.freedesktop.Hal.Device"),
   DBus::ObjectProxy(connection, udi, "org.freedesktop.Hal")
 {
@@ -74,18 +74,18 @@ HalDeviceProxy::HalDeviceProxy( DBus::Connection& connection, DBus::Path& udi )
 	connect_signal(HalDeviceProxy, Condition, ConditionCb);
 }
 
-void HalDeviceProxy::PropertyModifiedCb( const DBus::SignalMessage& sig )
+void HalDeviceProxy::PropertyModifiedCb(const DBus::SignalMessage &sig)
 {
-	typedef DBus::Struct< DBus::String, DBus::Bool, DBus::Bool > HalProperty;
+	typedef DBus::Struct< std::string, bool, bool > HalProperty;
 
 	DBus::MessageIter it = sig.reader();
-	DBus::Int32 number;
+	int32_t number;
 
 	it >> number;
 
 	DBus::MessageIter arr = it.recurse();
 
-	for(int i = 0; i < number; ++i, ++arr)
+	for (int i = 0; i < number; ++i, ++arr)
 	{
 		HalProperty hp;
 
@@ -95,10 +95,10 @@ void HalDeviceProxy::PropertyModifiedCb( const DBus::SignalMessage& sig )
 	}
 }
 
-void HalDeviceProxy::ConditionCb( const DBus::SignalMessage& sig )
+void HalDeviceProxy::ConditionCb(const DBus::SignalMessage &sig)
 {
 	DBus::MessageIter it = sig.reader();
-	DBus::String condition;
+	std::string condition;
 
 	it >> condition;
 
@@ -107,7 +107,7 @@ void HalDeviceProxy::ConditionCb( const DBus::SignalMessage& sig )
 
 DBus::BusDispatcher dispatcher;
 
-void niam( int sig )
+void niam(int sig)
 {
 	dispatcher.leave();
 }

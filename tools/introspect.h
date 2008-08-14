@@ -36,7 +36,7 @@ class IntrospectedObject : public DBus::IntrospectableProxy, public DBus::Object
 {
 public:
 
-	IntrospectedObject( DBus::Connection& conn, const char* path, const char* service )
+	IntrospectedObject(DBus::Connection &conn, const char *path, const char *service)
 	: DBus::ObjectProxy(conn, path, service)
 	{}
 };

@@ -54,104 +54,104 @@ public:
 
 	bool has_next();
 
-	MessageIter& operator ++();
+	MessageIter &operator ++();
 
 	MessageIter operator ++(int);
 
-	bool append_byte( unsigned char byte );
+	bool append_byte(unsigned char byte);
 
 	unsigned char get_byte();
 
-	bool append_bool( bool b );
+	bool append_bool(bool b);
 
 	bool get_bool();
 
-	bool append_int16( signed short i );
+	bool append_int16(signed short i);
 
 	signed short get_int16();
 
-	bool append_uint16( unsigned short u );
+	bool append_uint16(unsigned short u);
 
 	unsigned short get_uint16();
 
-	bool append_int32( signed int i );
+	bool append_int32(signed int i);
 
 	signed int get_int32();
 
-	bool append_uint32( unsigned int u );
+	bool append_uint32(unsigned int u);
 
 	unsigned int get_uint32();
 
-	bool append_int64( signed long long i );
+	bool append_int64(signed long long i);
 
 	signed long long get_int64();
 
-	bool append_uint64( unsigned long long i );
+	bool append_uint64(unsigned long long i);
 
 	unsigned long long get_uint64();
 
-	bool append_double( double d );
+	bool append_double(double d);
 
 	double get_double();
 	
-	bool append_string( const char* chars );
+	bool append_string(const char *chars);
 
-	const char* get_string();
+	const char *get_string();
 
-	bool append_path( const char* chars );
+	bool append_path(const char *chars);
 
-	const char* get_path();
+	const char *get_path();
 
-	bool append_signature( const char* chars );
+	bool append_signature(const char *chars);
 
-	const char* get_signature();
+	const char *get_signature();
 
-	char* signature() const; //returned string must be manually free()'d
+	char *signature() const; //returned string must be manually free()'d
 	
 	MessageIter recurse();
 
-	bool append_array( char type, const void* ptr, size_t length );
+	bool append_array(char type, const void *ptr, size_t length);
 
 	int array_type();
 
-	int get_array( void* ptr );
+	int get_array(void *ptr);
 
 	bool is_array();
 
 	bool is_dict();
 
-	MessageIter new_array( const char* sig );
+	MessageIter new_array(const char *sig);
 
-	MessageIter new_variant( const char* sig );
+	MessageIter new_variant(const char *sig);
 
 	MessageIter new_struct();
 
 	MessageIter new_dict_entry();
 
-	void close_container( MessageIter& container );
+	void close_container(MessageIter &container);
 
-	void copy_data( MessageIter& to );
+	void copy_data(MessageIter &to);
 
-	Message& msg() const
+	Message &msg() const
 	{
 		return *_msg;
 	}
 
 private:
 
-	DXXAPILOCAL MessageIter(Message& msg) : _msg(&msg) {}
+	DXXAPILOCAL MessageIter(Message &msg) : _msg(&msg) {}
 
-	DXXAPILOCAL bool append_basic( int type_id, void* value );
+	DXXAPILOCAL bool append_basic(int type_id, void *value);
 
-	DXXAPILOCAL void get_basic( int type_id, void* ptr );
+	DXXAPILOCAL void get_basic(int type_id, void *ptr);
 
 private:
 
 	/* I'm sorry, but don't want to include dbus.h in the public api
 	 */
-	unsigned char _iter[sizeof(void*)*3+sizeof(int)*11];
+	unsigned char _iter[sizeof(void *)*3+sizeof(int)*11];
 
-	Message* _msg;
+	Message *_msg;
 
 friend class Message;
 };
@@ -162,13 +162,13 @@ public:
 	
 	struct Private;
 
-	Message( Private*, bool incref = true );
+	Message(Private *, bool incref = true);
 
-	Message( const Message& m );
+	Message(const Message &m);
 
 	~Message();
 
-	Message& operator = ( const Message& m );
+	Message &operator = (const Message &m);
 
 	Message copy();
 
@@ -178,25 +178,25 @@ public:
 
 	int reply_serial() const;
 
-	bool reply_serial( int );
+	bool reply_serial(int);
 
-	const char* sender() const;
+	const char *sender() const;
 
-	bool sender( const char* s );
+	bool sender(const char *s);
 
-	const char* destination() const;
+	const char *destination() const;
 
-	bool destination( const char* s );
+	bool destination(const char *s);
 
 	bool is_error() const;
 
-	bool is_signal( const char* interface, const char* member ) const;
+	bool is_signal(const char *interface, const char *member) const;
 
 	MessageIter reader() const;
 
 	MessageIter writer();
 
-	bool append( int first_type, ... );
+	bool append(int first_type, ...);
 
 	void terminate();
 
@@ -226,13 +226,13 @@ public:
 	
 	ErrorMessage();
 
-	ErrorMessage( const Message&, const char* name, const char* message );
+	ErrorMessage(const Message &, const char *name, const char *message);
 
-	const char* name() const;
+	const char *name() const;
 
-	bool name( const char* n );
+	bool name(const char *n);
 
-	bool operator == ( const ErrorMessage& ) const;
+	bool operator == (const ErrorMessage &) const;
 };
 
 /*
@@ -242,25 +242,25 @@ class DXXAPI SignalMessage : public Message
 {
 public:
 
-	SignalMessage( const char* name );
+	SignalMessage(const char *name);
 
-	SignalMessage( const char* path, const char* interface, const char* name );
+	SignalMessage(const char *path, const char *interface, const char *name);
 
-	const char* interface() const;
+	const char *interface() const;
 
-	bool interface( const char* i );
+	bool interface(const char *i);
 
-	const char* member() const;
+	const char *member() const;
 
-	bool member( const char* m );
+	bool member(const char *m);
 
-	const char* path() const;
+	const char *path() const;
 
-	char** path_split() const;
+	char ** path_split() const;
 
-	bool path( const char* p );
+	bool path(const char *p);
 
-	bool operator == ( const SignalMessage& ) const;
+	bool operator == (const SignalMessage &) const;
 };
 
 /*
@@ -272,25 +272,25 @@ public:
 	
 	CallMessage();
 
-	CallMessage( const char* dest, const char* path, const char* iface, const char* method );
+	CallMessage(const char *dest, const char *path, const char *iface, const char *method);
 
-	const char* interface() const;
+	const char *interface() const;
 
-	bool interface( const char* i );
+	bool interface(const char *i);
 
-	const char* member() const;
+	const char *member() const;
 
-	bool member( const char* m );
+	bool member(const char *m);
 
-	const char* path() const;
+	const char *path() const;
 
-	char** path_split() const;
+	char ** path_split() const;
 
-	bool path( const char* p );
+	bool path(const char *p);
 
-	const char* signature() const;
+	const char *signature() const;
 
-	bool operator == ( const CallMessage& ) const;
+	bool operator == (const CallMessage &) const;
 };
 
 /*
@@ -300,9 +300,9 @@ class DXXAPI ReturnMessage : public Message
 {
 public:
 	
-	ReturnMessage( const CallMessage& callee );
+	ReturnMessage(const CallMessage &callee);
 
-	const char* signature() const;
+	const char *signature() const;
 };
 
 } /* namespace DBus */

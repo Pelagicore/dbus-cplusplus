@@ -45,15 +45,15 @@ class DXXAPI Server
 {
 public:
 
-	Server( const char* address );
+	Server(const char *address);
 
-	Dispatcher* setup( Dispatcher* );
+	Dispatcher *setup(Dispatcher *);
 
 	virtual ~Server();
 
 	bool listening() const;
 
-	bool operator == ( const Server& ) const;
+	bool operator == (const Server &) const;
 
 	void disconnect();
 
@@ -61,10 +61,10 @@ public:
 
 protected:
 
-	Server( const Server& s )
+	Server(const Server &s)
 	{}
 
-	virtual void on_new_connection( Connection& c ) = 0;
+	virtual void on_new_connection(Connection &c) = 0;
 
 private:
 

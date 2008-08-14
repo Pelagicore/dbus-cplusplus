@@ -9,15 +9,15 @@
 
 using namespace std;
 
-static const char* ECHO_SERVER_NAME = "org.freedesktop.DBus.Examples.Echo";
-static const char* ECHO_SERVER_PATH = "/org/freedesktop/DBus/Examples/Echo";
+static const char *ECHO_SERVER_NAME = "org.freedesktop.DBus.Examples.Echo";
+static const char *ECHO_SERVER_PATH = "/org/freedesktop/DBus/Examples/Echo";
 
-EchoClient::EchoClient( DBus::Connection& connection, const char* path, const char* name )
+EchoClient::EchoClient(DBus::Connection &connection, const char *path, const char *name)
 : DBus::ObjectProxy(connection, path, name)
 {
 }
 
-void EchoClient::Echoed( const DBus::Variant& value )
+void EchoClient::Echoed(const DBus::Variant &value)
 {
 	cout << "!";
 }
@@ -26,13 +26,13 @@ void EchoClient::Echoed( const DBus::Variant& value )
  * For some strange reason, libdbus frequently dies with an OOM
  */
 
-static const int THREADS = 16;
+static const int THREADS = 3;
 
 static bool spin = true;
 
-void* greeter_thread( void* arg )
+void *greeter_thread(void *arg)
 {
-	DBus::Connection* conn = reinterpret_cast<DBus::Connection*>(arg);
+	DBus::Connection *conn = reinterpret_cast<DBus::Connection *>(arg);
 
 	EchoClient client(*conn, ECHO_SERVER_PATH, ECHO_SERVER_NAME);
 
@@ -40,7 +40,7 @@ void* greeter_thread( void* arg )
 
 	snprintf(idstr, sizeof(idstr), "%lu", pthread_self());
 
-	for(int i = 0; i < 100 && spin; ++i)
+	for (int i = 0; i < 30 && spin; ++i)
 	{
 		cout << client.Hello(idstr) << endl;
 	}
@@ -52,7 +52,7 @@ void* greeter_thread( void* arg )
 
 DBus::BusDispatcher dispatcher;
 
-void niam( int sig )
+void niam(int sig)
 {
 	spin = false;
 
@@ -76,7 +76,7 @@ int main()
 
 	pthread_t threads[THREADS];
 
-	for(int i = 0; i < THREADS; ++i)
+	for (int i = 0; i < THREADS; ++i)
 	{
 		pthread_create(threads+i, NULL, greeter_thread, &conn);
 	}
@@ -85,7 +85,7 @@ int main()
 
 	cout << "terminating" << endl;
 
-	for(int i = 0; i < THREADS; ++i)
+	for (int i = 0; i < THREADS; ++i)
 	{
 		pthread_join(threads[i], NULL);
 	}

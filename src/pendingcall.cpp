@@ -36,10 +36,10 @@
 
 using namespace DBus;
 
-PendingCall::Private::Private( DBusPendingCall* dpc )
+PendingCall::Private::Private(DBusPendingCall *dpc)
 : call(dpc), dataslot(-1)
 {
-	if(!dbus_pending_call_allocate_data_slot(&dataslot))
+	if (!dbus_pending_call_allocate_data_slot(&dataslot))
 	{
 		throw ErrorNoMemory("Unable to allocate data slot");
 	}
@@ -47,30 +47,30 @@ PendingCall::Private::Private( DBusPendingCall* dpc )
 
 PendingCall::Private::~Private()
 {
-	if(dataslot != -1)
+	if (dataslot != -1)
 	{
 		dbus_pending_call_allocate_data_slot(&dataslot);
 	}
 }
 
-void PendingCall::Private::notify_stub( DBusPendingCall* dpc, void* data )
+void PendingCall::Private::notify_stub(DBusPendingCall *dpc, void *data)
 {
-	PendingCall::Private* pvt = static_cast<PendingCall::Private*>(data);
+	PendingCall::Private *pvt = static_cast<PendingCall::Private *>(data);
 
 	PendingCall pc(pvt);
 	pvt->slot(pc);
 }
 
-PendingCall::PendingCall( PendingCall::Private* p )
+PendingCall::PendingCall(PendingCall::Private *p)
 : _pvt(p)
 {
-	if(!dbus_pending_call_set_notify(_pvt->call, Private::notify_stub, p, NULL))
+	if (!dbus_pending_call_set_notify(_pvt->call, Private::notify_stub, p, NULL))
 	{
 		throw ErrorNoMemory("Unable to initialize pending call");
 	}
 }
 
-PendingCall::PendingCall( const PendingCall& c )
+PendingCall::PendingCall(const PendingCall &c)
 : _pvt(c._pvt)
 {
 	dbus_pending_call_ref(_pvt->call);
@@ -81,9 +81,9 @@ PendingCall::~PendingCall()
 	dbus_pending_call_unref(_pvt->call);
 }
 
-PendingCall& PendingCall::operator = ( const PendingCall& c )
+PendingCall &PendingCall::operator = (const PendingCall &c)
 {
-	if(&c != this)
+	if (&c != this)
 	{
 		dbus_pending_call_unref(_pvt->call);
 		_pvt = c._pvt;
@@ -107,37 +107,37 @@ void PendingCall::block()
 	dbus_pending_call_block(_pvt->call);
 }
 
-void PendingCall::data( void* p )
+void PendingCall::data(void *p)
 {
-	if(!dbus_pending_call_set_data(_pvt->call, _pvt->dataslot, p, NULL))
+	if (!dbus_pending_call_set_data(_pvt->call, _pvt->dataslot, p, NULL))
 	{
 		throw ErrorNoMemory("Unable to initialize data slot");
 	}
 }
 
-void* PendingCall::data()
+void *PendingCall::data()
 {
 	return dbus_pending_call_get_data(_pvt->call, _pvt->dataslot);
 }
 
-Slot<void, PendingCall&>& PendingCall::slot()
+Slot<void, PendingCall &>& PendingCall::slot()
 {
 	return _pvt->slot;
 }
 
 Message PendingCall::steal_reply()
 {
-	DBusMessage* dmsg = dbus_pending_call_steal_reply(_pvt->call);
-	if(!dmsg)
+	DBusMessage *dmsg = dbus_pending_call_steal_reply(_pvt->call);
+	if (!dmsg)
 	{
 		dbus_bool_t callComplete = dbus_pending_call_get_completed(_pvt->call);
 
-		if(callComplete)
+		if (callComplete)
 			throw ErrorNoReply("No reply available");
 		else
 			throw ErrorNoReply("Call not complete");
 	}
 
-	return Message( new Message::Private(dmsg) );
+	return Message(new Message::Private(dmsg));
 }
 

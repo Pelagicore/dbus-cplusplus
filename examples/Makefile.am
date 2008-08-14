@@ -1,4 +1,4 @@
-SUBDIRS = properties echo hal glib  ecore
+SUBDIRS = properties echo hal glib ecore
 
 MAINTAINERCLEANFILES = \
 	Makefile.in

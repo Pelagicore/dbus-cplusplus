@@ -9,58 +9,59 @@
 #include <stdio.h>
 #include <limits.h>
 
-static const char* ECHO_SERVER_NAME = "org.freedesktop.DBus.Examples.Echo";
-static const char* ECHO_SERVER_PATH = "/org/freedesktop/DBus/Examples/Echo";
+static const char *ECHO_SERVER_NAME = "org.freedesktop.DBus.Examples.Echo";
+static const char *ECHO_SERVER_PATH = "/org/freedesktop/DBus/Examples/Echo";
 
-EchoServer::EchoServer( DBus::Connection& connection )
+EchoServer::EchoServer(DBus::Connection &connection)
 : DBus::ObjectAdaptor(connection, ECHO_SERVER_PATH)
 {
 }
 
-DBus::Int32 EchoServer::Random()
+int32_t EchoServer::Random()
 {
 	return rand();
 }
 
-DBus::String EchoServer::Hello( const DBus::String& name )
+std::string EchoServer::Hello(const std::string &name)
 {
+	sleep (10);
 	return "Hello " + name + "!";
 }
 
-DBus::Variant EchoServer::Echo( const DBus::Variant& value )
+DBus::Variant EchoServer::Echo(const DBus::Variant &value)
 {
 	this->Echoed(value);
 
 	return value;
 }
 
-std::vector< DBus::Byte > EchoServer::Cat( const DBus::String & file )
+std::vector< uint8_t > EchoServer::Cat(const std::string &file)
 {
-	FILE* handle = fopen(file.c_str(), "rb");
+	FILE *handle = fopen(file.c_str(), "rb");
 
-	if(!handle) throw DBus::Error("org.freedesktop.DBus.EchoDemo.ErrorFileNotFound", "file not found");
+	if (!handle) throw DBus::Error("org.freedesktop.DBus.EchoDemo.ErrorFileNotFound", "file not found");
 
-	DBus::Byte buff[1024];
+	uint8_t buff[1024];
 
 	size_t nread = fread(buff, 1, sizeof(buff), handle);
 
 	fclose(handle);
 
-	return std::vector< DBus::Byte > (buff, buff + nread);
+	return std::vector< uint8_t > (buff, buff + nread);
 }
 
-DBus::Int32 EchoServer::Sum( const std::vector<DBus::Int32>& ints )
+int32_t EchoServer::Sum(const std::vector<int32_t>& ints)
 {
-	DBus::Int32 sum = 0;
+	int32_t sum = 0;
 
-	for(size_t i = 0; i < ints.size(); ++i) sum += ints[i];
+	for (size_t i = 0; i < ints.size(); ++i) sum += ints[i];
 
 	return sum;	
 }
 
-std::map< DBus::String, DBus::String > EchoServer::Info()
+std::map< std::string, std::string > EchoServer::Info()
 {
-	std::map< DBus::String, DBus::String > info;
+	std::map< std::string, std::string > info;
 	char hostname[HOST_NAME_MAX];
 
 	gethostname(hostname, sizeof(hostname));
@@ -73,7 +74,7 @@ std::map< DBus::String, DBus::String > EchoServer::Info()
 
 DBus::BusDispatcher dispatcher;
 
-void niam( int sig )
+void niam(int sig)
 {
 	dispatcher.leave();
 }

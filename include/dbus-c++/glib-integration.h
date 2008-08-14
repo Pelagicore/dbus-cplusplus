@@ -41,13 +41,13 @@ class DXXAPI BusTimeout : public Timeout
 {
 private:
 
-	BusTimeout( Timeout::Internal*, GMainContext* );
+	BusTimeout(Timeout::Internal *, GMainContext *, int);
 
 	~BusTimeout();
 
 	void toggle();
 
-	static gboolean timeout_handler( gpointer );
+	static gboolean timeout_handler(gpointer);
 
 	void _enable();
 
@@ -55,8 +55,9 @@ private:
 
 private:
 
-	GSource* _source;
-	GMainContext* _ctx;
+	GSource *_source;
+	GMainContext *_ctx;
+	int _priority;
 
 friend class BusDispatcher;
 };
@@ -65,13 +66,13 @@ class DXXAPI BusWatch : public Watch
 {
 private:
 
-	BusWatch( Watch::Internal*, GMainContext* );
+	BusWatch(Watch::Internal *, GMainContext *, int);
 
 	~BusWatch();
 
 	void toggle();
 
-	static gboolean watch_handler( gpointer );
+	static gboolean watch_handler(gpointer);
 
 	void _enable();
 
@@ -79,8 +80,9 @@ private:
 
 private:
 
-	GSource* _source;
-	GMainContext* _ctx;
+	GSource *_source;
+	GMainContext *_ctx;
+	int _priority;
 
 friend class BusDispatcher;
 };
@@ -88,25 +90,29 @@ friend class BusDispatcher;
 class DXXAPI BusDispatcher : public Dispatcher
 {
 public:
-	BusDispatcher() : _ctx(NULL) {}
 
-	void attach( GMainContext* );
+	BusDispatcher() : _ctx(NULL), _priority(G_PRIORITY_DEFAULT) {}
+
+	void attach(GMainContext *);
 
 	void enter() {}
 
 	void leave() {}
 
-	Timeout* add_timeout( Timeout::Internal* );
+	Timeout *add_timeout(Timeout::Internal *);
 
-	void rem_timeout( Timeout* );
+	void rem_timeout(Timeout *);
 
-	Watch* add_watch( Watch::Internal* );
+	Watch *add_watch(Watch::Internal *);
 
-	void rem_watch( Watch* );
+	void rem_watch(Watch *);
+
+	void set_priority(int priority);
 
 private:
 
-	GMainContext* _ctx;
+	GMainContext *_ctx;
+	int _priority;
 };
 
 } /* namespace Glib */

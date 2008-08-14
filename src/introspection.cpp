@@ -36,7 +36,7 @@
 
 using namespace DBus;
 
-static const char* introspectable_name = "org.freedesktop.DBus.Introspectable";
+static const char *introspectable_name = "org.freedesktop.DBus.Introspectable";
 
 IntrospectableAdaptor::IntrospectableAdaptor()
 : InterfaceAdaptor(introspectable_name)
@@ -44,7 +44,7 @@ IntrospectableAdaptor::IntrospectableAdaptor()
 	register_method(IntrospectableAdaptor, Introspect, Introspect);
 }
 
-Message IntrospectableAdaptor::Introspect( const CallMessage& call )
+Message IntrospectableAdaptor::Introspect(const CallMessage &call)
 {
 	debug_log("requested introspection data");
 
@@ -58,37 +58,37 @@ Message IntrospectableAdaptor::Introspect( const CallMessage& call )
 
 	InterfaceAdaptorTable::const_iterator iti;
 
-	for(iti = _interfaces.begin(); iti != _interfaces.end(); ++iti)
+	for (iti = _interfaces.begin(); iti != _interfaces.end(); ++iti)
 	{
 		debug_log("introspecting interface %s", iti->first.c_str());
 
-		IntrospectedInterface* const intro = iti->second->introspect();
-		if(intro)
+		IntrospectedInterface *const intro = iti->second->introspect();
+		if (intro)
 		{
 			xml << "\n\t<interface name=\"" << intro->name << "\">";
 
-			for(const IntrospectedProperty* p = intro->properties; p->name; ++p)
+			for (const IntrospectedProperty *p = intro->properties; p->name; ++p)
 			{
 				std::string access;
 
-				if(p->read)  access += "read";
-				if(p->write) access += "write";
+				if (p->read)  access += "read";
+				if (p->write) access += "write";
 
 				xml << "\n\t\t<property name=\"" << p->name << "\""
 				    << " type=\"" << p->type << "\""
 				    << " access=\"" << access << "\"/>";
 			}
 
-			for(const IntrospectedMethod* m = intro->methods; m->args; ++m)
+			for (const IntrospectedMethod *m = intro->methods; m->args; ++m)
 			{
 				xml << "\n\t\t<method name=\"" << m->name << "\">";
 
-				for(const IntrospectedArgument* a = m->args; a->type; ++a)
+				for (const IntrospectedArgument *a = m->args; a->type; ++a)
 				{
 					xml << "\n\t\t\t<arg direction=\"" << (a->in ? "in" : "out") << "\""
 					    << " type=\"" << a->type << "\"";
 
-					if(a->name) xml << " name=\"" << a->name << "\"";
+					if (a->name) xml << " name=\"" << a->name << "\"";
 
 					xml << "/>";
 				}
@@ -96,15 +96,15 @@ Message IntrospectableAdaptor::Introspect( const CallMessage& call )
 				xml << "\n\t\t</method>";
 			}
 
-			for(const IntrospectedMethod* m = intro->signals; m->args; ++m)
+			for (const IntrospectedMethod *m = intro->signals; m->args; ++m)
 			{
 				xml << "\n\t\t<signal name=\"" << m->name << "\">";
 
-				for(const IntrospectedArgument* a = m->args; a->type; ++a)
+				for (const IntrospectedArgument *a = m->args; a->type; ++a)
 				{
 					xml << "<arg type=\"" << a->type << "\"";
 
-					if(a->name) xml << " name=\"" << a->name << "\"";
+					if (a->name) xml << " name=\"" << a->name << "\"";
 
 					xml << "/>";
 				}
@@ -118,7 +118,7 @@ Message IntrospectableAdaptor::Introspect( const CallMessage& call )
 	const ObjectPathList nodes = ObjectAdaptor::child_nodes_from_prefix(path + '/');
 	ObjectPathList::const_iterator oni;
 
-	for(oni = nodes.begin(); oni != nodes.end(); ++oni) 
+	for (oni = nodes.begin(); oni != nodes.end(); ++oni) 
 	{
 		xml << "\n\t<node name=\"" << (*oni) << "\"/>";
 	}
@@ -128,7 +128,7 @@ Message IntrospectableAdaptor::Introspect( const CallMessage& call )
 
 	ObjectAdaptorPList::const_iterator oci;
 
-	for(oci = children.begin(); oci != children.end(); ++oci) 
+	for (oci = children.begin(); oci != children.end(); ++oci) 
 	{
 		std::string name = (*oci)->path().substr(path.length()+1);
 		name.substr(name.find('/'));
@@ -145,7 +145,7 @@ Message IntrospectableAdaptor::Introspect( const CallMessage& call )
 	return reply;
 }
 
-IntrospectedInterface* const IntrospectableAdaptor::introspect() const
+IntrospectedInterface *const IntrospectableAdaptor::introspect() const
 {
 	static IntrospectedArgument Introspect_args[] =
 	{
@@ -188,7 +188,7 @@ std::string IntrospectableProxy::Introspect()
 	DBus::Message ret = invoke_method(call);
 
 	DBus::MessageIter ri = ret.reader();
-	const char* str = ri.get_string();
+	const char *str = ri.get_string();
 
 	return str;
 }

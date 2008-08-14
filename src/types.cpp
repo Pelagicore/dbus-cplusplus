@@ -42,7 +42,7 @@ Variant::Variant()
 {
 }
 
-Variant::Variant( MessageIter& it )
+Variant::Variant(MessageIter &it)
 : _msg(CallMessage())
 {
 	MessageIter vi = it.recurse();
@@ -50,9 +50,9 @@ Variant::Variant( MessageIter& it )
 	vi.copy_data(mi);
 }
 
-Variant& Variant::operator = ( const Variant& v )
+Variant &Variant::operator = (const Variant &v)
 {
-	if(&v != this)
+	if (&v != this)
 	{
 		_msg = v._msg;
 	}
@@ -67,7 +67,7 @@ void Variant::clear()
 
 const Signature Variant::signature() const
 {
-	char* sigbuf = reader().signature();
+	char *sigbuf = reader().signature();
 
 	Signature signature = sigbuf;
 
@@ -76,7 +76,7 @@ const Signature Variant::signature() const
 	return signature;
 }
 
-MessageIter& operator << ( MessageIter& iter, const Variant& val )
+MessageIter &operator << (MessageIter &iter, const Variant &val)
 {
 	const Signature sig = val.signature();
 
@@ -90,9 +90,9 @@ MessageIter& operator << ( MessageIter& iter, const Variant& val )
 	return iter;
 }
 
-MessageIter& operator >> ( MessageIter& iter, Variant& val )
+MessageIter &operator >> (MessageIter &iter, Variant &val)
 {
-	if(iter.type() != DBUS_TYPE_VARIANT)
+	if (iter.type() != DBUS_TYPE_VARIANT)
 		throw ErrorInvalidArgs("variant type expected");
 
 	val.clear();

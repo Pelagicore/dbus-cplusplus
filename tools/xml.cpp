@@ -28,7 +28,7 @@
 
 #include <expat.h>
 
-std::istream& operator >> ( std::istream& in, DBus::Xml::Document& doc )
+std::istream &operator >> (std::istream &in, DBus::Xml::Document &doc)
 {
 	std::stringbuf xmlbuf;
 	in.get(xmlbuf, '\0');
@@ -37,7 +37,7 @@ std::istream& operator >> ( std::istream& in, DBus::Xml::Document& doc )
 	return in;
 }
 
-std::ostream& operator << ( std::ostream& out, const DBus::Xml::Document& doc )
+std::ostream &operator << (std::ostream &out, const DBus::Xml::Document &doc)
 {
 	return out << doc.to_xml();
 }
@@ -45,7 +45,7 @@ std::ostream& operator << ( std::ostream& out, const DBus::Xml::Document& doc )
 using namespace DBus;
 using namespace DBus::Xml;
 
-Error::Error( const char* error, int line, int column )
+Error::Error(const char *error, int line, int column)
 {
 	std::ostringstream estream;
 
@@ -54,11 +54,11 @@ Error::Error( const char* error, int line, int column )
 	_error = estream.str();
 }
 
-Node::Node( const char* n, const char** a )
+Node::Node(const char *n, const char ** a)
 : name(n)
 {
-	if(a)
-	for(int i = 0; a[i]; i += 2)
+	if (a)
+	for (int i = 0; a[i]; i += 2)
 	{
 		_attrs[a[i]] = a[i+1];
 
@@ -66,11 +66,11 @@ Node::Node( const char* n, const char** a )
 	}
 }
 
-Nodes Nodes::operator[]( const std::string& key )
+Nodes Nodes::operator[](const std::string &key)
 {
 	Nodes result;
 
-	for(iterator i = begin(); i != end(); ++i)
+	for (iterator i = begin(); i != end(); ++i)
 	{
 		Nodes part = (**i)[key];
 
@@ -79,43 +79,43 @@ Nodes Nodes::operator[]( const std::string& key )
 	return result;
 }
 
-Nodes Nodes::select( const std::string& attr, const std::string& value )
+Nodes Nodes::select(const std::string &attr, const std::string &value)
 {
 	Nodes result;
 
-	for(iterator i = begin(); i != end(); ++i)
+	for (iterator i = begin(); i != end(); ++i)
 	{
-		if((*i)->get(attr) == value)
+		if ((*i)->get(attr) == value)
 			result.insert(result.end(), *i);
 	}
 	return result;
 }
 
-Nodes Node::operator[]( const std::string& key )
+Nodes Node::operator[](const std::string &key)
 {
 	Nodes result;
 
-	if(key.length() == 0) return result;
+	if (key.length() == 0) return result;
 
-	for(Children::iterator i = children.begin(); i != children.end(); ++i)
+	for (Children::iterator i = children.begin(); i != children.end(); ++i)
 	{
-		if(i->name == key)
+		if (i->name == key)
 			result.push_back(&(*i));
 	}
 	return result;
 }
 
-std::string Node::get( const std::string& attribute )
+std::string Node::get(const std::string &attribute)
 {
-	if(_attrs.find(attribute) != _attrs.end())
+	if (_attrs.find(attribute) != _attrs.end())
 		return _attrs[attribute];
 	else
 		return "";
 }
 
-void Node::set( const std::string& attribute, std::string value )
+void Node::set(const std::string &attribute, std::string value)
 {
-	if(value.length())
+	if (value.length())
 		_attrs[attribute] = value;
 	else 
 		_attrs.erase(value);
@@ -131,17 +131,17 @@ std::string Node::to_xml() const
 	return xml;
 }
 
-void Node::_raw_xml( std::string& xml, int& depth ) const
+void Node::_raw_xml(std::string &xml, int &depth) const
 {
-	xml.append(depth*2, ' ');
+	xml.append(depth *2, ' ');
 	xml.append("<"+name);
 
-	for(Attributes::const_iterator i = _attrs.begin(); i != _attrs.end(); ++i)
+	for (Attributes::const_iterator i = _attrs.begin(); i != _attrs.end(); ++i)
 	{
 		xml.append(" "+i->first+"=\""+i->second+"\"");
 	}
 
-	if(cdata.length() == 0 && children.size() == 0)
+	if (cdata.length() == 0 && children.size() == 0)
 	{
 		xml.append("/>\n");
 	}
@@ -149,23 +149,23 @@ void Node::_raw_xml( std::string& xml, int& depth ) const
 	{
 		xml.append(">");
 		
-		if(cdata.length())
+		if (cdata.length())
 		{
 			xml.append(cdata);
 		}
 
-		if(children.size())
+		if (children.size())
 		{
 			xml.append("\n");
 			depth++;
 
-			for(Children::const_iterator i = children.begin(); i != children.end(); ++i)
+			for (Children::const_iterator i = children.begin(); i != children.end(); ++i)
 			{
 				i->_raw_xml(xml, depth);
 			}
 
 			depth--;
-			xml.append(depth*2, ' ');
+			xml.append(depth *2, ' ');
 		}
 		xml.append("</"+name+">\n");
 	}
@@ -176,7 +176,7 @@ Document::Document()
 {
 }
 	
-Document::Document( const std::string& xml )
+Document::Document(const std::string &xml)
 : root(0), _depth(0)
 {
 	from_xml(xml);
@@ -190,15 +190,15 @@ Document::~Document()
 struct Document::Expat
 {
 	static void start_doctype_decl_handler(
-		void* data, const XML_Char* name, const XML_Char* sysid, const XML_Char* pubid, int has_internal_subset
+		void *data, const XML_Char *name, const XML_Char *sysid, const XML_Char *pubid, int has_internal_subset
 	);
-	static void end_doctype_decl_handler( void* data );
-	static void start_element_handler( void *data, const XML_Char *name, const XML_Char **atts );
-	static void character_data_handler( void *data, const XML_Char* chars, int len );
-	static void end_element_handler( void *data, const XML_Char *name );
+	static void end_doctype_decl_handler(void *data);
+	static void start_element_handler(void *data, const XML_Char *name, const XML_Char **atts);
+	static void character_data_handler(void *data, const XML_Char *chars, int len);
+	static void end_element_handler(void *data, const XML_Char *name);
 };
 
-void Document::from_xml( const std::string& xml )
+void Document::from_xml(const std::string &xml)
 {
 	_depth = 0;
 	delete root;
@@ -227,9 +227,9 @@ void Document::from_xml( const std::string& xml )
 
 	XML_Status status = XML_Parse(parser, xml.c_str(), xml.length(), true);
 
-	if(status == XML_STATUS_ERROR)
+	if (status == XML_STATUS_ERROR)
 	{
-		const char* error = XML_ErrorString(XML_GetErrorCode(parser));
+		const char *error = XML_ErrorString(XML_GetErrorCode(parser));
 		int line = XML_GetCurrentLineNumber(parser);
 		int column = XML_GetCurrentColumnNumber(parser);
 
@@ -249,30 +249,30 @@ std::string Document::to_xml() const
 }
 
 void Document::Expat::start_doctype_decl_handler(
-	void* data, const XML_Char* name, const XML_Char* sysid, const XML_Char* pubid, int has_internal_subset
+	void *data, const XML_Char *name, const XML_Char *sysid, const XML_Char *pubid, int has_internal_subset
 )
 {
 }
 
-void Document::Expat::end_doctype_decl_handler( void* data )
+void Document::Expat::end_doctype_decl_handler(void *data)
 {
 }
 
-void Document::Expat::start_element_handler( void *data, const XML_Char *name, const XML_Char **atts )
+void Document::Expat::start_element_handler(void *data, const XML_Char *name, const XML_Char **atts)
 {
-	Document* doc = (Document*)data;
+	Document *doc = (Document *)data;
 
 	//debug_log("xml:%d -> %s", doc->_depth, name);
 
-	if(!doc->root)
+	if (!doc->root)
 	{
 		doc->root = new Node(name, atts);
 	}
 	else
 	{
-		Node::Children* cld = &(doc->root->children);
+		Node::Children *cld = &(doc->root->children);
 
-		for(int i = 1; i < doc->_depth; ++i)
+		for (int i = 1; i < doc->_depth; ++i)
 		{
 			cld = &(cld->back().children);
 		}
@@ -283,13 +283,13 @@ void Document::Expat::start_element_handler( void *data, const XML_Char *name, c
 	doc->_depth++;
 }
 
-void Document::Expat::character_data_handler( void *data, const XML_Char* chars, int len )
+void Document::Expat::character_data_handler(void *data, const XML_Char *chars, int len)
 {
-	Document* doc = (Document*)data;
+	Document *doc = (Document *)data;
 
-	Node* nod = doc->root;
+	Node *nod = doc->root;
 
-	for(int i = 1; i < doc->_depth; ++i)
+	for (int i = 1; i < doc->_depth; ++i)
 	{
 		nod = &(nod->children.back());
 	}
@@ -298,15 +298,15 @@ void Document::Expat::character_data_handler( void *data, const XML_Char* chars,
 	x = 0;
 	y = len-1;
 
-	while(isspace(chars[y]) && y > 0) --y;
-	while(isspace(chars[x]) && x < y) ++x;
+	while (isspace(chars[y]) && y > 0) --y;
+	while (isspace(chars[x]) && x < y) ++x;
 
 	nod->cdata = std::string(chars, x, y+1);
 }
 
-void Document::Expat::end_element_handler( void *data, const XML_Char *name )
+void Document::Expat::end_element_handler(void *data, const XML_Char *name)
 {
-	Document* doc = (Document*)data;
+	Document *doc = (Document *)data;
 
 	//debug_log("xml:%d <- %s", doc->_depth, name);
 

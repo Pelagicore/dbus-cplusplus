@@ -11,9 +11,9 @@ class EchoClient
 {
 public:
 
-	EchoClient( DBus::Connection& connection, const char* path, const char* name );
+	EchoClient(DBus::Connection &connection, const char *path, const char *name);
 
-	void Echoed( const DBus::Variant& value );
+	void Echoed(const DBus::Variant &value);
 };
 
 #endif//__DEMO_ECHO_CLIENT_H
