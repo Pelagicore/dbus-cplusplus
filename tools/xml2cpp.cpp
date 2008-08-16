@@ -327,7 +327,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				file << tab << tab << tab << "::DBus::CallMessage call ;\n ";
 				file << tab << tab << tab <<"call.member(\"Set\");  call.interface( \"org.freedesktop.DBus.Properties\");"<< endl;
 				file << tab << tab << tab <<"::DBus::MessageIter wi = call.writer(); " << endl;
-				file << tab << tab << tab <<"DBus::Variant value;" << endl;
+				file << tab << tab << tab <<"::DBus::Variant value;" << endl;
 				file << tab << tab << tab <<"::DBus::MessageIter vi = value.writer ();" << endl;
 				file << tab << tab << tab <<"vi << input;" << endl;
 				file << tab << tab << tab <<"const DBus::String interface_name = \"" << ifacename << "\";" << endl;
