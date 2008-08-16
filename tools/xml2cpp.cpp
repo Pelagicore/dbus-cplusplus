@@ -304,10 +304,10 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				file << tab << tab << tab
 				     << "::DBus::MessageIter wi = call.writer(); " << endl;
 				file << tab << tab << tab
-				     << "const DBus::String interface_name = \"" << ifacename << "\";"
+				     << "const std::string interface_name = \"" << ifacename << "\";"
 				     << endl;
 				file << tab << tab << tab
-				     << "const DBus::String property_name  = \"" << prop_name << "\";"
+				     << "const std::string property_name  = \"" << prop_name << "\";"
 				     << endl;
 				file << tab << tab << tab << "wi << interface_name;" << endl;
 				file << tab << tab << tab << "wi << property_name;" << endl;
@@ -330,8 +330,8 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				file << tab << tab << tab <<"::DBus::Variant value;" << endl;
 				file << tab << tab << tab <<"::DBus::MessageIter vi = value.writer ();" << endl;
 				file << tab << tab << tab <<"vi << input;" << endl;
-				file << tab << tab << tab <<"const DBus::String interface_name = \"" << ifacename << "\";" << endl;
-				file << tab << tab << tab <<"const DBus::String property_name  = \"" << prop_name << "\";"<< endl;
+				file << tab << tab << tab <<"const std::string interface_name = \"" << ifacename << "\";" << endl;
+				file << tab << tab << tab <<"const std::string property_name  = \"" << prop_name << "\";"<< endl;
 				file << tab << tab << tab <<"wi << interface_name;" << endl;
 				file << tab << tab << tab <<"wi << property_name;" << endl;
 				file << tab << tab << tab <<"wi << value;" << endl;
