@@ -70,7 +70,9 @@ void InterfaceAdaptor::emit_signal(const SignalMessage &sig)
 {
 	SignalMessage &sig2 = const_cast<SignalMessage &>(sig);
 
-	sig2.interface(name().c_str());
+	if (sig2.interface() == NULL)
+		sig2.interface(name().c_str());
+
 	_emit_signal(sig2);
 }
 
@@ -147,6 +149,8 @@ Message InterfaceProxy::invoke_method(const CallMessage &call)
 {
 	CallMessage &call2 = const_cast<CallMessage &>(call);
 
-	call2.interface(name().c_str());
+	if (call.interface() == NULL)
+		call2.interface(name().c_str());
+
 	return _invoke_method(call2);
 }
