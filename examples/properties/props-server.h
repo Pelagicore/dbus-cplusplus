@@ -5,7 +5,7 @@
 #include "props-glue.h"
 
 class PropsServer
-: public org::freedesktop::DBus::PropsDemo,
+: public org::freedesktop::DBus::PropsDemo_adaptor,
   public DBus::IntrospectableAdaptor,
   public DBus::PropertiesAdaptor,
   public DBus::ObjectAdaptor

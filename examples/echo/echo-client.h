@@ -5,7 +5,7 @@
 #include "echo-client-glue.h"
 
 class EchoClient
-: public org::freedesktop::DBus::EchoDemo,
+: public org::freedesktop::DBus::EchoDemo_proxy,
   public DBus::IntrospectableProxy,
   public DBus::ObjectProxy
 {
