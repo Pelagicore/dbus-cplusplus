@@ -257,6 +257,8 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 
 		getline(ss, ifaceclass);
 
+		ifaceclass += "_proxy";
+
 		cerr << "generating code for interface " << ifacename << "..." << endl;
 
 		file << "class " << ifaceclass << endl
@@ -615,6 +617,8 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 		string ifaceclass;
 
 		getline(ss, ifaceclass);
+
+		ifaceclass += "_adaptor";
 
 		cerr << "generating code for interface " << ifacename << "..." << endl;
 
