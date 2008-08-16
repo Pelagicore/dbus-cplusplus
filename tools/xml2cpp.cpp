@@ -281,6 +281,62 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 
 		file << tab << "}" << endl
 		     << endl;
+/// write properties
+		file << "public:" << endl << endl
+		     << tab << "/* properties exported by this interface */" << endl;
+
+		for (Xml::Nodes::iterator pi = properties.begin ();
+		     pi != properties.end (); ++pi)
+		{
+			Xml::Node & property = **pi;
+			string prop_name = property.get ("name");
+			string property_access = property.get ("access");
+			if (property_access == "read" || property_access == "readwrite")
+			{
+				file << tab << tab << "const " << signature_to_type (property.get("type"))
+				     << " " << prop_name << "() {" << endl;
+				file << tab << tab << tab << "::DBus::CallMessage call ;\n ";
+				file << tab << tab << tab
+				     << "call.member(\"Get\"); call.interface(\"org.freedesktop.DBus.Properties\");"
+				     << endl;
+				file << tab << tab << tab
+				     << "::DBus::MessageIter wi = call.writer(); " << endl;
+				file << tab << tab << tab
+				     << "const DBus::String interface_name = \"" << ifacename << "\";"
+				     << endl;
+				file << tab << tab << tab
+				     << "const DBus::String property_name  = \"" << prop_name << "\";"
+				     << endl;
+				file << tab << tab << tab << "wi << interface_name;" << endl;
+				file << tab << tab << tab << "wi << property_name;" << endl;
+				file << tab << tab << tab
+				     << "::DBus::Message ret = this->invoke_method (call);" << endl;
+				file << tab << tab << tab
+				     << "::DBus::MessageIter ri = ret.reader ();" << endl;
+				file << tab << tab << tab << "::DBus::Variant argout; " << endl;
+				file << tab << tab << tab << "ri >> argout;" << endl;
+				file << tab << tab << tab << "return argout;" << endl;
+				file << tab << tab << "};" << endl;
+			}
+
+			if (property_access == "write" || property_access == "readwrite")
+			{
+				file << tab << tab << "void " << prop_name << "( const "<< signature_to_type (property.get("type")) << " & input" << ") {" << endl;
+				file << tab << tab << tab << "::DBus::CallMessage call ;\n ";
+				file << tab << tab << tab <<"call.member(\"Set\");  call.interface( \"org.freedesktop.DBus.Properties\");"<< endl;
+				file << tab << tab << tab <<"::DBus::MessageIter wi = call.writer(); " << endl;
+				file << tab << tab << tab <<"DBus::Variant value;" << endl;
+				file << tab << tab << tab <<"::DBus::MessageIter vi = value.writer ();" << endl;
+				file << tab << tab << tab <<"vi << input;" << endl;
+				file << tab << tab << tab <<"const DBus::String interface_name = \"" << ifacename << "\";" << endl;
+				file << tab << tab << tab <<"const DBus::String property_name  = \"" << prop_name << "\";"<< endl;
+				file << tab << tab << tab <<"wi << interface_name;" << endl;
+				file << tab << tab << tab <<"wi << property_name;" << endl;
+				file << tab << tab << tab <<"wi << value;" << endl;
+				file << tab << tab << tab <<"::DBus::Message ret = this->invoke_method (call);" << endl;
+				file << tab << tab << "};" << endl;
+            }
+		}
 
 		file << "public:" << endl
 		     << endl
