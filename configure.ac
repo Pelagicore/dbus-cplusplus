@@ -190,5 +190,6 @@ AC_OUTPUT(
 	examples/hal/Makefile
 	examples/glib/Makefile
 	dbus-c++-1.pc
+	dbus-c++-1-uninstalled.pc
 	libdbus-c++.spec
 )
