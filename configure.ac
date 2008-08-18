@@ -124,7 +124,9 @@ AC_CHECK_LIB([pthread], pthread_create,
 	[AC_CHECK_HEADERS(pthread.h, have_pthread=true, have_pthread=false)],
 	have_pthread=false)
 
-AM_CONDITIONAL(HAVE_PTHREAD, test "$have_pthread" = "true")
+if test "$have_pthread" = "false"; then
+	AC_MSG_ERROR([You need the POSIX Thread library (pthreads)])	
+fi
 
 if test "$enable_debug" = "yes" ; then
 	CXXFLAGS="$CXXFLAGS -Wall -ggdb -O0 -DDEBUG"
