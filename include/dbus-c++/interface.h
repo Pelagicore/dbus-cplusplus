@@ -25,8 +25,6 @@
 #ifndef __DBUSXX_INTERFACE_H
 #define __DBUSXX_INTERFACE_H
 
-#include "dbus-c++-config.h"
-
 #include <string>
 #include <map>
 #include "api.h"

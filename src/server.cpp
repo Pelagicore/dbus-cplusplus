@@ -24,7 +24,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <dbus-c++/dbus-c++-config.h>
 
 #include <dbus-c++/debug.h>
 #include <dbus-c++/server.h>

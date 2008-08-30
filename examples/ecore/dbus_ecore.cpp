@@ -6,11 +6,14 @@
 
 #include <xml.h>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 static const char* DBUS_SERVER_NAME = "org.freedesktop.DBus";
 static const char* DBUS_SERVER_PATH = "/org/freedesktop/DBus";
+
+typedef vector <string> Names;
 
 DBusBrowser::DBusBrowser( ::DBus::Connection& conn )
 : ::DBus::ObjectProxy(conn, DBUS_SERVER_PATH, DBUS_SERVER_NAME)

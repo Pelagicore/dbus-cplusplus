@@ -25,9 +25,6 @@
 #include <config.h>
 #endif
 
-#include <dbus-c++/dbus-c++-config.h>
-
-
 #include <dbus-c++/debug.h>
 #include <dbus-c++/connection.h>
 

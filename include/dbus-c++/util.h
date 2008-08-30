@@ -25,8 +25,6 @@
 #ifndef __DBUSXX_UTIL_H
 #define __DBUSXX_UTIL_H
 
-#include "dbus-c++-config.h"
-
 #include "api.h"
 #include "debug.h"
 

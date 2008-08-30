@@ -25,8 +25,6 @@
 #ifndef __DBUSXX_REFPTR_IMPL_H
 #define __DBUSXX_REFPTR_IMPL_H
 
-#include "dbus-c++-config.h"
-
 #include "api.h"
 #include "util.h"
 

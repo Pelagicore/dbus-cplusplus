@@ -25,7 +25,6 @@
 #ifndef __DBUSXX_GLIB_INTEGRATION_H
 #define __DBUSXX_GLIB_INTEGRATION_H
 
-#include "dbus-c++-config.h"
 #include <glib.h>
 
 #include "api.h"

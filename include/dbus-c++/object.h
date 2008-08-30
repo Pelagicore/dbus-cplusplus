@@ -25,8 +25,6 @@
 #ifndef __DBUSXX_OBJECT_H
 #define __DBUSXX_OBJECT_H
 
-#include "dbus-c++-config.h"
-
 #include <string>
 #include <list>
 

@@ -25,8 +25,6 @@
 #ifndef __DBUSXX_PROPERTY_H
 #define __DBUSXX_PROPERTY_H
 
-#include "dbus-c++-config.h"
-
 #include "api.h"
 #include "types.h"
 #include "interface.h"

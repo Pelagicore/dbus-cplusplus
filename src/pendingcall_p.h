@@ -28,7 +28,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <dbus-c++/dbus-c++-config.h>
 
 #include <dbus-c++/pendingcall.h>
 #include <dbus-c++/refptr_impl.h>

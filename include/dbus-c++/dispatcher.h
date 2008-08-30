@@ -25,7 +25,6 @@
 #ifndef __DBUSXX_DISPATCHER_H
 #define __DBUSXX_DISPATCHER_H
 
-#include "dbus-c++-config.h"
 #include "api.h"
 #include "connection.h"
 #include "eventloop.h"
@@ -222,16 +221,15 @@ protected:
 	Internal *_int;
 };
 
-#ifndef DBUS_HAS_RECURSIVE_MUTEX
 typedef Mutex *(*MutexNewFn)();
+typedef void (*MutexUnlockFn)(Mutex *mx);
+
+#ifndef DBUS_HAS_RECURSIVE_MUTEX
 typedef bool (*MutexFreeFn)(Mutex *mx);
 typedef bool (*MutexLockFn)(Mutex *mx);
-typedef void (*MutexUnlockFn)(Mutex *mx);
 #else
-typedef Mutex *(*MutexNewFn)();
 typedef void (*MutexFreeFn)(Mutex *mx);
 typedef void (*MutexLockFn)(Mutex *mx);
-typedef void (*MutexUnlockFn)(Mutex *mx);
 #endif//DBUS_HAS_RECURSIVE_MUTEX
 
 typedef CondVar *(*CondVarNewFn)();
@@ -241,9 +239,7 @@ typedef bool (*CondVarWaitTimeoutFn)(CondVar *cv, Mutex *mx, int timeout);
 typedef void (*CondVarWakeOneFn)(CondVar *cv);
 typedef void (*CondVarWakeAllFn)(CondVar *cv);
 
-#ifdef DBUS_HAS_THREADS_INIT_DEFAULT
 void DXXAPI _init_threading();
-#endif//DBUS_HAS_THREADS_INIT_DEFAULT
 
 void DXXAPI _init_threading(
 	MutexNewFn, MutexFreeFn, MutexLockFn, MutexUnlockFn,

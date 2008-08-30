@@ -25,8 +25,6 @@
 #ifndef __DBUSXX_PENDING_CALL_H
 #define __DBUSXX_PENDING_CALL_H
 
-#include "dbus-c++-config.h"
-
 #include "api.h"
 #include "util.h"
 #include "message.h"

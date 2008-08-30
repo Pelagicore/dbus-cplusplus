@@ -24,7 +24,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <dbus-c++/dbus-c++-config.h>
 
 #include <dbus-c++/dispatcher.h>
 
@@ -181,12 +180,14 @@ void Dispatcher::dispatch_pending()
 	_mutex_p.unlock();
 }
 
-#ifdef DBUS_HAS_THREADS_INIT_DEFAULT
 void DBus::_init_threading()
 {
+#ifdef DBUS_HAS_THREADS_INIT_DEFAULT
 	dbus_threads_init_default();
-}
+#else
+  debug_log("Thread support is not enabled! Your D-Bus version is too old!");
 #endif//DBUS_HAS_THREADS_INIT_DEFAULT
+}
 
 void DBus::_init_threading(
 	MutexNewFn m1,

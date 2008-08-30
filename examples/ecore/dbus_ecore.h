@@ -8,7 +8,7 @@
 #include "dbus_ecore-glue.h"
 
 class DBusBrowser
-: public org::freedesktop::DBus,
+: public org::freedesktop::DBus_proxy,
   public DBus::IntrospectableProxy,
   public DBus::ObjectProxy
 {

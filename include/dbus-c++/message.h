@@ -25,8 +25,6 @@
 #ifndef __DBUSXX_MESSAGE_H
 #define __DBUSXX_MESSAGE_H
 
-#include "dbus-c++-config.h"
-
 #include <string>
 #include <map>
 

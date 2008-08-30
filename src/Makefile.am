@@ -16,11 +16,8 @@ ECORE_H = $(HEADER_DIR)/ecore-integration.h
 ECORE_CPP = ecore-integration.cpp
 endif
 
-CONFIG_H = $(top_builddir)/include/dbus-c++/dbus-c++-config.h
-
 HEADER_DIR  = $(top_srcdir)/include/dbus-c++
 HEADER_FILES = \
-	$(CONFIG_H) \
 	$(HEADER_DIR)/dbus.h \
 	$(HEADER_DIR)/types.h \
 	$(HEADER_DIR)/connection.h \

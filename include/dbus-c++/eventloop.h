@@ -25,8 +25,6 @@
 #ifndef __DBUSXX_EVENTLOOP_H
 #define __DBUSXX_EVENTLOOP_H
 
-#include "dbus-c++-config.h"
-
 #include <pthread.h>
 #include <list>
 
