@@ -27,10 +27,7 @@
 
 #include "dbus-c++-config.h"
 
-#ifdef HAVE_PTHREAD_H
 #include <pthread.h>
-#endif
-
 #include <list>
 
 #include "api.h"
@@ -141,15 +138,7 @@ public:
 
 private:
 
-#if defined HAVE_PTHREAD_H
-
 	pthread_mutex_t _mutex;
-
-#elif defined HAVE_WIN32
-
-//TODO: use a critical section
-
-#endif
 };
 
 class DXXAPI DefaultMainLoop

@@ -78,42 +78,22 @@ DefaultWatch::~DefaultWatch()
 
 DefaultMutex::DefaultMutex()
 {
-#if defined HAVE_PTHREAD_H
-
 	pthread_mutex_init(&_mutex, NULL);
-
-#elif defined HAVE_WIN32
-#endif
 }
 
 DefaultMutex::~DefaultMutex()
 {
-#if defined HAVE_PTHREAD_H
-
 	pthread_mutex_destroy(&_mutex);
-
-#elif defined HAVE_WIN32
-#endif
 }
 
 void DefaultMutex::lock()
 {
-#if defined HAVE_PTHREAD_H
-
 	pthread_mutex_lock(&_mutex);
-
-#elif defined HAVE_WIN32
-#endif
 }
 
 void DefaultMutex::unlock()
 {
-#if defined HAVE_PTHREAD_H
-
 	pthread_mutex_unlock(&_mutex);
-
-#elif defined HAVE_WIN32
-#endif
 }
 
 DefaultMainLoop::DefaultMainLoop()

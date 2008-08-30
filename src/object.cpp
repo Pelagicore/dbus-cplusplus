@@ -324,8 +324,11 @@ void ObjectProxy::unregister_obj()
 
 Message ObjectProxy::_invoke_method(CallMessage &call)
 {
-	call.path(path().c_str());
-	call.destination(service().c_str());
+	if (call.path() == NULL)
+		call.path(path().c_str());
+
+	if (call.destination() == NULL)
+		call.destination(service().c_str());
 
 	return conn().send_blocking(call);
 }

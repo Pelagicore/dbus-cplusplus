@@ -2,10 +2,10 @@
 #define __DEMO_PROPS_SERVER_H
 
 #include <dbus-c++/dbus.h>
-#include "props-glue.h"
+#include "propsgs-glue-adaptor.h"
 
 class PropsServer
-: public org::freedesktop::DBus::PropsDemo_adaptor,
+: public org::freedesktop::DBus::PropsGSDemo_adaptor,
   public DBus::IntrospectableAdaptor,
   public DBus::PropertiesAdaptor,
   public DBus::ObjectAdaptor

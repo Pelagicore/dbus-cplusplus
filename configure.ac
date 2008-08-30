@@ -202,6 +202,7 @@ AC_OUTPUT(
 	doc/Doxyfile
 	examples/Makefile
 	examples/properties/Makefile
+	examples/properties_get_set/Makefile
 	examples/echo/Makefile
 	examples/ecore/Makefile
 	examples/hal/Makefile
