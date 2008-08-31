@@ -33,6 +33,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 using namespace std;
 using namespace DBus;
@@ -198,25 +199,20 @@ string signature_to_type(const string &signature)
 
 void generate_proxy(Xml::Document &doc, const char *filename)
 {
-	cerr << "writing " << filename << endl;
+  ostringstream file;
+  ostringstream headerStream;
+  vector <string> includeVector;
 
-	ofstream file(filename);
-	if (file.bad())
-	{
-		cerr << "unable to write file " << filename << endl;
-		exit(-1);
-	}
-
-	file << header;
+	headerStream << header;
 	string filestring = filename;
 	underscorize(filestring);
 
 	string cond_comp = "__dbusxx__" + filestring + "__PROXY_MARSHAL_H";
 
-	file << "#ifndef " << cond_comp << endl;
-	file << "#define " << cond_comp << endl;
+	headerStream << "#ifndef " << cond_comp << endl;
+	headerStream << "#define " << cond_comp << endl;
 
-	file << dbus_includes;
+	headerStream << dbus_includes;
 
 	Xml::Node &root = *(doc.root);
 	Xml::Nodes interfaces = root["interface"];
@@ -231,7 +227,10 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 		ms.insert(ms.end(), methods.begin(), methods.end());
 		ms.insert(ms.end(), signals.begin(), signals.end());
 
+    // gets the name of each interface: <interface name="XYZ">
 		string ifacename = iface.get("name");
+    
+    // these interface names are skipped. Not sure why...
 		if (ifacename == "org.freedesktop.DBus.Introspectable"
 		 ||ifacename == "org.freedesktop.DBus.Properties")
 		{
@@ -242,7 +241,8 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 		istringstream ss(ifacename);
 		string nspace;
 		unsigned int nspaces = 0;
-
+    
+    // this loop prints all the namespaces defined with <interface name="X.Y.Z">
 		while (ss.str().find('.', ss.tellg()) != string::npos)
 		{
 			getline(ss, nspace, '.');
@@ -256,11 +256,13 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 		string ifaceclass;
 
 		getline(ss, ifaceclass);
-
+    
+    // a "_proxy" is added to class name to distinguish between proxy and adaptor
 		ifaceclass += "_proxy";
 
 		cerr << "generating code for interface " << ifacename << "..." << endl;
-
+    
+    // the code from class definiton up to opening of the constructor is generated...
 		file << "class " << ifaceclass << endl
 		     << " : public ::DBus::InterfaceProxy" << endl
 		     << "{" << endl
@@ -269,7 +271,8 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 		     << tab << ifaceclass << "()" << endl
 		     << tab << ": ::DBus::InterfaceProxy(\"" << ifacename << "\")" << endl
 		     << tab << "{" << endl;
-
+    
+    // this loop generates code to connect all the signal stubs; this is still inside the constructor
 		for (Xml::Nodes::iterator si = signals.begin(); si != signals.end(); ++si)
 		{
 			Xml::Node &signal = **si;
@@ -280,13 +283,16 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			     << ifaceclass << ", " << signal.get("name") << ", " << stub_name(signal.get("name"))
 			     << ");" << endl;
 		}
-
+    
+    // the constructor ends here
 		file << tab << "}" << endl
 		     << endl;
-/// write properties
+    
+    // write public block header for properties
 		file << "public:" << endl << endl
 		     << tab << "/* properties exported by this interface */" << endl;
-
+    
+    // this loop generates all properties
 		for (Xml::Nodes::iterator pi = properties.begin ();
 		     pi != properties.end (); ++pi)
 		{
@@ -337,15 +343,17 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				file << tab << tab << tab <<"wi << value;" << endl;
 				file << tab << tab << tab <<"::DBus::Message ret = this->invoke_method (call);" << endl;
 				file << tab << tab << "};" << endl;
-            }
+      }
 		}
-
+    
+    // write public block header for methods
 		file << "public:" << endl
 		     << endl
 		     << tab << "/* methods exported by this interface," << endl
 		     << tab << " * this functions will invoke the corresponding methods on the remote objects" << endl
 		     << tab << " */" << endl;
-
+    
+    // this loop generates all methods
 		for (Xml::Nodes::iterator mi = methods.begin(); mi != methods.end(); ++mi)
 		{
 			Xml::Node &method = **mi;
@@ -361,7 +369,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			{
 				file << tab << signature_to_type(args_out.front()->get("type")) << " ";
 			}
-
+      
 			file << method.get("name") << "(";
 			
 			unsigned int i = 0;
@@ -454,13 +462,15 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			file << tab << "}" << endl
 			     << endl;
 		}
-
+    
+    // write public block header for signals
 		file << endl
 		     << "public:" << endl
 		     << endl
 		     << tab << "/* signal handlers for this interface" << endl
 		     << tab << " */" << endl;
-
+    
+    // this loop generates all signals
 		for (Xml::Nodes::iterator si = signals.begin(); si != signals.end(); ++si)
 		{
 			Xml::Node &signal = **si;
@@ -468,13 +478,29 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 
 			file << tab << "virtual void " << signal.get("name") << "(";
 
+      // this loop generates all argument for a signal
 			unsigned int i = 0;
 			for (Xml::Nodes::iterator ai = args.begin(); ai != args.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
-				file << "const " << signature_to_type(arg.get("type")) << "& ";
-
-				string arg_name = arg.get("name");
+        
+        string arg_name = arg.get("name");
+        string arg_object = arg.get("object");
+        
+        // generate basic signature only if no object name available...
+        if (!arg_object.length())
+        {
+				  file << "const " << signature_to_type(arg.get("type")) << "& ";
+        }
+        // ...or generate object style if available
+        else
+        {
+          file << "const " << arg_object << "& ";
+          
+          // store a object name to later generate header includes
+          includeVector.push_back (arg_object);
+        }
+        
 				if (arg_name.length())
 					file << arg_name;
 				else
@@ -485,13 +511,15 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			}
 			file << ") = 0;" << endl;
 		}
-
+    
+    // write private block header for unmarshalers
 		file << endl
 		     << "private:" << endl
 		     << endl
 		     << tab << "/* unmarshalers (to unpack the DBus message before calling the actual signal handler)" << endl
 		     << tab << " */" << endl;
 
+    // loop to generate all the unmarshalers
 		for (Xml::Nodes::iterator si = signals.begin(); si != signals.end(); ++si)
 		{
 			Xml::Node &signal = **si;
@@ -513,25 +541,51 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				file << tab << tab << signature_to_type(arg.get("type")) << " " ;
 
 				string arg_name = arg.get("name");
-				if (arg_name.length())
-					file << arg_name << ";" << " ri >> " << arg_name << ";" << endl;
-				else
-					file << "arg" << i << ";" << " ri >> " << "arg" << i << ";" << endl;
+        
+        string arg_object = arg.get("object");
+       
+        // use a default if no arg name given
+				if (!arg_name.length())
+        {
+          arg_name = "arg";
+        }
+				       
+        file << arg_name << ";" << endl;
+        file << tab << tab << "ri >> " << arg_name << ";" << endl;
+        
+        // if a object type is used create a local variable and insert values with '<<' operation
+        if (arg_object.length())
+        {
+          file << tab << tab << arg_object << " _" << arg_name << ";" << endl;
+          file << tab << tab << "_" << arg_name << " << " << arg_name << ";" << endl;
+        }
 			}
 
 			file << tab << tab << signal.get("name") << "(";
 
+      // generate all arguments for the call to the virtual function
 			unsigned int j = 0;
 			for (Xml::Nodes::iterator ai = args.begin(); ai != args.end(); ++ai, ++j)
 			{
 				Xml::Node &arg = **ai;
 
-				string arg_name = arg.get("name");
-				if (arg_name.length())
-					file << arg_name;
-				else
-					file << "arg" << j;
-
+        string arg_name = arg.get("name");
+        string arg_object = arg.get("object");
+        
+        if (!arg_name.length())
+        {
+          arg_name = "arg" + j;
+        }
+                
+        if (arg_object.length())
+        {
+          file << "_" << arg_name;
+        }
+        else
+        {
+          file << arg_name;
+        }
+        
 				if (ai+1 != args.end())
 					file << ", ";
 			}
@@ -552,9 +606,34 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 		file << endl;
 	}
 
-	file << "#endif//" << cond_comp << endl;
+	file << "#endif //" << cond_comp << endl;
+    
+  cerr << "writing " << filename << endl;
 
-	file.close();
+  // remove all duplicates in the header include vector
+  vector<string>::const_iterator vec_end_it = unique (includeVector.begin (), includeVector.end ());
+
+  for (vector<string>::const_iterator vec_it = includeVector.begin ();
+       vec_it != vec_end_it;
+       ++vec_it)
+  {
+    const string &include = *vec_it;
+    
+    headerStream << "#include " << "\"" << include << ".h" << "\"" << endl;
+  }
+  headerStream << endl;
+  
+	ofstream fileX(filename);
+	if (file.bad())
+	{
+		cerr << "unable to write file " << filename << endl;
+		exit(-1);
+	}
+  
+  fileX << headerStream.str ();
+  fileX << file.str ();
+
+	fileX.close();
 }
 
 void generate_adaptor(Xml::Document &doc, const char *filename)
