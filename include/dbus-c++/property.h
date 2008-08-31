@@ -80,10 +80,10 @@ public:
 
 protected:
 
-	virtual void on_get_property(InterfaceAdaptor &interface, const std::string &property, Variant &value)
+	virtual void on_get_property(InterfaceAdaptor &/*interface*/, const std::string &/*property*/, Variant &/*value*/)
 	{}
 
-	virtual void on_set_property(InterfaceAdaptor &interface, const std::string &property, const Variant &value)
+	virtual void on_set_property(InterfaceAdaptor &/*interface*/, const std::string &/*property*/, const Variant &/*value*/)
 	{}
 
 	IntrospectedInterface *const introspect() const;
