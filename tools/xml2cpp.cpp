@@ -360,24 +360,47 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			Xml::Nodes args = method["arg"];
 			Xml::Nodes args_in = args.select("direction","in");
 			Xml::Nodes args_out = args.select("direction","out");
-
+      string arg_object = args_out.front()->get("object");
+      
 			if (args_out.size() == 0 || args_out.size() > 1)
 			{
 				body << tab << "void ";
 			}
 			else if (args_out.size() == 1)
 			{
-				body << tab << signature_to_type(args_out.front()->get("type")) << " ";
+        if (arg_object.length())
+        {
+          body << tab << arg_object << " ";
+        }
+        else
+        {
+				  body << tab << signature_to_type(args_out.front()->get("type")) << " ";
+        }
 			}
       
 			body << method.get("name") << "(";
 			
+      // generate all 'in' arguments for a method signature
 			unsigned int i = 0;
 			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
-				body << "const " << signature_to_type(arg.get("type")) << "& ";
-
+        string arg_object = arg.get("object");
+        
+        // generate basic signature only if no object name available...
+        if (!arg_object.length())
+        {
+				  body << "const " << signature_to_type(arg.get("type")) << "& ";
+        }
+        // ...or generate object style if available
+        else
+        {
+          body << "const " << arg_object << "& ";
+          
+          // store a object name to later generate header includes
+          include_vector.push_back (arg_object);
+        }
+        
 				string arg_name = arg.get("name");
 				if (arg_name.length())
 					body << arg_name;
@@ -390,12 +413,27 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 
 			if (args_out.size() > 1)
 			{
+        // generate all 'out' arguments for a method signature
 				unsigned int i = 0;
 				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
 				{
 					Xml::Node &arg = **ao;
-					body << signature_to_type(arg.get("type")) << "&";
-
+          string arg_object = arg.get("object");
+          
+          // generate basic signature only if no object name available...
+          if (!arg_object.length())
+          {
+            body << signature_to_type(arg.get("type")) << "&";
+          }
+          // ...or generate object style if available
+          else
+          {
+            body << arg_object << "& ";
+            
+            // store a object name to later generate header includes
+            include_vector.push_back (arg_object);
+          }
+          
 					string arg_name = arg.get("name");
 					if (arg_name.length())
 						body << " " << arg_name;
@@ -417,15 +455,29 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				     << endl;
 			}
 
+      // generate all 'in' arguments for a method body
 			unsigned int j = 0;
 			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++j)
 			{
 				Xml::Node &arg = **ai;
 				string arg_name = arg.get("name");
-				if (arg_name.length())
-					body << tab << tab << "wi << " << arg_name << ";" << endl;
-				else
-					body << tab << tab << "wi << argin" << j << ";" << endl;
+        string arg_object = arg.get("object");
+        
+        if (!arg_name.length())
+        {
+					arg_name = "argin" + j;
+        }
+        
+        // generate extra code to wrap object
+        if (arg_object.length())
+        {
+          body << tab << tab << signature_to_type(arg.get("type")) << "_" << arg_name << ";" << endl;
+          body << tab << tab << "_" << arg_name << " << " << arg_name << ";" << endl;
+          
+          arg_name = string ("_") + arg_name;
+        }
+        
+        body << tab << tab << "wi << " << arg_name << ";" << endl;
 			}
 
 			body << tab << tab << "call.member(\"" << method.get("name") << "\");" << endl
@@ -438,24 +490,65 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				     << endl;
 			}
 
+      // generate 'out' value as return if only one existing
 			if (args_out.size() == 1)
 			{
+        string arg_object = args_out.front()->get("object");
+        cerr << "arg_object: " << arg_object << endl;
+        
+        if (arg_object.length())
+        {
+          body << tab << tab << arg_object << " _argout;" << endl;
+        }
+
 				body << tab << tab << signature_to_type(args_out.front()->get("type")) << " argout;" << endl;
+        
 				body << tab << tab << "ri >> argout;" << endl;
-				body << tab << tab << "return argout;" << endl;
+        
+        if (arg_object.length())
+        {
+          body << tab << tab <<  "_argout << argout;" << endl;
+				  body << tab << tab << "return _argout;" << endl;
+        }
+        else
+        {
+          body << tab << tab << "return argout;" << endl;
+        }
 			}
 			else if (args_out.size() > 1)
 			{
+        // generate multible 'out' value
 				unsigned int i = 0;
 				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
 				{
 					Xml::Node &arg = **ao;
 
 					string arg_name = arg.get("name");
-					if (arg_name.length())
-						body << tab << tab << "ri >> " << arg.get("name") << ";" << endl;
-					else
-						body << tab << tab << "ri >> argout" << i << ";" << endl;
+          string arg_object = arg.get("object");
+          
+					if (!arg_name.length())
+          {
+            arg_name = "argout" + i;
+          }
+          
+          if (arg_object.length())
+          {
+            body << tab << tab << signature_to_type(arg.get("type")) << "_" << arg_name << ";" << endl;
+          }
+          
+          if (arg_object.length())
+          {
+            body << tab << tab << "ri >> " << "_" << arg_name << ";" << endl;
+          }
+          else
+          {
+            body << tab << tab << "ri >> " << arg_name << ";" << endl;
+          }
+          
+          if (arg_object.length())
+          {
+            body << tab << tab << arg_name << " << " << "_" << arg_name << ";" << endl;
+          }
 				}
 			}
 
@@ -484,7 +577,6 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			{
 				Xml::Node &arg = **ai;
         
-        string arg_name = arg.get("name");
         string arg_object = arg.get("object");
         
         // generate basic signature only if no object name available...
@@ -501,6 +593,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
           include_vector.push_back (arg_object);
         }
         
+        string arg_name = arg.get("name");
 				if (arg_name.length())
 					body << arg_name;
 				else
