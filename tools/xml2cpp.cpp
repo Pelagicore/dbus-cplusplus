@@ -363,7 +363,12 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			Xml::Nodes args = method["arg"];
 			Xml::Nodes args_in = args.select("direction","in");
 			Xml::Nodes args_out = args.select("direction","out");
-      string arg_object = args_out.front()->get("object");
+      string arg_object;
+        
+      if (args_out.size() > 0)
+      {
+        string arg_object = args_out.front()->get("object");
+      }
       
 			if (args_out.size() == 0 || args_out.size() > 1)
 			{
@@ -740,16 +745,16 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
   ostringstream head;
   vector <string> include_vector;
   
-	body << header;
+	head << header;
 	string filestring = filename;
 	underscorize(filestring);
 
 	string cond_comp = "__dbusxx__" + filestring + "__ADAPTOR_MARSHAL_H";
 
-	body << "#ifndef " << cond_comp << endl
+	head << "#ifndef " << cond_comp << endl
 	     << "#define " << cond_comp << endl;
 
-	body << dbus_includes;
+	head << dbus_includes;
 
 	Xml::Node &root = *(doc.root);
 	Xml::Nodes interfaces = root["interface"];
@@ -970,25 +975,57 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			Xml::Nodes args = method["arg"];
 			Xml::Nodes args_in = args.select("direction","in");
 			Xml::Nodes args_out = args.select("direction","out");
+      string arg_object;
 
+      if (args_out.size() > 0)
+      {
+        arg_object = args_out.front()->get("object");
+      }
+      
 			body << tab << "virtual ";
 
+      // return type is 'void' if none or multible return values
 			if (args_out.size() == 0 || args_out.size() > 1)
 			{
 				body << "void ";
 			}
 			else if (args_out.size() == 1)
 			{
-				body << signature_to_type(args_out.front()->get("type")) << " ";
+        // generate basic or object return type
+        if (arg_object.length())
+        {
+          body << arg_object << " ";
+        }
+        else
+        {
+				  body << signature_to_type(args_out.front()->get("type")) << " ";
+        }
 			}
 
+      // generate the method name
 			body << method.get("name") << "(";
 			
+      
+      // generate the methods 'in' variables
 			unsigned int i = 0;
 			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
-				body << "const " << signature_to_type(arg.get("type")) << "& ";
+        string arg_object = arg.get("object");
+        
+        // generate basic signature only if no object name available...
+        if (!arg_object.length())
+        {
+				  body << "const " << signature_to_type(arg.get("type")) << "& ";
+        }
+        // ...or generate object style if available
+        else
+        {
+          body << "const " << arg_object << "& ";
+          
+          // store a object name to later generate header includes
+          include_vector.push_back (arg_object);
+        }
 
 				string arg_name = arg.get("name");
 				if (arg_name.length())
@@ -998,13 +1035,28 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 					body << ", ";
 			}
 
+      // generate the method 'out' variables if multibe 'out' values exist
 			if (args_out.size() > 1)
 			{
 				unsigned int i = 0;
 				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
 				{
 					Xml::Node &arg = **ao;
-					body << signature_to_type(arg.get("type")) << "&";
+          string arg_object = arg.get("object");
+          
+          // generate basic signature only if no object name available...
+          if (!arg_object.length())
+          {
+            body << "const " << signature_to_type(arg.get("type")) << "& ";
+          }
+          // ...or generate object style if available
+          else
+          {
+            body << "const " << arg_object << "& ";
+            
+            // store a object name to later generate header includes
+            include_vector.push_back (arg_object);
+          }
 
 					string arg_name = arg.get("name");
 					if (arg_name.length())
@@ -1031,32 +1083,61 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 
 			body << tab << "void " << signal.get("name") << "(";
 
+      // generate the signal arguments
 			unsigned int i = 0;
 			for (Xml::Nodes::iterator a = args.begin(); a != args.end(); ++a, ++i)
 			{
 				Xml::Node &arg = **a;
-
-				body << "const " << signature_to_type(arg.get("type")) << "& arg" << i+1;
-
+        string arg_object = arg.get("object");
+        
+        // generate basic signature only if no object name available...
+        if (!arg_object.length())
+        {
+          body << "const " << signature_to_type(arg.get("type")) << "& arg" << i+1;
+        }
+        // ...or generate object style if available
+        else
+        {
+          body << "const " << arg_object << "& arg" << i+1;
+          
+          // store a object name to later generate header includes
+          include_vector.push_back (arg_object);
+        }
+        
 				if (i+1 != args.size())
 					body << ", ";
 			}
 
 			body << ")" << endl
 			     << tab << "{" << endl
-			     << tab << tab << "::DBus::SignalMessage sig(\"" << signal.get("name") <<"\");" << endl;;
+			     << tab << tab << "::DBus::SignalMessage sig(\"" << signal.get("name") <<"\");" << endl;
 
-
+      
 			if (args.size() > 0)
 			{
 				body << tab << tab << "::DBus::MessageIter wi = sig.writer();" << endl;
 
-				for (unsigned int i = 0; i < args.size(); ++i)
+        unsigned int i = 0;
+			  for (Xml::Nodes::iterator a = args.begin(); a != args.end(); ++a, ++i)
 				{
-					body << tab << tab << "wi << arg" << i+1 << ";" << endl;
+         	Xml::Node &arg = **a;
+          string arg_object = arg.get("object");
+          
+          if (arg_object.length())
+          {
+            body << tab << tab << signature_to_type(arg.get("type")) << " _arg" << i+1 << ";" << endl;
+            body << tab << tab << "_arg" << i+1 << " << " << "arg" << i+1 << ";" << endl;
+            
+            body << tab << tab << "wi << _arg" << i+1 << ";" << endl;
+          }
+          else
+          {
+					  body << tab << tab << "wi << arg" << i+1 << ";" << endl;
+          }
 				}
 			}
 
+      // emit the signal in method body
 			body << tab << tab << "emit_signal(sig);" << endl
 			     << tab << "}" << endl;
 		}
@@ -1156,6 +1237,19 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 	}
 
 	body << "#endif //" << cond_comp << endl;
+    
+  // remove all duplicates in the header include vector
+  vector<string>::const_iterator vec_end_it = unique (include_vector.begin (), include_vector.end ());
+
+  for (vector<string>::const_iterator vec_it = include_vector.begin ();
+       vec_it != vec_end_it;
+       ++vec_it)
+  {
+    const string &include = *vec_it;
+    
+    head << "#include " << "\"" << include << ".h" << "\"" << endl;
+  }
+  head << endl;
 
 	ofstream file(filename);
 	if (file.bad())
