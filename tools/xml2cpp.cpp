@@ -502,7 +502,6 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			if (args_out.size() == 1)
 			{
         string arg_object = args_out.front()->get("object");
-        cerr << "arg_object: " << arg_object << endl;
         
         if (arg_object.length())
         {
@@ -1161,51 +1160,108 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			     << tab << tab << "::DBus::MessageIter ri = call.reader();" << endl
 			     << endl;
 
+      // generate the 'in' variables
 			unsigned int i = 1;
 			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
-				body << tab << tab << signature_to_type(arg.get("type")) << " argin" << i << ";"
-				     << " ri >> argin" << i << ";" << endl;
+        string arg_object = arg.get("object");
+        
+				body << tab << tab << signature_to_type(arg.get("type")) << " argin" << i << ";" << endl;
+				body << tab << tab << " ri >> argin" << i << ";" << endl;
+        
+        if (arg_object.length())
+        {
+          body << tab << tab << arg_object << " _argin" << i << ";" << endl;
+        }
 			}
 
+      // generate out variables
 			if (args_out.size() == 0)
 			{
 				body << tab << tab;
 			}
-			else if (args_out.size() == 1)
+      // if only one out argument exists
+      // TODO: is this needed? Should be same as else condition...
+			/*else if (args_out.size() == 1)
 			{
 				body << tab << tab << signature_to_type(args_out.front()->get("type")) << " argout1 = ";
-			}
+			}*/
 			else
 			{
 				unsigned int i = 1;
 				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
 				{
 					Xml::Node &arg = **ao;
-					body << tab << tab << signature_to_type(arg.get("type")) << " argout" << i << ";" << endl;
+          string arg_object = arg.get("object");
+          
+          body << tab << tab << signature_to_type(arg.get("type")) << " argout" << i << ";" << endl;
+          
+          // generate object types
+          if (arg_object.length())
+          {
+            body << tab << tab << arg_object << " _argout" << i << ";" << endl;
+          }
 				}		
-				body << tab << tab;
+				//body << tab << tab;
 			}
 
-			body << method.get("name") << "(";
-
-			for (unsigned int i = 0; i < args_in.size(); ++i)
+      // generate in '<<' operation
+      i = 0;
+      for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
-				body << "argin" << i+1;
+        Xml::Node &arg = **ai;
+        string arg_object = arg.get("object");
+        
+        if (arg_object.length())
+        {
+          body << tab << tab << "_argin" << i+1 << " << " << "argin" << i+1 << ";" << endl;
+        }
+      }
+      
+			body << tab << tab << method.get("name") << "(";
+      
+      // generate call stub parameters
+      i = 0;
+      for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
+			{
+        Xml::Node &arg = **ai;
+        string arg_object = arg.get("object");
+        
+        if (arg_object.length())
+        {
+          body << "_argin" << i+1;
+        }
+        else
+        {
+				  body << "argin" << i+1;
+        }
 
 				if ((i+1 != args_in.size() || args_out.size() > 1))
 					body << ", ";
 			}
 
 			if (args_out.size() > 1)
-			for (unsigned int i = 0; i < args_out.size(); ++i)
-			{
-				body << "argout" << i+1;
+      {
+        i = 0;
+        for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
+        {
+          Xml::Node &arg = **ao;
+          string arg_object = arg.get("object");
+          
+          if (arg_object.length())
+          {
+            body << "_argout" << i+1;
+          }
+          else
+          {
+            body << "argout" << i+1;
+          }
 
-				if (i+1 != args_out.size())
-					body << ", ";
-			}
+          if (i+1 != args_out.size())
+            body << ", ";
+        }
+      }
 
 			body << ");" << endl;
 
@@ -1214,6 +1270,19 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			if (args_out.size() > 0)
 			{
 				body << tab << tab << "::DBus::MessageIter wi = reply.writer();" << endl;
+        
+        // generate out '<<' operation
+        i = 0;
+        for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
+        {
+          Xml::Node &arg = **ao;
+          string arg_object = arg.get("object");
+          
+          if (arg_object.length())
+          {
+            body << tab << tab << "argout" << i+1 << " << " << "_argout" << i+1 << ";" << endl;
+          }
+        }
 
 				for (unsigned int i = 0; i < args_out.size(); ++i)
 				{
