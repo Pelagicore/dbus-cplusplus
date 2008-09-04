@@ -19,7 +19,7 @@ public:
 };
 
 class DBusBrowser
-: public org::freedesktop::DBus,
+: public org::freedesktop::DBus_proxy,
   public DBus::IntrospectableProxy,
   public DBus::ObjectProxy,
   public Gtk::Window
