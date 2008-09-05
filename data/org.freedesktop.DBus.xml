@@ -6,6 +6,22 @@
       <arg name="data" direction="out" type="s"/>
     </method>
   </interface>
+  <interface name="org.freedesktop.DBus.Properties">
+    <method name="Get">
+      <arg name="interface_name" direction="in" type="s"/>
+      <arg name="property_name" direction="in" type="s"/>
+      <arg name="value" direction="out" type="v"/>
+    </method>
+    <method name="Set">
+      <arg name="interface_name" direction="in" type="s"/>
+      <arg name="property_name" direction="in" type="s"/>
+      <arg name="value" direction="in" type="v"/>
+    </method>
+    <method name="GetAll">
+      <arg name="interface_name" direction="in" type="s"/>
+      <arg name="props" direction="out" type="a{sv}"/>
+    </method>
+  </interface>
   <interface name="org.freedesktop.DBus">
     <method name="RequestName">
       <arg direction="in" type="s"/>
