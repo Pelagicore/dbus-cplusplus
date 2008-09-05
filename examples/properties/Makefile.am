@@ -1,16 +1,22 @@
-EXTRA_DIST = README props-introspect.xml
+EXTRA_DIST = propsget-introspect.xml
 
 AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_builddir)/include
 
-noinst_PROGRAMS = props-server
+noinst_PROGRAMS = propsgs-server propsgs-client
 
-props_server_SOURCES = props-glue.h props-server.h props-server.cpp
-props_server_LDADD = $(top_builddir)/src/libdbus-c++-1.la
+propsgs_server_SOURCES = propsgs-glue.h propsgs-server.h propsgs-server.cpp
+propsgs_server_LDADD = $(top_builddir)/src/libdbus-c++-1.la
 
-props-glue.h: props-introspect.xml
-	$(top_builddir)/tools/dbusxx-xml2cpp $^ --adaptor=$@
+propsgs_client_SOURCES = propsgs-glue.h propsgs-client.h propsgs-client.cpp
+propsgs_client_LDADD = $(top_builddir)/src/libdbus-c++-1.la -lpthread
 
-BUILT_SOURCES = props-glue.h
+propsgs-glue-adaptor.h: propsgs-introspect.xml
+	$(top_builddir)/tools/dbusxx-xml2cpp $^ --adaptor=$@ --
+
+propsgs-glue-proxy.h: propsgs-introspect.xml
+	$(top_builddir)/tools/dbusxx-xml2cpp $^ --proxy=$@ --
+
+BUILT_SOURCES = propsgs-glue-adaptor.h propsgs-glue-proxy.h
 CLEANFILES = $(BUILT_SOURCES)
 
 dist-hook:
