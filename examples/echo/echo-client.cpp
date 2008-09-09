@@ -42,7 +42,9 @@ void *greeter_thread(void *arg)
 
 	for (int i = 0; i < 30 && spin; ++i)
 	{
+    cout << "+Hello" << endl;
 		cout << client.Hello(idstr) << endl;
+    cout << "-Hello" << endl;
 	}
 
 	cout << idstr << " done " << endl;

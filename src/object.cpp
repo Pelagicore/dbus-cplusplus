@@ -332,6 +332,17 @@ Message ObjectProxy::_invoke_method(CallMessage &call)
 	return conn().send_blocking(call);
 }
 
+bool ObjectProxy::_invoke_method_noreply(CallMessage &call)
+{
+	if (call.path() == NULL)
+		call.path(path().c_str());
+
+	if (call.destination() == NULL)
+		call.destination(service().c_str());
+
+	return conn().send(call);
+}
+
 bool ObjectProxy::handle_message(const Message &msg)
 {
 	switch (msg.type())

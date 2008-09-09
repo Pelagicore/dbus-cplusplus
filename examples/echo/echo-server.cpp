@@ -24,7 +24,7 @@ int32_t EchoServer::Random()
 
 std::string EchoServer::Hello(const std::string &name)
 {
-	sleep (10);
+	sleep (5);
 	return "Hello " + name + "!";
 }
 
