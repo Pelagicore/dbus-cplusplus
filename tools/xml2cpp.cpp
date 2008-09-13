@@ -475,7 +475,8 @@ void generate_proxy(Xml::Document &doc, const char *filename)
         
         if (!arg_name.length())
         {
-					arg_name = "argin" + j;
+					arg_name = "argin";
+          arg_name += toString <uint> (j);
         }
         
         // generate extra code to wrap object
@@ -561,7 +562,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
           
 					if (!arg_name.length())
           {
-            arg_name = "argout" + i;
+            arg_name = "argout" + toString <uint> (i);
           }
           
           if (arg_object.length())
@@ -673,7 +674,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
         // use a default if no arg name given
 				if (!arg_name.length())
         {
-          arg_name = "arg";
+          arg_name = "arg" + toString <uint> (i);
         }
 				       
         body << arg_name << ";" << endl;
@@ -700,7 +701,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
         
         if (!arg_name.length())
         {
-          arg_name = "arg" + j;
+          arg_name = "arg" + toString <uint> (j);
         }
                 
         if (arg_object.length())
