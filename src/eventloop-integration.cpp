@@ -100,7 +100,8 @@ Timeout *BusDispatcher::add_timeout(Timeout::Internal *ti)
 	bt->expired = new Callback<BusDispatcher, void, DefaultTimeout &>(this, &BusDispatcher::timeout_expired);
 	bt->data(bt);
 
-	debug_log("added timeout %p (%s)", bt, ((Timeout *)bt)->enabled() ? "on":"off");
+	debug_log("added timeout %p (%s) interval=%d",
+		bt, ((Timeout *)bt)->enabled() ? "on":"off", ((Timeout *)bt)->interval());
 
 	return bt;
 }
@@ -120,8 +121,7 @@ Watch *BusDispatcher::add_watch(Watch::Internal *wi)
 	bw->data(bw);
 
 	debug_log("added watch %p (%s) fd=%d flags=%d",
-		bw, ((Watch *)bw)->enabled() ? "on":"off", ((Watch *)bw)->descriptor(), ((Watch *)bw)->flags()
-	);
+		bw, ((Watch *)bw)->enabled() ? "on":"off", ((Watch *)bw)->descriptor(), ((Watch *)bw)->flags());
 
 	return bw;
 }

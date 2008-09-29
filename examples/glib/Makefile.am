@@ -1,6 +1,6 @@
 EXTRA_DIST = 
 
-AM_CPPFLAGS = -I$(top_srcdir)/include $(gtkmm_CFLAGS) -I$(top_srcdir)/tools
+AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_builddir)/include $(gtkmm_CFLAGS) -I$(top_srcdir)/tools
 
 if HAVE_GTKMM
 noinst_PROGRAMS = dbus-browser

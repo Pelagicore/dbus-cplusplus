@@ -1,4 +1,5 @@
 #include "propsgs-server.h"
+#include <iostream>
 #include <signal.h>
 
 static const char *PROPS_SERVER_NAME = "org.freedesktop.DBus.Examples.Properties";
@@ -16,8 +17,17 @@ void PropsServer::on_set_property
 {
 	if (property == "Message")
 	{
+		std::cout << "'Message' has been changed\n";
+
 		std::string msg = value;
 		this->MessageChanged(msg);
+	}
+	if (property == "Data")
+	{
+		std::cout << "'Data' has been changed\n";
+
+		double data = value;
+		this->DataChanged(data);
 	}
 }
 
