@@ -363,13 +363,26 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			Xml::Nodes args = method["arg"];
 			Xml::Nodes args_in = args.select("direction","in");
 			Xml::Nodes args_out = args.select("direction","out");
-      Xml::Nodes annotations = method["annotation"];
+      Xml::Nodes annotations = args["annotation"];
       Xml::Nodes annotations_noreply = annotations.select("name","org.freedesktop.DBus.NoReply");
+      Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
       string arg_object;
-        
-      if (args_out.size() > 0)
+      bool annotation_noreply_value = false;
+      
+      // parse method level noreply annotations
+      if (annotations_noreply.size() > 0)
       {
-        string arg_object = args_out.front()->get("object");
+        string annotation_noreply_value_str = annotations_noreply.front()->get("value");
+        
+        if (annotation_noreply_value_str == "yes")
+        {
+          annotation_noreply_value = true;
+        }
+      }      
+        
+      if (annotations_object.size() > 0)
+      {
+        arg_object = annotations_object.front()->get("value");
       }
       
 			if (args_out.size() == 0 || args_out.size() > 1)
@@ -395,7 +408,14 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
-        string arg_object = arg.get("object");
+        Xml::Nodes annotations = arg["annotation"];
+        Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+        string arg_object;
+        
+        if (annotations_object.size() > 0)
+        {
+          arg_object = annotations_object.front()->get("value");
+        }
         
         // generate basic signature only if no object name available...
         if (!arg_object.length())
@@ -424,11 +444,18 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			if (args_out.size() > 1)
 			{
         // generate all 'out' arguments for a method signature
-				unsigned int i = 0;
-				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
+				unsigned int j = 0;
+				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++j)
 				{
 					Xml::Node &arg = **ao;
-          string arg_object = arg.get("object");
+          Xml::Nodes annotations = args_out["annotation"];
+          Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+          string arg_object;
+          
+          if (annotations_object.size() > 0)
+          {
+            arg_object = annotations_object.front()->get("value");
+          }
           
           // generate basic signature only if no object name available...
           if (!arg_object.length())
@@ -448,7 +475,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 					if (arg_name.length())
 						body << " " << arg_name;
 					else
-						body << " argout" << i;
+						body << " argout" << j;
 
 					if (i+1 != args_out.size())
 						body << ", ";
@@ -466,17 +493,24 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			}
 
       // generate all 'in' arguments for a method body
-			unsigned int j = 0;
-			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++j)
+			i = 0;
+			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
 				string arg_name = arg.get("name");
-        string arg_object = arg.get("object");
+        Xml::Nodes annotations = arg["annotation"];
+        Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+        string arg_object;
+        
+        if (annotations_object.size() > 0)
+        {
+          arg_object = annotations_object.front()->get("value");
+        }
         
         if (!arg_name.length())
         {
 					arg_name = "argin";
-          arg_name += toString <uint> (j);
+          arg_name += toString <uint> (i);
         }
         
         // generate extra code to wrap object
@@ -493,42 +527,44 @@ void generate_proxy(Xml::Document &doc, const char *filename)
       
       body << tab << tab << "call.member(\"" << method.get("name") << "\");" << endl;
       
-      // generate noreply method calls
-      unsigned int k = 0;
-      string invoke_method = "::DBus::Message ret = invoke_method";
-			for (Xml::Nodes::iterator an = annotations_noreply.begin(); an != annotations_noreply.end(); ++an, ++k)
-			{
-				Xml::Node &annotation = **an;
-				string annotation_value = annotation.get("value");
-
-        if (annotation_value == "yes")
-        {
+      // generate noreply/reply method calls
+      if (annotation_noreply_value)
+      {
           if (args_out.size ())
           {
             cerr << "Function: " << method.get("name") << ":" << endl;
             cerr << "Option' org.freedesktop.DBus.NoReply' not allowed for methods with 'out' variables!" << endl << "-> Option ignored!" << endl;
+            
+            body << tab << tab << "::DBus::Message ret = invoke_method";
           }
           else
           {
-            invoke_method = "invoke_method_noreply";
-          }
-          break;
-        }
+            body << tab << tab << "::DBus::Message ret = invoke_method_noreply";
+          }        
       }
-
-			body << tab << tab << invoke_method << "(call);" << endl;
-
+      else
+      {
+        body << tab << tab << "::DBus::Message ret = invoke_method";
+      }
+			body << "(call);" << endl;
 
 			if (args_out.size() > 0)
 			{
 				body << tab << tab << "::DBus::MessageIter ri = ret.reader();" << endl
 				     << endl;
 			}
-
-      // generate 'out' value as return if only one existing
+      
+      // generate 'out' values as return if only one existing
 			if (args_out.size() == 1)
 			{
-        string arg_object = args_out.front()->get("object");
+        Xml::Nodes annotations = args_out["annotation"];
+        Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+        string arg_object;
+    
+        if (annotations_object.size() > 0)
+        {
+          arg_object = annotations_object.front()->get("value");
+        }
         
         if (arg_object.length())
         {
@@ -556,9 +592,15 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
 				{
 					Xml::Node &arg = **ao;
-
 					string arg_name = arg.get("name");
-          string arg_object = arg.get("object");
+          Xml::Nodes annotations = arg["annotation"];
+          Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+          string arg_object;
+        
+          if (annotations_object.size() > 0)
+          {
+            arg_object = annotations_object.front()->get("value");
+          }
           
 					if (!arg_name.length())
           {
