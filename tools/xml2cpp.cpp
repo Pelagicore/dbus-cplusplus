@@ -233,7 +233,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
     // gets the name of a interface: <interface name="XYZ">
 		string ifacename = iface.get("name");
     
-    // these interface names are skipped. Not sure why...
+    // these interface names are skipped.
 		if (ifacename == "org.freedesktop.DBus.Introspectable"
 		 ||ifacename == "org.freedesktop.DBus.Properties")
 		{
@@ -322,6 +322,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				body << tab << tab << tab << "wi << property_name;" << endl;
 				body << tab << tab << tab
 				     << "::DBus::Message ret = this->invoke_method (call);" << endl;
+        // TODO: support invoke_method_noreply for properties
 				body << tab << tab << tab
 				     << "::DBus::MessageIter ri = ret.reader ();" << endl;
 				body << tab << tab << tab << "::DBus::Variant argout; " << endl;
@@ -345,6 +346,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				body << tab << tab << tab <<"wi << property_name;" << endl;
 				body << tab << tab << tab <<"wi << value;" << endl;
         body << tab << tab << tab <<"::DBus::Message ret = this->invoke_method (call);" << endl;
+        // TODO: support invoke_method_noreply for properties
 				body << tab << tab << "};" << endl;
       }
 		}
@@ -652,8 +654,15 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			for (Xml::Nodes::iterator ai = args.begin(); ai != args.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
+				string arg_name = arg.get("name");
+        Xml::Nodes annotations = arg["annotation"];
+        Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+        string arg_object;
         
-        string arg_object = arg.get("object");
+        if (annotations_object.size() > 0)
+        {
+          arg_object = annotations_object.front()->get("value");
+        }
         
         // generate basic signature only if no object name available...
         if (!arg_object.length())
@@ -669,7 +678,6 @@ void generate_proxy(Xml::Document &doc, const char *filename)
           include_vector.push_back (arg_object);
         }
         
-        string arg_name = arg.get("name");
 				if (arg_name.length())
 					body << arg_name;
 				else
@@ -707,11 +715,17 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			for (Xml::Nodes::iterator ai = args.begin(); ai != args.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
-				body << tab << tab << signature_to_type(arg.get("type")) << " " ;
-
 				string arg_name = arg.get("name");
+        Xml::Nodes annotations = arg["annotation"];
+        Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+        string arg_object;
         
-        string arg_object = arg.get("object");
+        if (annotations_object.size() > 0)
+        {
+          arg_object = annotations_object.front()->get("value");
+        }				
+				
+				body << tab << tab << signature_to_type(arg.get("type")) << " " ;
        
         // use a default if no arg name given
 				if (!arg_name.length())
@@ -727,6 +741,9 @@ void generate_proxy(Xml::Document &doc, const char *filename)
         {
           body << tab << tab << arg_object << " _" << arg_name << ";" << endl;
           body << tab << tab << "_" << arg_name << " << " << arg_name << ";" << endl;
+					
+					// store a object name to later generate header includes
+          include_vector.push_back (arg_object);
         }
 			}
 
@@ -737,9 +754,15 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			for (Xml::Nodes::iterator ai = args.begin(); ai != args.end(); ++ai, ++j)
 			{
 				Xml::Node &arg = **ai;
-
-        string arg_name = arg.get("name");
-        string arg_object = arg.get("object");
+				string arg_name = arg.get("name");
+        Xml::Nodes annotations = arg["annotation"];
+        Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+        string arg_object;
+        
+        if (annotations_object.size() > 0)
+        {
+          arg_object = annotations_object.front()->get("value");
+        }
         
         if (!arg_name.length())
         {
@@ -841,7 +864,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
     // gets the name of a interface: <interface name="XYZ">
 		string ifacename = iface.get("name");
     
-    // these interface names are skipped. Not sure why...
+    // these interface names are skipped.
 		if (ifacename == "org.freedesktop.DBus.Introspectable"
 		 ||ifacename == "org.freedesktop.DBus.Properties")
 		{
@@ -1043,12 +1066,14 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			Xml::Nodes args = method["arg"];
 			Xml::Nodes args_in = args.select("direction","in");
 			Xml::Nodes args_out = args.select("direction","out");
+			Xml::Nodes annotations = args["annotation"];
+			Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
       string arg_object;
-
-      if (args_out.size() > 0)
-      {
-        arg_object = args_out.front()->get("object");
-      }
+			
+			if (annotations_object.size() > 0)
+			{
+				arg_object = annotations_object.front()->get("value");
+			}
       
 			body << tab << "virtual ";
 
@@ -1073,13 +1098,20 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
       // generate the method name
 			body << method.get("name") << "(";
 			
-      
       // generate the methods 'in' variables
 			unsigned int i = 0;
 			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
-        string arg_object = arg.get("object");
+        Xml::Nodes annotations = arg["annotation"];
+        Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+				string arg_name = arg.get("name");
+        string arg_object;
+        
+        if (annotations_object.size() > 0)
+        {
+          arg_object = annotations_object.front()->get("value");
+        }
         
         // generate basic signature only if no object name available...
         if (!arg_object.length())
@@ -1095,7 +1127,6 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
           include_vector.push_back (arg_object);
         }
 
-				string arg_name = arg.get("name");
 				if (arg_name.length())
 					body << arg_name;
 
@@ -1110,7 +1141,15 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
 				{
 					Xml::Node &arg = **ao;
-          string arg_object = arg.get("object");
+					Xml::Nodes annotations = arg["annotation"];
+					Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+					string arg_name = arg.get("name");
+					string arg_object;
+					
+					if (annotations_object.size() > 0)
+					{
+						arg_object = annotations_object.front()->get("value");
+					}
           
           // generate basic signature only if no object name available...
           if (!arg_object.length())
@@ -1126,7 +1165,6 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
             include_vector.push_back (arg_object);
           }
 
-					string arg_name = arg.get("name");
 					if (arg_name.length())
 						body << " " << arg_name;
 
@@ -1156,8 +1194,15 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			for (Xml::Nodes::iterator a = args.begin(); a != args.end(); ++a, ++i)
 			{
 				Xml::Node &arg = **a;
-        string arg_object = arg.get("object");
-        
+				Xml::Nodes annotations = arg["annotation"];
+				Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+				string arg_object;
+				
+				if (annotations_object.size() > 0)
+				{
+					arg_object = annotations_object.front()->get("value");
+				}
+				
         // generate basic signature only if no object name available...
         if (!arg_object.length())
         {
@@ -1180,7 +1225,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			     << tab << "{" << endl
 			     << tab << tab << "::DBus::SignalMessage sig(\"" << signal.get("name") <<"\");" << endl;
 
-      
+      // generate the signal body
 			if (args.size() > 0)
 			{
 				body << tab << tab << "::DBus::MessageIter wi = sig.writer();" << endl;
@@ -1189,7 +1234,14 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			  for (Xml::Nodes::iterator a = args.begin(); a != args.end(); ++a, ++i)
 				{
          	Xml::Node &arg = **a;
-          string arg_object = arg.get("object");
+					Xml::Nodes annotations = arg["annotation"];
+					Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+					string arg_object;
+					
+					if (annotations_object.size() > 0)
+					{
+						arg_object = annotations_object.front()->get("value");
+					}
           
           if (arg_object.length())
           {
@@ -1234,7 +1286,14 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
-        string arg_object = arg.get("object");
+        Xml::Nodes annotations = arg["annotation"];
+        Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+        string arg_object;
+        
+        if (annotations_object.size() > 0)
+        {
+          arg_object = annotations_object.front()->get("value");
+        }
         
 				body << tab << tab << signature_to_type(arg.get("type")) << " argin" << i << ";" << endl;
 				body << tab << tab << " ri >> argin" << i << ";" << endl;
@@ -1250,19 +1309,20 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			{
 				body << tab << tab;
 			}
-      // if only one out argument exists
-      // TODO: is this needed? Should be same as else condition...
-			/*else if (args_out.size() == 1)
-			{
-				body << tab << tab << signature_to_type(args_out.front()->get("type")) << " argout1 = ";
-			}*/
 			else
 			{
 				unsigned int i = 1;
 				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
 				{
 					Xml::Node &arg = **ao;
-          string arg_object = arg.get("object");
+					Xml::Nodes annotations = arg["annotation"];
+					Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+					string arg_object;
+					
+					if (annotations_object.size() > 0)
+					{
+						arg_object = annotations_object.front()->get("value");
+					}
           
           body << tab << tab << signature_to_type(arg.get("type")) << " argout" << i << ";" << endl;
           
@@ -1280,7 +1340,14 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
       for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
         Xml::Node &arg = **ai;
-        string arg_object = arg.get("object");
+        Xml::Nodes annotations = arg["annotation"];
+        Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+        string arg_object;
+        
+        if (annotations_object.size() > 0)
+        {
+          arg_object = annotations_object.front()->get("value");
+        }
         
         if (arg_object.length())
         {
@@ -1295,7 +1362,14 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
       for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
         Xml::Node &arg = **ai;
-        string arg_object = arg.get("object");
+        Xml::Nodes annotations = arg["annotation"];
+        Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+        string arg_object;
+        
+        if (annotations_object.size() > 0)
+        {
+          arg_object = annotations_object.front()->get("value");
+        }
         
         if (arg_object.length())
         {
@@ -1316,7 +1390,14 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
         for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
         {
           Xml::Node &arg = **ao;
-          string arg_object = arg.get("object");
+					Xml::Nodes annotations = arg["annotation"];
+					Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+					string arg_object;
+					
+					if (annotations_object.size() > 0)
+					{
+						arg_object = annotations_object.front()->get("value");
+					}
           
           if (arg_object.length())
           {
@@ -1345,7 +1426,14 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
         for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
         {
           Xml::Node &arg = **ao;
-          string arg_object = arg.get("object");
+					Xml::Nodes annotations = arg["annotation"];
+					Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+					string arg_object;
+					
+					if (annotations_object.size() > 0)
+					{
+						arg_object = annotations_object.front()->get("value");
+					}
           
           if (arg_object.length())
           {
