@@ -1296,7 +1296,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
         }
         
 				body << tab << tab << signature_to_type(arg.get("type")) << " argin" << i << ";" << endl;
-				body << tab << tab << " ri >> argin" << i << ";" << endl;
+				body << tab << tab << "ri >> argin" << i << ";" << endl;
         
         if (arg_object.length())
         {
@@ -1305,11 +1305,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			}
 
       // generate out variables
-			if (args_out.size() == 0)
-			{
-				body << tab << tab;
-			}
-			else
+			if (args_out.size() != 0)
 			{
 				unsigned int i = 1;
 				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
@@ -1331,8 +1327,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
           {
             body << tab << tab << arg_object << " _argout" << i << ";" << endl;
           }
-				}		
-				//body << tab << tab;
+				}
 			}
 
       // generate in '<<' operation
