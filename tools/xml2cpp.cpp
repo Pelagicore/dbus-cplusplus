@@ -1,6 +1,6 @@
 /*
  *
- *  D-Bus++ - C++ bindings for D-Bus
+ *  D-->Bus++ - C++ bindings for D-Bus
  *
  *  Copyright (C) 2005-2007  Paolo Durante <shackan@gmail.com>
  *
@@ -450,7 +450,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++j)
 				{
 					Xml::Node &arg = **ao;
-          Xml::Nodes annotations = args_out["annotation"];
+          Xml::Nodes annotations = arg["annotation"];
           Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
           string arg_object;
           
@@ -479,7 +479,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 					else
 						body << " argout" << j;
 
-					if (i+1 != args_out.size())
+					if (j+1 != args_out.size())
 						body << ", ";
 				}
 			}
