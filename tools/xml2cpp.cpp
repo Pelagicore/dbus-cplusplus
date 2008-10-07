@@ -366,7 +366,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			Xml::Nodes args_in = args.select("direction","in");
 			Xml::Nodes args_out = args.select("direction","out");
       Xml::Nodes annotations = args["annotation"];
-      Xml::Nodes annotations_noreply = annotations.select("name","org.freedesktop.DBus.NoReply");
+      Xml::Nodes annotations_noreply = annotations.select("name","org.freedesktop.DBus.Method.NoReply");
       Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
       string arg_object;
       bool annotation_noreply_value = false;
@@ -376,7 +376,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
       {
         string annotation_noreply_value_str = annotations_noreply.front()->get("value");
         
-        if (annotation_noreply_value_str == "yes")
+        if (annotation_noreply_value_str == "true")
         {
           annotation_noreply_value = true;
         }
@@ -535,7 +535,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
           if (args_out.size ())
           {
             cerr << "Function: " << method.get("name") << ":" << endl;
-            cerr << "Option' org.freedesktop.DBus.NoReply' not allowed for methods with 'out' variables!" << endl << "-> Option ignored!" << endl;
+            cerr << "Option 'org.freedesktop.DBus.Method.NoReply' not allowed for methods with 'out' variables!" << endl << "-> Option ignored!" << endl;
             
             body << tab << tab << "::DBus::Message ret = invoke_method";
           }
