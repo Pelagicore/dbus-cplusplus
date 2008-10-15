@@ -49,6 +49,7 @@ static const char *header = "\n\
 
 static const char *dbus_includes = "\n\
 #include <dbus-c++/dbus.h>\n\
+#include <cassert>\n\n\
 \n\
 ";
 
@@ -538,18 +539,17 @@ void generate_proxy(Xml::Document &doc, const char *filename)
             cerr << "Function: " << method.get("name") << ":" << endl;
             cerr << "Option 'org.freedesktop.DBus.Method.NoReply' not allowed for methods with 'out' variables!" << endl << "-> Option ignored!" << endl;
             
-            body << tab << tab << "::DBus::Message ret = invoke_method";
+            body << tab << tab << "::DBus::Message ret = invoke_method (call);" << endl;
           }
           else
           {
-            body << tab << tab << "::DBus::Message ret = invoke_method_noreply";
+            body << tab << tab << "assert (invoke_method_noreply (call));" << endl; // will only assert in case of no memory
           }        
       }
       else
       {
-        body << tab << tab << "::DBus::Message ret = invoke_method";
+        body << tab << tab << "::DBus::Message ret = invoke_method (call);" << endl;
       }
-			body << "(call);" << endl;
 
 			if (args_out.size() > 0)
 			{

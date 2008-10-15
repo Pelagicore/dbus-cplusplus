@@ -166,8 +166,8 @@ public:
 	InterfaceProxy(const std::string &name);
 
 	Message invoke_method(const CallMessage &);
-    
-  bool invoke_method_noreply(const CallMessage &call);
+
+	bool invoke_method_noreply(const CallMessage &call);
 
 	bool dispatch_signal(const SignalMessage &);
 
