@@ -3,12 +3,5 @@ Debugging
 To compile debugging code configure the project with the --enable-debug option. Then at runtime you may set the environment variable "DBUSXX_VERBOSE=1" to activate debugging and to '0' to deactivate debugging.
 
 
-Hints
------
-Your applications based on dbus-c++ have to support PTHREAD and to export the variable HAVE_PTHREAD_H.
-
-
 BUGS:
 -----
-- dbus seems to stop working sometimes (only seen with ecore integrattion)
-- ecore dbus integration is really "raw" (but working) at the moment

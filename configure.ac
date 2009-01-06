@@ -138,8 +138,8 @@ AC_SUBST(xml_LIBS)
 
 ACX_PTHREAD
 if test x"$acx_pthread_ok" = xyes; then
-  AC_DEFINE(HAVE_PTHREAD_H, 1, [Define to enable pthread support])
-  AM_CONDITIONAL(HAVE_PTHREAD, test x"$acx_pthread_ok" = xyes)
+	AC_DEFINE(HAVE_PTHREAD_H, 1, [Define to enable pthread support])
+	AM_CONDITIONAL(HAVE_PTHREAD, test x"$acx_pthread_ok" = xyes)
 fi
 
 if test "$enable_debug" = "yes" ; then
@@ -148,7 +148,6 @@ if test "$enable_debug" = "yes" ; then
 else
 	CXXFLAGS="$CXXFLAGS -Wall -O3"
 fi
-
 
 # Doxygen Documentation
 
