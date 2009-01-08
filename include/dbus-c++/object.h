@@ -202,7 +202,7 @@ private:
 
 	Message _invoke_method(CallMessage &);
     
-  bool _invoke_method_noreply(CallMessage &call);
+	bool _invoke_method_noreply(CallMessage &call);
 
 	bool handle_message(const Message &);
 

@@ -95,8 +95,8 @@ protected:
 	{}
 
 	virtual Message _invoke_method(CallMessage &) = 0;
-    
-  virtual bool _invoke_method_noreply(CallMessage &call) = 0;
+	
+	virtual bool _invoke_method_noreply(CallMessage &call) = 0;
 
 	InterfaceProxyTable _interfaces;
 };

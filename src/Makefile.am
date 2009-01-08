@@ -1,7 +1,7 @@
 AM_CPPFLAGS = \
 	$(dbus_CFLAGS) \
 	$(glib_CFLAGS) \
-  $(ecore_CFLAGS) \
+	$(ecore_CFLAGS) \
 	$(PRIVATE_CFLAGS) \
 	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include

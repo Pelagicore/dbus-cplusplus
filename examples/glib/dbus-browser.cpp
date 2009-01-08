@@ -2,11 +2,8 @@
 
 #include <xml.h>
 #include <iostream>
-#include <vector>
 
 using namespace std;
-
-typedef vector <string> Names;
 
 static const char *DBUS_SERVER_NAME = "org.freedesktop.DBus";
 static const char *DBUS_SERVER_PATH = "/org/freedesktop/DBus";
