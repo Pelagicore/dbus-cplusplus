@@ -31,8 +31,8 @@
 
 using namespace DBus;
 
-Ecore::BusTimeout::BusTimeout( Timeout::Internal* ti/*, GMainContext* ctx */)
-: Timeout(ti)/*, _ctx(ctx)*/
+Ecore::BusTimeout::BusTimeout( Timeout::Internal* ti)
+: Timeout(ti)
 {
 	_enable();
 }
@@ -63,16 +63,9 @@ int Ecore::BusTimeout::timeout_handler( void *data )
 
 void Ecore::BusTimeout::_enable()
 {
-  // TODO: port
-  // _source => Ecore_Timer
-  // g_source_set_callback => EcoreDispatcher init()
   debug_log("Ecore::BusTimeout::_enable()");
   
   _etimer = ecore_timer_add (((double)Timeout::interval())/1000, timeout_handler, this);
-  
-	/*_source = g_timeout_source_new();
-	g_source_set_callback(_source, timeout_handler, this, NULL);
-	g_source_attach(_source, _ctx);*/
 }
 
 void Ecore::BusTimeout::_disable()
@@ -80,17 +73,9 @@ void Ecore::BusTimeout::_disable()
   debug_log("Ecore::BusTimeout::_disable()");
 
   ecore_timer_del (_etimer);
-	//g_source_destroy(_source);
 }
 
-struct BusSource
-{
-  // TODO: needed?
-	//GSource source;
-	//GPollFD poll;
-};
-
-static bool watch_prepare( /*GSource *source,*/ int *timeout )
+static bool watch_prepare( int *timeout )
 {
 	debug_log("ecore: watch_prepare");
 
@@ -98,35 +83,24 @@ static bool watch_prepare( /*GSource *source,*/ int *timeout )
 	return false;
 }
 
-static bool watch_check( /*GSource *source*/ )
+static bool watch_check( )
 {
 	debug_log("ecore: watch_check");
 
-	//BusSource* io = (BusSource*)source;
-	return true;//io->poll.revents ? true : false;
+	return true;
 }
 
-// TODO: port parameters
-static bool watch_dispatch(/* GSource *source, GSourceFunc callback, */void *data )
+static bool watch_dispatch( void *data )
 {
 	debug_log("ecore: watch_dispatch");
 
-	bool cb = true;//callback(data);
+	bool cb = true;
 	DBus::default_dispatcher->dispatch_pending(); //TODO: won't work in case of multiple dispatchers
 	return cb;
 }
 
-// TODO: needed?
-/*static GSourceFuncs watch_funcs = {
-	watch_prepare,
-	watch_check,
-	watch_dispatch,
-	NULL
-};*/
-
-// TODO: port parameter
-Ecore::BusWatch::BusWatch( Watch::Internal* wi/*, GMainContext* ctx */)
-: Watch(wi)/*, _ctx(ctx)*/
+Ecore::BusWatch::BusWatch( Watch::Internal* wi)
+: Watch(wi)
 {
 	_enable();
 }
@@ -169,8 +143,6 @@ int Ecore::BusWatch::watch_handler_error( void *data, Ecore_Fd_Handler *fdh  )
   
   watch_dispatch(NULL);
 
-	//w->handle(flags);
-
 	return 1;
 }
 
@@ -179,18 +151,6 @@ void Ecore::BusWatch::_enable()
   debug_log("Ecore::BusWatch::_enable()");
   
   int flags = Watch::flags();
-  //Ecore_Fd_Handler_Flags condition = ECORE_FD_READ;
-  
-  // TODO: create second handler for ECORE_FD_ERROR case
-
-	/*if(flags & DBUS_WATCH_READABLE)
-		condition |= ECORE_FD_READ;
-//	if(flags & DBUS_WATCH_WRITABLE)
-//		condition |= G_IO_OUT;
-	if(flags & DBUS_WATCH_ERROR)
-		condition |= ECORE_FD_ERROR;
-	//if(flags & DBUS_WATCH_HANGUP)
-		//condition |= G_IO_HUP;*/
   
   fd_handler_read = ecore_main_fd_handler_add (Watch::descriptor(),
                                                             ECORE_FD_READ,
@@ -207,41 +167,21 @@ void Ecore::BusWatch::_enable()
                                                             NULL, NULL);
   
   ecore_main_fd_handler_active_set(fd_handler_error, ECORE_FD_ERROR);
-  
-  // TODO: port this
-	/*_source = g_source_new(&watch_funcs, sizeof(BusSource));
-	g_source_set_callback(_source, watch_handler, this, NULL);
-
-
-
-	GPollFD* poll = &(((BusSource*)_source)->poll);
-	poll->fd = Watch::descriptor();
-	poll->events = condition;
-	poll->revents = 0;
-
-	g_source_add_poll(_source, poll);
-	g_source_attach(_source, _ctx);*/
 }
 
 void Ecore::BusWatch::_disable()
 {
   ecore_main_fd_handler_del (fd_handler_read);
   ecore_main_fd_handler_del (fd_handler_error);
-  
-  // TODO: port this
-	/*GPollFD* poll = &(((BusSource*)_source)->poll);
-	g_source_remove_poll(_source, poll);
-	g_source_destroy(_source);*/
 }
 
-void Ecore::BusDispatcher::attach( /*GMainContext* ctx */)
+void Ecore::BusDispatcher::attach( )
 {
-	//_ctx = ctx ? ctx : g_main_context_default();
 }
 
 Timeout* Ecore::BusDispatcher::add_timeout( Timeout::Internal* wi )
 {
-	Timeout* t = new Ecore::BusTimeout(wi/*, _ctx*/);
+	Timeout* t = new Ecore::BusTimeout( wi );
 
 	debug_log("ecore: added timeout %p (%s)", t, t->enabled() ? "on":"off");
 
@@ -257,7 +197,7 @@ void Ecore::BusDispatcher::rem_timeout( Timeout* t )
 
 Watch* Ecore::BusDispatcher::add_watch( Watch::Internal* wi )
 {
-	Watch* w = new Ecore::BusWatch(wi/*, _ctx*/);
+	Watch* w = new Ecore::BusWatch(wi);
 
 	debug_log("ecore: added watch %p (%s) fd=%d flags=%d",
 		w, w->enabled() ? "on":"off", w->descriptor(), w->flags()

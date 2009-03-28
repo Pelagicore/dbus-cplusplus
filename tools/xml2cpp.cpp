@@ -1287,6 +1287,16 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
+        
+				body << tab << tab << signature_to_type(arg.get("type")) << " argin" << i << ";" << " ";
+				body << "ri >> argin" << i << ";" << endl;
+			}
+      
+      // generate the 'in' object variables
+			i = 1;
+			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
+			{
+				Xml::Node &arg = **ai;
         Xml::Nodes annotations = arg["annotation"];
         Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
         string arg_object;
@@ -1296,17 +1306,36 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
           arg_object = annotations_object.front()->get("value");
         }
         
-				body << tab << tab << signature_to_type(arg.get("type")) << " argin" << i << ";" << endl;
-				body << tab << tab << "ri >> argin" << i << ";" << endl;
-        
         if (arg_object.length())
         {
-          body << tab << tab << arg_object << " _argin" << i << ";" << endl;
+          body << tab << tab << arg_object << " _argin" << i << ";";
+          body << " " << "_argin" << i << " << " << "argin" << i << ";" << endl;
         }
 			}
 
-      // generate out variables
-			if (args_out.size() != 0)
+      // generate 'out' variables
+			if (args_out.size() > 0)
+			{
+				unsigned int i = 1;
+				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
+				{
+					Xml::Node &arg = **ao;
+					          
+          body << tab << tab << signature_to_type(arg.get("type")) << " argout" << i;
+                
+          if (args_out.size() == 1) // a single 'out' parameter will be assigned
+          {
+            body << " = ";
+          }
+          else // multible 'out' parameters will be handled as parameters below
+          {
+            body << ";" << endl;
+          }
+				}
+			}
+      
+      // generate 'out' object variables
+			if (args_out.size() > 0)
 			{
 				unsigned int i = 1;
 				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
@@ -1320,9 +1349,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 					{
 						arg_object = annotations_object.front()->get("value");
 					}
-          
-          body << tab << tab << signature_to_type(arg.get("type")) << " argout" << i << ";" << endl;
-          
+                           
           // generate object types
           if (arg_object.length())
           {
@@ -1344,14 +1371,15 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
         {
           arg_object = annotations_object.front()->get("value");
         }
-        
-        if (arg_object.length())
-        {
-          body << tab << tab << "_argin" << i+1 << " << " << "argin" << i+1 << ";" << endl;
-        }
+      }
+
+      // do correct indent
+      if (args_out.size() != 1 )
+      {
+        body << tab << tab;
       }
       
-			body << tab << tab << method.get("name") << "(";
+      body << method.get("name") << "(";
       
       // generate call stub parameters
       i = 0;

@@ -41,7 +41,7 @@ class DXXAPI BusTimeout : public Timeout
 {
 private:
 
-	BusTimeout( Timeout::Internal*/*, GMainContext* */);
+	BusTimeout( Timeout::Internal*);
 
 	~BusTimeout();
 
@@ -55,8 +55,6 @@ private:
 
 private:
   Ecore_Timer *_etimer;
-	//GSource* _source;
-	//GMainContext* _ctx;
 
 friend class BusDispatcher;
 };
@@ -65,7 +63,7 @@ class DXXAPI BusWatch : public Watch
 {
 private:
 
-	BusWatch( Watch::Internal*/*, GMainContext* */);
+	BusWatch( Watch::Internal*);
 
 	~BusWatch();
 
@@ -80,8 +78,6 @@ private:
 	void _disable();
 
 private:
-  //GSource* _source;
-	//GMainContext* _ctx;
   Ecore_Fd_Handler *fd_handler_read;
   Ecore_Fd_Handler *fd_handler_error;
 
@@ -91,9 +87,9 @@ friend class BusDispatcher;
 class DXXAPI BusDispatcher : public Dispatcher
 {
 public:
-	BusDispatcher() /*: _ctx(NULL) */{}
+	BusDispatcher() {}
 
-	void attach(/* GMainContext* */);
+	void attach();
 
 	void enter() {}
 
@@ -109,7 +105,6 @@ public:
 
 private:
 
-	//GMainContext* _ctx;
 };
 
 } /* namespace Ecore */
