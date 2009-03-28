@@ -81,7 +81,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
     
     // the code from class definiton up to opening of the constructor is generated...
 		body << "class " << ifaceclass << endl
-		     << " : public ::DBus::InterfaceProxy" << endl
+		     << ": public ::DBus::InterfaceProxy" << endl
 		     << "{" << endl
 		     << "public:" << endl
 		     << endl
@@ -601,7 +601,6 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			body << tab << "}" << endl;
 		}
 
-
 		body << "};" << endl
 		     << endl;
 
@@ -613,8 +612,6 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 	}
 
 	body << "#endif //" << cond_comp << endl;
-    
-  cerr << "writing " << filename << endl;
 
   // remove all duplicates in the header include vector
   vector<string>::const_iterator vec_end_it = unique (include_vector.begin (), include_vector.end ());
