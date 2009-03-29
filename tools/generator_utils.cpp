@@ -1,6 +1,30 @@
-#include "generator_utils.h"
+/*
+ *
+ *  D-Bus++ - C++ bindings for D-Bus
+ *
+ *  Copyright (C) 2005-2007  Paolo Durante <shackan@gmail.com>
+ *
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
 
 #include <iostream>
+#include <cstdlib>
+
+#include "generator_utils.h"
 
 using namespace std;
 
@@ -18,6 +42,21 @@ const char *dbus_includes = "\n\
 #include <cassert>\n\n\
 \n\
 ";
+
+void underscorize(string &str)
+{
+	for (unsigned int i = 0; i < str.length(); ++i)
+	{
+		if (!isalpha(str[i]) && !isdigit(str[i])) str[i] = '_';
+	}
+}
+
+string stub_name(string name)
+{
+	underscorize(name);
+
+	return "_" + name + "_stub";
+}
 
 const char *atomic_type_to_string(char t)
 {
@@ -45,13 +84,6 @@ const char *atomic_type_to_string(char t)
 		if (atos[i].type == t) break;
 	}
 	return atos[i].name;
-}
-
-string stub_name(string name)
-{
-	underscorize(name);
-
-	return "_" + name + "_stub";
 }
 
 void _parse_signature(const string &signature, string &type, unsigned int &i)
@@ -132,12 +164,4 @@ string signature_to_type(const string &signature)
 	unsigned int i = 0;
 	_parse_signature(signature, type, i);
 	return type;
-}
-
-void underscorize(string &str)
-{
-	for (unsigned int i = 0; i < str.length(); ++i)
-	{
-		if (!isalpha(str[i]) && !isdigit(str[i])) str[i] = '_';
-	}
 }

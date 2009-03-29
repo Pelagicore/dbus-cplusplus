@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
+#include <algorithm>
 
 #include "generator_utils.h"
 #include "generate_proxy.h"
