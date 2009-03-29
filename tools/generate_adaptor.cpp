@@ -58,7 +58,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 	Xml::Node &root = *(doc.root);
 	Xml::Nodes interfaces = root["interface"];
 
-  // iterate over all interface definitions
+	// iterate over all interface definitions
 	for (Xml::Nodes::iterator i = interfaces.begin(); i != interfaces.end(); ++i)
 	{
 		Xml::Node &iface = **i;
@@ -69,10 +69,10 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 		ms.insert(ms.end(), methods.begin(), methods.end());
 		ms.insert(ms.end(), signals.begin(), signals.end());
 
-    // gets the name of a interface: <interface name="XYZ">
+		// gets the name of a interface: <interface name="XYZ">
 		string ifacename = iface.get("name");
     
-    // these interface names are skipped.
+		// these interface names are skipped.
 		if (ifacename == "org.freedesktop.DBus.Introspectable"
 		 ||ifacename == "org.freedesktop.DBus.Properties")
 		{
@@ -84,7 +84,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 		string nspace;
 		unsigned int nspaces = 0;
 
-    // prints all the namespaces defined with <interface name="X.Y.Z">
+		// prints all the namespaces defined with <interface name="X.Y.Z">
 		while (ss.str().find('.', ss.tellg()) != string::npos)
 		{
 			getline(ss, nspace, '.');
