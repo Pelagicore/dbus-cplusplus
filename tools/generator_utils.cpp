@@ -39,8 +39,7 @@ const char *header = "\n\
 
 const char *dbus_includes = "\n\
 #include <dbus-c++/dbus.h>\n\
-#include <cassert>
-\n\
+#include <cassert>\n\
 ";
 
 void underscorize(string &str)
