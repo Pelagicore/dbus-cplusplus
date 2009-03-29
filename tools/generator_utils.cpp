@@ -39,7 +39,7 @@ const char *header = "\n\
 
 const char *dbus_includes = "\n\
 #include <dbus-c++/dbus.h>\n\
-#include <cassert>\n\n\
+#include <cassert>
 \n\
 ";
 

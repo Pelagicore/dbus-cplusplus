@@ -1,3 +1,26 @@
+/*
+ *
+ *  D-Bus++ - C++ bindings for D-Bus
+ *
+ *  Copyright (C) 2005-2007  Paolo Durante <shackan@gmail.com>
+ *
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
+
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -35,7 +58,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 	Xml::Node &root = *(doc.root);
 	Xml::Nodes interfaces = root["interface"];
 
-  // iterate over all interface definitions
+	// iterate over all interface definitions
 	for (Xml::Nodes::iterator i = interfaces.begin(); i != interfaces.end(); ++i)
 	{
 		Xml::Node &iface = **i;
@@ -46,10 +69,10 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 		ms.insert(ms.end(), methods.begin(), methods.end());
 		ms.insert(ms.end(), signals.begin(), signals.end());
 
-    // gets the name of a interface: <interface name="XYZ">
+		// gets the name of a interface: <interface name="XYZ">
 		string ifacename = iface.get("name");
     
-    // these interface names are skipped.
+		// these interface names are skipped.
 		if (ifacename == "org.freedesktop.DBus.Introspectable"
 		 ||ifacename == "org.freedesktop.DBus.Properties")
 		{
@@ -60,8 +83,8 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 		istringstream ss(ifacename);
 		string nspace;
 		unsigned int nspaces = 0;
-    
-    // prints all the namespaces defined with <interface name="X.Y.Z">
+
+		// prints all the namespaces defined with <interface name="X.Y.Z">
 		while (ss.str().find('.', ss.tellg()) != string::npos)
 		{
 			getline(ss, nspace, '.');
@@ -75,13 +98,13 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 		string ifaceclass;
 
 		getline(ss, ifaceclass);
-    
-    // a "_proxy" is added to class name to distinguish between proxy and adaptor
+
+		// a "_proxy" is added to class name to distinguish between proxy and adaptor
 		ifaceclass += "_proxy";
 
 		cerr << "generating code for interface " << ifacename << "..." << endl;
-    
-    // the code from class definiton up to opening of the constructor is generated...
+
+		// the code from class definiton up to opening of the constructor is generated...
 		body << "class " << ifaceclass << endl
 		     << ": public ::DBus::InterfaceProxy" << endl
 		     << "{" << endl
@@ -90,8 +113,8 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 		     << tab << ifaceclass << "()" << endl
 		     << tab << ": ::DBus::InterfaceProxy(\"" << ifacename << "\")" << endl
 		     << tab << "{" << endl;
-    
-    // generates code to connect all the signal stubs; this is still inside the constructor
+
+		// generates code to connect all the signal stubs; this is still inside the constructor
 		for (Xml::Nodes::iterator si = signals.begin(); si != signals.end(); ++si)
 		{
 			Xml::Node &signal = **si;
@@ -102,16 +125,16 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			     << ifaceclass << ", " << signal.get("name") << ", " << stub_name(signal.get("name"))
 			     << ");" << endl;
 		}
-    
-    // the constructor ends here
+
+		// the constructor ends here
 		body << tab << "}" << endl
 		     << endl;
-    
-    // write public block header for properties
+
+		// write public block header for properties
 		body << "public:" << endl << endl
 		     << tab << "/* properties exported by this interface */" << endl;
-    
-    // this loop generates all properties
+
+		// this loop generates all properties
 		for (Xml::Nodes::iterator pi = properties.begin ();
 		     pi != properties.end (); ++pi)
 		{
@@ -138,7 +161,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				body << tab << tab << tab << "wi << property_name;" << endl;
 				body << tab << tab << tab
 				     << "::DBus::Message ret = this->invoke_method (call);" << endl;
-        // TODO: support invoke_method_NoReply for properties
+				// TODO: support invoke_method_NoReply for properties
 				body << tab << tab << tab
 				     << "::DBus::MessageIter ri = ret.reader ();" << endl;
 				body << tab << tab << tab << "::DBus::Variant argout; " << endl;
@@ -161,20 +184,20 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				body << tab << tab << tab <<"wi << interface_name;" << endl;
 				body << tab << tab << tab <<"wi << property_name;" << endl;
 				body << tab << tab << tab <<"wi << value;" << endl;
-        body << tab << tab << tab <<"::DBus::Message ret = this->invoke_method (call);" << endl;
-        // TODO: support invoke_method_noreply for properties
+				body << tab << tab << tab <<"::DBus::Message ret = this->invoke_method (call);" << endl;
+				// TODO: support invoke_method_noreply for properties
 				body << tab << tab << "};" << endl;
-      }
+			}
 		}
-    
-    // write public block header for methods
+
+		// write public block header for methods
 		body << "public:" << endl
 		     << endl
 		     << tab << "/* methods exported by this interface," << endl
 		     << tab << " * this functions will invoke the corresponding methods on the remote objects" << endl
 		     << tab << " */" << endl;
-    
-    // this loop generates all methods
+
+		// this loop generates all methods
 		for (Xml::Nodes::iterator mi = methods.begin(); mi != methods.end(); ++mi)
 		{
 			Xml::Node &method = **mi;
@@ -222,7 +245,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
       
 			body << method.get("name") << "(";
 			
-      // generate all 'in' arguments for a method signature
+			// generate all 'in' arguments for a method signature
 			unsigned int i = 0;
 			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
@@ -449,15 +472,15 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			body << tab << "}" << endl
 			     << endl;
 		}
-    
-    // write public block header for signals
+
+		// write public block header for signals
 		body << endl
 		     << "public:" << endl
 		     << endl
 		     << tab << "/* signal handlers for this interface" << endl
 		     << tab << " */" << endl;
-    
-    // this loop generates all signals
+
+		// this loop generates all signals
 		for (Xml::Nodes::iterator si = signals.begin(); si != signals.end(); ++si)
 		{
 			Xml::Node &signal = **si;
@@ -465,7 +488,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 
 			body << tab << "virtual void " << signal.get("name") << "(";
 
-      // this loop generates all argument for a signal
+			// this loop generates all argument for a signal
 			unsigned int i = 0;
 			for (Xml::Nodes::iterator ai = args.begin(); ai != args.end(); ++ai, ++i)
 			{
@@ -504,15 +527,15 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			}
 			body << ") = 0;" << endl;
 		}
-    
-    // write private block header for unmarshalers
+
+		// write private block header for unmarshalers
 		body << endl
 		     << "private:" << endl
 		     << endl
 		     << tab << "/* unmarshalers (to unpack the DBus message before calling the actual signal handler)" << endl
 		     << tab << " */" << endl;
 
-    // generate all the unmarshalers
+		// generate all the unmarshalers
 		for (Xml::Nodes::iterator si = signals.begin(); si != signals.end(); ++si)
 		{
 			Xml::Node &signal = **si;
