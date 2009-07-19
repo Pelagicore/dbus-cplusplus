@@ -40,13 +40,13 @@ static double millis(timeval tv)
 	return (tv.tv_sec *1000.0 + tv.tv_usec/1000.0);
 }
 	
-DefaultTimeout::DefaultTimeout(int interval, bool repeat, DefaultMainLoop *ed)
-: _enabled(true), _interval(interval), _repeat(repeat), _expiration(0), _data(0), _disp(ed)
+DefaultTimeout::DefaultTimeout(int interval_, bool repeat_, DefaultMainLoop *ed)
+: _enabled(true), _interval(interval_), _repeat(repeat_), _expiration(0), _data(0), _disp(ed)
 {
 	timeval now;
 	gettimeofday(&now, NULL);
 
-	_expiration = millis(now) + interval;
+	_expiration = millis(now) + interval_;
 
 	_disp->_mutex_t.lock();
 	_disp->_timeouts.push_back(this);
@@ -60,8 +60,8 @@ DefaultTimeout::~DefaultTimeout()
 	_disp->_mutex_t.unlock();
 }
 
-DefaultWatch::DefaultWatch(int fd, int flags, DefaultMainLoop *ed)
-: _enabled(true), _fd(fd), _flags(flags), _state(0), _data(0), _disp(ed)
+DefaultWatch::DefaultWatch(int fd, int flags_, DefaultMainLoop *ed)
+: _enabled(true), _fd(fd), _flags(flags_), _state(0), _data(0), _disp(ed)
 {
 	_disp->_mutex_w.lock();
 	_disp->_watches.push_back(this);

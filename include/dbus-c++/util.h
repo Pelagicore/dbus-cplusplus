@@ -55,11 +55,11 @@ public:
 		unref();
 	}
 
-	RefCnt &operator = (const RefCnt &ref)
+	RefCnt &operator = (const RefCnt &rc)
 	{
-		ref.ref();
+		rc.ref();
 		unref();
-		__ref = ref.__ref;
+		__ref = rc.__ref;
 		return *this;
 	}
 

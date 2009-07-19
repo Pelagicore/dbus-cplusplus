@@ -82,7 +82,7 @@ protected:
 	virtual void on_set_property(InterfaceAdaptor &/*interface*/, const std::string &/*property*/, const Variant &/*value*/)
 	{}
 
-	IntrospectedInterface *const introspect() const;
+	const IntrospectedInterface *introspect() const;
 };
 
 class DXXAPI PropertiesProxy : public InterfaceProxy

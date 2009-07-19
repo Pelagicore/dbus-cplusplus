@@ -137,7 +137,7 @@ public:
 
 private:
 
-	DXXAPILOCAL MessageIter(Message &msg) : _msg(&msg) {}
+	DXXAPILOCAL MessageIter(Message &m) : _msg(&m) {}
 
 	DXXAPILOCAL bool append_basic(int type_id, void *value);
 

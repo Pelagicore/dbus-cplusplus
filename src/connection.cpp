@@ -152,7 +152,7 @@ void Connection::Private::dispatch_status_stub(DBusConnection *dc, DBusDispatchS
 	}
 }
 
-DBusHandlerResult Connection::Private::message_filter_stub(DBusConnection *conn, DBusMessage *dmsg, void *data)
+DBusHandlerResult Connection::Private::message_filter_stub(DBusConnection *, DBusMessage *dmsg, void *data)
 {
 	MessageSlot *slot = static_cast<MessageSlot *>(data);
 

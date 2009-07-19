@@ -68,11 +68,11 @@ const Signature Variant::signature() const
 {
 	char *sigbuf = reader().signature();
 
-	Signature signature = sigbuf;
+	Signature sig = sigbuf;
 
 	free(sigbuf);
 
-	return signature;
+	return sig;
 }
 
 MessageIter &operator << (MessageIter &iter, const Variant &val)

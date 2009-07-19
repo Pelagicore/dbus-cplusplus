@@ -46,10 +46,10 @@ Error::Error(InternalError &i)
 : _int(new InternalError(i))
 {}
 
-Error::Error(const char *name, const char *message)
+Error::Error(const char *n, const char *msg)
 : _int(new InternalError)
 {
-	set(name, message);
+	set(n, msg);
 }
 
 Error::Error(Message &m)
@@ -77,9 +77,9 @@ bool Error::is_set() const
 	return *(_int);
 }
 
-void Error::set(const char *name, const char *message)
+void Error::set(const char *n, const char *msg)
 {
-	dbus_set_error_const(&(_int->error), name, message);
+	dbus_set_error_const(&(_int->error), n, msg);
 }
 
 const char *Error::what() const throw()
