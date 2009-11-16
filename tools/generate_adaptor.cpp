@@ -40,10 +40,10 @@ extern const char *dbus_includes;
   */
 void generate_adaptor(Xml::Document &doc, const char *filename)
 {
-  ostringstream body;
-  ostringstream head;
-  vector <string> include_vector;
-  
+	ostringstream body;
+	ostringstream head;
+	vector <string> include_vector;
+
 	head << header;
 	string filestring = filename;
 	underscorize(filestring);
@@ -276,7 +276,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			Xml::Nodes args_out = args.select("direction","out");
 			Xml::Nodes annotations = args["annotation"];
 			Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
-      string arg_object;
+      		string arg_object;
 			
 			if (annotations_object.size() > 0)
 			{
@@ -285,55 +285,55 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
       
 			body << tab << "virtual ";
 
-      // return type is 'void' if none or multible return values
+      		// return type is 'void' if none or multible return values
 			if (args_out.size() == 0 || args_out.size() > 1)
 			{
 				body << "void ";
 			}
 			else if (args_out.size() == 1)
 			{
-        // generate basic or object return type
-        if (arg_object.length())
-        {
-          body << arg_object << " ";
-        }
-        else
-        {
-				  body << signature_to_type(args_out.front()->get("type")) << " ";
-        }
+       			// generate basic or object return type
+        		if (arg_object.length())
+        		{
+          			body << arg_object << " ";
+        		}
+        		else
+        		{
+					body << signature_to_type(args_out.front()->get("type")) << " ";
+        		}
 			}
 
-      // generate the method name
+      		// generate the method name
 			body << method.get("name") << "(";
 			
-      // generate the methods 'in' variables
+      		// generate the methods 'in' variables
 			unsigned int i = 0;
 			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
-        Xml::Nodes annotations = arg["annotation"];
-        Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+        		Xml::Nodes annotations = arg["annotation"];
+       			Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 				string arg_name = arg.get("name");
-        string arg_object;
+        		string arg_object;
         
-        if (annotations_object.size() > 0)
-        {
-          arg_object = annotations_object.front()->get("value");
-        }
+        		if (annotations_object.size() > 0)
+        		{
+          			arg_object = annotations_object.front()->get("value");
+        		}
         
-        // generate basic signature only if no object name available...
-        if (!arg_object.length())
-        {
-				  body << "const " << signature_to_type(arg.get("type")) << "& ";
-        }
-        // ...or generate object style if available
-        else
-        {
-          body << "const " << arg_object << "& ";
+        		// generate basic signature only if no object name available...
+        		if (!arg_object.length())
+        		{
+					body << "const " << signature_to_type(arg.get("type")) << "& ";
+        		}
+        		// ...or generate object style if available
+        		else
+        		{
+          			body << "const " << arg_object << "& ";
           
-          // store a object name to later generate header includes
-          include_vector.push_back (arg_object);
-        }
+          			// store a object name to later generate header includes
+          			include_vector.push_back (arg_object);
+        		}
 
 				if (arg_name.length())
 					body << arg_name;
@@ -411,20 +411,20 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 					arg_object = annotations_object.front()->get("value");
 				}
 				
-        // generate basic signature only if no object name available...
-        if (!arg_object.length())
-        {
-          body << "const " << signature_to_type(arg.get("type")) << "& arg" << i+1;
-        }
-        // ...or generate object style if available
-        else
-        {
-          body << "const " << arg_object << "& arg" << i+1;
-          
-          // store a object name to later generate header includes
-          include_vector.push_back (arg_object);
-        }
-        
+        		// generate basic signature only if no object name available...
+        		if (!arg_object.length())
+        		{
+        			body << "const " << signature_to_type(arg.get("type")) << "& arg" << i+1;
+        		}
+        		// ...or generate object style if available
+        		else
+        		{
+          			body << "const " << arg_object << "& arg" << i+1;
+          			
+          			// store a object name to later generate header includes
+          			include_vector.push_back (arg_object);
+       			}
+        		
 				if (i+1 != args.size())
 					body << ", ";
 			}
@@ -433,7 +433,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			     << tab << "{" << endl
 			     << tab << tab << "::DBus::SignalMessage sig(\"" << signal.get("name") <<"\");" << endl;
 
-      // generate the signal body
+      		// generate the signal body
 			if (args.size() > 0)
 			{
 				body << tab << tab << "::DBus::MessageIter wi = sig.writer();" << endl;
@@ -494,54 +494,54 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
-        
+        	
 				body << tab << tab << signature_to_type(arg.get("type")) << " argin" << i << ";" << " ";
 				body << "ri >> argin" << i << ";" << endl;
 			}
       
-      // generate the 'in' object variables
+     		// generate the 'in' object variables
 			i = 1;
 			for (Xml::Nodes::iterator ai = args_in.begin(); ai != args_in.end(); ++ai, ++i)
 			{
 				Xml::Node &arg = **ai;
-        Xml::Nodes annotations = arg["annotation"];
-        Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
-        string arg_object;
+        		Xml::Nodes annotations = arg["annotation"];
+        		Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
+        		string arg_object;
         
-        if (annotations_object.size() > 0)
-        {
-          arg_object = annotations_object.front()->get("value");
-        }
-        
-        if (arg_object.length())
-        {
-          body << tab << tab << arg_object << " _argin" << i << ";";
-          body << " " << "_argin" << i << " << " << "argin" << i << ";" << endl;
-        }
+        		if (annotations_object.size() > 0)
+        		{
+          			arg_object = annotations_object.front()->get("value");
+        		}
+        		
+        		if (arg_object.length())
+        		{
+          			body << tab << tab << arg_object << " _argin" << i << ";";
+          			body << " " << "_argin" << i << " << " << "argin" << i << ";" << endl;
+        		}
 			}
 
-      // generate 'out' variables
+      		// generate 'out' variables
 			if (args_out.size() > 0)
 			{
 				unsigned int i = 1;
 				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
 				{
 					Xml::Node &arg = **ao;
-					          
-          body << tab << tab << signature_to_type(arg.get("type")) << " argout" << i;
+					
+          			body << tab << tab << signature_to_type(arg.get("type")) << " argout" << i;
                 
-          if (args_out.size() == 1) // a single 'out' parameter will be assigned
-          {
-            body << " = ";
-          }
-          else // multible 'out' parameters will be handled as parameters below
-          {
-            body << ";" << endl;
-          }
+          			if (args_out.size() == 1) // a single 'out' parameter will be assigned
+          			{
+            			body << " = ";
+          			}
+          			else // multible 'out' parameters will be handled as parameters below
+          			{
+            			body << ";" << endl;
+          			}
 				}
 			}
-      
-      // generate 'out' object variables
+
+      		// generate 'out' object variables
 			if (args_out.size() > 0)
 			{
 				unsigned int i = 1;
@@ -557,11 +557,11 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 						arg_object = annotations_object.front()->get("value");
 					}
                            
-          // generate object types
-          if (arg_object.length())
-          {
-            body << tab << tab << arg_object << " _argout" << i << ";" << endl;
-          }
+          			// generate object types
+          			if (arg_object.length())
+          			{
+            			body << tab << tab << arg_object << " _argout" << i << ";" << endl;
+          			}
 				}
 			}
 
@@ -694,7 +694,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 	}
 
 	body << "#endif //" << cond_comp << endl;
-    
+
   // remove all duplicates in the header include vector
   vector<string>::const_iterator vec_end_it = unique (include_vector.begin (), include_vector.end ());
 
@@ -715,8 +715,8 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 		exit(-1);
 	}
   
-  file << head.str ();
-  file << body.str ();
+	file << head.str ();
+	file << body.str ();
 
-  file.close();
+	file.close();
 }
