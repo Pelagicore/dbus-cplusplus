@@ -44,7 +44,7 @@ Server::Private::~Private()
 {
 }
 
-void Server::Private::on_new_conn_cb(DBusServer *, DBusConnection *conn, void *data)
+void Server::Private::on_new_conn_cb(DBusServer *server, DBusConnection *conn, void *data)
 {
 	Server *s = static_cast<Server *>(data);
 

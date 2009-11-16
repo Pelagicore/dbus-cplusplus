@@ -1,6 +1,6 @@
 /*
  *
- *  D-->Bus++ - C++ bindings for D-Bus
+ *  D-Bus++ - C++ bindings for D-Bus
  *
  *  Copyright (C) 2005-2007  Paolo Durante <shackan@gmail.com>
  *
@@ -30,7 +30,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <algorithm>
 
 #include "xml2cpp.h"
 #include "generate_adaptor.h"
@@ -54,12 +53,15 @@ void usage(const char *argv0)
 		return t;
 
 	return DBUS_TYPE_INVALID;
-}
+}*/
 
-bool is_atomic_type(const string &type)
+
+
+/*bool is_atomic_type(const string &type)
 {
 	return type.length() == 1 && char_to_atomic_type(type[0]) != DBUS_TYPE_INVALID;
 }*/
+
 
 int main(int argc, char ** argv)
 {

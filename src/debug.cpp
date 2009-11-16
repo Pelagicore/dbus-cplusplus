@@ -48,8 +48,6 @@ static void _debug_log_default(const char *format, ...)
 
 	        va_end(args);
 	}
-#else
-  (void)format;
 
 #endif//DEBUG
 }

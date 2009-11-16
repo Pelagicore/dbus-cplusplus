@@ -86,9 +86,9 @@ bool Watch::enabled() const
 	return dbus_watch_get_enabled((DBusWatch *)_int);
 }
 
-bool Watch::handle(int flags_)
+bool Watch::handle(int flags)
 {
-	return dbus_watch_handle((DBusWatch *)_int, flags_);
+	return dbus_watch_handle((DBusWatch *)_int, flags);
 }
 
 /*
@@ -114,7 +114,7 @@ void Dispatcher::Private::on_rem_watch(DBusWatch *watch, void *data)
 	d->rem_watch(w);
 }
 
-void Dispatcher::Private::on_toggle_watch(DBusWatch *watch, void *)
+void Dispatcher::Private::on_toggle_watch(DBusWatch *watch, void *data)
 {
 	Watch *w = static_cast<Watch *>(dbus_watch_get_data(watch));
 
@@ -141,7 +141,7 @@ void Dispatcher::Private::on_rem_timeout(DBusTimeout *timeout, void *data)
 	d->rem_timeout(t);
 }
 
-void Dispatcher::Private::on_toggle_timeout(DBusTimeout *timeout, void *)
+void Dispatcher::Private::on_toggle_timeout(DBusTimeout *timeout, void *data)
 {
 	Timeout *t = static_cast<Timeout *>(dbus_timeout_get_data(timeout));
 
@@ -266,8 +266,7 @@ void DBus::_init_threading(
 		(DBusRecursiveMutexNewFunction) m1,
 		(DBusRecursiveMutexFreeFunction) m2,
 		(DBusRecursiveMutexLockFunction) m3,
-		(DBusRecursiveMutexUnlockFunction) m4,
-    0, 0, 0, 0
+		(DBusRecursiveMutexUnlockFunction) m4
 	};
 #endif//DBUS_HAS_RECURSIVE_MUTEX
 	dbus_threads_init(&functions);

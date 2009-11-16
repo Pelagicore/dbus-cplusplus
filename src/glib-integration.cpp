@@ -31,7 +31,7 @@
 using namespace DBus;
 
 Glib::BusTimeout::BusTimeout(Timeout::Internal *ti, GMainContext *ctx, int priority)
-: Timeout(ti), _source(NULL), _ctx(ctx), _priority(priority)
+: Timeout(ti), _ctx(ctx), _priority(priority), _source(NULL)
 {
 	if (Timeout::enabled())
 		_enable();
@@ -85,7 +85,7 @@ struct BusSource
 	GPollFD poll;
 };
 
-static gboolean watch_prepare(GSource *, gint *timeout)
+static gboolean watch_prepare(GSource *source, gint *timeout)
 {
 	//debug_log("glib: watch_prepare");
 
@@ -101,7 +101,7 @@ static gboolean watch_check(GSource *source)
 	return io->poll.revents ? TRUE : FALSE;
 }
 
-static gboolean watch_dispatch(GSource *, GSourceFunc callback, gpointer data)
+static gboolean watch_dispatch(GSource *source, GSourceFunc callback, gpointer data)
 {
 	debug_log("glib: watch_dispatch");
 
@@ -113,13 +113,11 @@ static GSourceFuncs watch_funcs = {
 	watch_prepare,
 	watch_check,
 	watch_dispatch,
-	NULL,
-  NULL,
-  NULL
+	NULL
 };
 
 Glib::BusWatch::BusWatch(Watch::Internal *wi, GMainContext *ctx, int priority)
-: Watch(wi), _source(NULL), _ctx(ctx), _priority(priority)
+: Watch(wi), _ctx(ctx), _priority(priority), _source(NULL)
 {
 	if (Watch::enabled())
 		_enable();
@@ -167,16 +165,16 @@ void Glib::BusWatch::_enable()
 	g_source_set_priority(_source, _priority);
 	g_source_set_callback(_source, watch_handler, this, NULL);
 
-	int flags_ = Watch::flags();
+	int flags = Watch::flags();
 	int condition = 0;
 
-	if (flags_ &DBUS_WATCH_READABLE)
+	if (flags &DBUS_WATCH_READABLE)
 		condition |= G_IO_IN;
-	if (flags_ &DBUS_WATCH_WRITABLE)
+	if (flags &DBUS_WATCH_WRITABLE)
 		condition |= G_IO_OUT;
-	if (flags_ &DBUS_WATCH_ERROR)
+	if (flags &DBUS_WATCH_ERROR)
 		condition |= G_IO_ERR;
-	if (flags_ &DBUS_WATCH_HANGUP)
+	if (flags &DBUS_WATCH_HANGUP)
 		condition |= G_IO_HUP;
 
 	GPollFD *poll = &(((BusSource *)_source)->poll);
@@ -219,15 +217,15 @@ static gboolean dispatcher_prepare(GSource *source, gint *timeout)
   	return dispatcher->has_something_to_dispatch()? TRUE:FALSE;
 }
 
-static gboolean dispatcher_check(GSource *)
+static gboolean dispatcher_check(GSource *source)
 {
   	return FALSE;
 }
 
 static gboolean
 dispatcher_dispatch(GSource *source,
-                    GSourceFunc,
-                    gpointer)
+                    GSourceFunc callback,
+                    gpointer user_data)
 {
   	Dispatcher *dispatcher = ((DispatcherSource*)source)->dispatcher;
 
@@ -239,9 +237,7 @@ static const GSourceFuncs dispatcher_funcs = {
 	dispatcher_prepare,
 	dispatcher_check,
 	dispatcher_dispatch,
-	NULL,
-  NULL,
-  NULL
+	NULL
 };
 
 Glib::BusDispatcher::BusDispatcher()

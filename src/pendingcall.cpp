@@ -52,7 +52,7 @@ PendingCall::Private::~Private()
 	}
 }
 
-void PendingCall::Private::notify_stub(DBusPendingCall *, void *data)
+void PendingCall::Private::notify_stub(DBusPendingCall *dpc, void *data)
 {
 	PendingCall::Private *pvt = static_cast<PendingCall::Private *>(data);
 

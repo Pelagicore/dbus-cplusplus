@@ -96,7 +96,7 @@ Message PropertiesAdaptor::Set(const CallMessage &call)
 	return reply;
 }
 
-const IntrospectedInterface *PropertiesAdaptor::introspect() const
+IntrospectedInterface *const PropertiesAdaptor::introspect() const
 {
 	static IntrospectedArgument Get_args[] =
 	{
@@ -141,14 +141,14 @@ PropertiesProxy::PropertiesProxy()
 {
 }
 
-Variant PropertiesProxy::Get(const std::string &/*iface*/, const std::string &/*property*/)
+Variant PropertiesProxy::Get(const std::string &iface, const std::string &property)
 {
 //todo
 	Variant v;
 	return v;
 }
 
-void PropertiesProxy::Set(const std::string &/*iface*/, const std::string &/*property*/, const Variant &/*value*/)
+void PropertiesProxy::Set(const std::string &iface, const std::string &property, const Variant &value)
 {
 //todo
 }

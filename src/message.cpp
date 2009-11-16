@@ -236,9 +236,9 @@ char *MessageIter::signature() const
 	return dbus_message_iter_get_signature((DBusMessageIter *)&_iter);
 }
 
-bool MessageIter::append_array(char type_, const void *ptr, size_t length)
+bool MessageIter::append_array(char type, const void *ptr, size_t length)
 {
-	return dbus_message_iter_append_fixed_array((DBusMessageIter *)&_iter, type_, &ptr, length);
+	return dbus_message_iter_append_fixed_array((DBusMessageIter *)&_iter, type, &ptr, length);
 }
 
 int MessageIter::array_type()
@@ -491,9 +491,9 @@ ErrorMessage::ErrorMessage()
 	_pvt->msg = dbus_message_new(DBUS_MESSAGE_TYPE_ERROR);
 }
 
-ErrorMessage::ErrorMessage(const Message &to_reply, const char *name_, const char *message)
+ErrorMessage::ErrorMessage(const Message &to_reply, const char *name, const char *message)
 {
-	_pvt->msg = dbus_message_new_error(to_reply._pvt->msg, name_, message);
+	_pvt->msg = dbus_message_new_error(to_reply._pvt->msg, name, message);
 }
 
 bool ErrorMessage::operator == (const ErrorMessage &m) const
@@ -520,9 +520,9 @@ SignalMessage::SignalMessage(const char *name)
 	member(name);
 }
 
-SignalMessage::SignalMessage(const char *path_, const char *interface_, const char *name)
+SignalMessage::SignalMessage(const char *path, const char *interface, const char *name)
 {
-	_pvt->msg = dbus_message_new_signal(path_, interface_, name);
+	_pvt->msg = dbus_message_new_signal(path, interface, name);
 }
 
 bool SignalMessage::operator == (const SignalMessage &m) const
@@ -575,9 +575,9 @@ CallMessage::CallMessage()
 	_pvt->msg = dbus_message_new(DBUS_MESSAGE_TYPE_METHOD_CALL);
 }
 
-CallMessage::CallMessage(const char *dest, const char *path_, const char *iface, const char *method)
+CallMessage::CallMessage(const char *dest, const char *path, const char *iface, const char *method)
 {
-	_pvt->msg = dbus_message_new_method_call(dest, path_, iface, method);
+	_pvt->msg = dbus_message_new_method_call(dest, path, iface, method);
 }
 
 bool CallMessage::operator == (const CallMessage &m) const

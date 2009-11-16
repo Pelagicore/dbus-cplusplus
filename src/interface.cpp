@@ -32,40 +32,40 @@
 
 using namespace DBus;
 
-Interface::Interface(const std::string &n)
-: _name(n)
+Interface::Interface(const std::string &name)
+: _name(name)
 {}
 
 Interface::~Interface()
 {}
 
-InterfaceAdaptor *AdaptorBase::find_interface(const std::string &n)
+InterfaceAdaptor *AdaptorBase::find_interface(const std::string &name)
 {
-	InterfaceAdaptorTable::const_iterator ii = _interfaces.find(n);
+	InterfaceAdaptorTable::const_iterator ii = _interfaces.find(name);
 
 	return ii != _interfaces.end() ? ii->second : NULL;
 }
 
-InterfaceAdaptor::InterfaceAdaptor(const std::string &n)
-: Interface(n)
+InterfaceAdaptor::InterfaceAdaptor(const std::string &name)
+: Interface(name)
 {
-	debug_log("adding interface %s", n.c_str());
+	debug_log("adding interface %s", name.c_str());
 
-	_interfaces[n] = this;
+	_interfaces[name] = this;
 }
 
 Message InterfaceAdaptor::dispatch_method(const CallMessage &msg)
 {
-	const char *n = msg.member();
+	const char *name = msg.member();
 
-	MethodTable::iterator mi = _methods.find(n);
+	MethodTable::iterator mi = _methods.find(name);
 	if (mi != _methods.end())
 	{
 		return mi->second.call(msg);
 	}
 	else
 	{
-		return ErrorMessage(msg, DBUS_ERROR_UNKNOWN_METHOD, n);
+		return ErrorMessage(msg, DBUS_ERROR_UNKNOWN_METHOD, name);
 	}
 }
 
@@ -79,9 +79,9 @@ void InterfaceAdaptor::emit_signal(const SignalMessage &sig)
 	_emit_signal(sig2);
 }
 
-Variant *InterfaceAdaptor::get_property(const std::string &n)
+Variant *InterfaceAdaptor::get_property(const std::string &name)
 {
-	PropertyTable::iterator pti = _properties.find(n);
+	PropertyTable::iterator pti = _properties.find(name);
 
 	if (pti != _properties.end())
 	{
@@ -93,9 +93,9 @@ Variant *InterfaceAdaptor::get_property(const std::string &n)
 	return NULL;
 }
 
-void InterfaceAdaptor::set_property(const std::string &n, Variant &value)
+void InterfaceAdaptor::set_property(const std::string &name, Variant &value)
 {
-	PropertyTable::iterator pti = _properties.find(n);
+	PropertyTable::iterator pti = _properties.find(name);
 
 	if (pti != _properties.end())
 	{
@@ -113,26 +113,26 @@ void InterfaceAdaptor::set_property(const std::string &n, Variant &value)
 	throw ErrorFailed("requested property not found");
 }
 
-InterfaceProxy *ProxyBase::find_interface(const std::string &n)
+InterfaceProxy *ProxyBase::find_interface(const std::string &name)
 {
-	InterfaceProxyTable::const_iterator ii = _interfaces.find(n);
+	InterfaceProxyTable::const_iterator ii = _interfaces.find(name);
 
 	return ii != _interfaces.end() ? ii->second : NULL;
 }
 
-InterfaceProxy::InterfaceProxy(const std::string &n)
-: Interface(n)
+InterfaceProxy::InterfaceProxy(const std::string &name)
+: Interface(name)
 {
-	debug_log("adding interface %s", n.c_str());
+	debug_log("adding interface %s", name.c_str());
 
-	_interfaces[n] = this;
+	_interfaces[name] = this;
 }
 
 bool InterfaceProxy::dispatch_signal(const SignalMessage &msg)
 {
-	const char *n = msg.member();
+	const char *name = msg.member();
 
-	SignalTable::iterator si = _signals.find(n);
+	SignalTable::iterator si = _signals.find(name);
 	if (si != _signals.end())
 	{
 		si->second.call(msg);

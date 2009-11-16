@@ -143,7 +143,7 @@ public:
 
 	void set_property(const std::string &name, Variant &value);
 
-	virtual const IntrospectedInterface * introspect() const
+	virtual IntrospectedInterface *const introspect() const
 	{
 		return NULL;
 	}

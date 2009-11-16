@@ -39,8 +39,8 @@
 
 using namespace DBus;
 
-Object::Object(Connection &conn_, const Path &path_, const char *service_)
-: _conn(conn_), _path(path_), _service(service_ ? service_ : "")
+Object::Object(Connection &conn, const Path &path, const char *service)
+: _conn(conn), _path(path), _service(service ? service : "")
 {
 }
 
@@ -61,7 +61,7 @@ static DBusObjectPathVTable _vtable =
 	NULL, NULL, NULL, NULL
 };
 
-void ObjectAdaptor::Private::unregister_function_stub(DBusConnection *, void *)
+void ObjectAdaptor::Private::unregister_function_stub(DBusConnection *conn, void *data)
 {
  	//TODO: what do we have to do here ?
 }
@@ -148,8 +148,8 @@ ObjectPathList ObjectAdaptor::child_nodes_from_prefix(const std::string &prefix)
 	return ali;
 }
 
-ObjectAdaptor::ObjectAdaptor(Connection &conn_, const Path &path_)
-: Object(conn_, path_, conn_.unique_name())
+ObjectAdaptor::ObjectAdaptor(Connection &conn, const Path &path)
+: Object(conn, path, conn.unique_name())
 {
 	register_obj();
 }
@@ -270,8 +270,8 @@ ObjectAdaptor::Continuation *ObjectAdaptor::find_continuation(const Tag *tag)
 	return di != _continuations.end() ? di->second : NULL;
 }
 
-ObjectAdaptor::Continuation::Continuation(Connection &conn, const CallMessage &call, const Tag *tag_)
-: _conn(conn), _call(call), _return(_call), _tag(tag_)
+ObjectAdaptor::Continuation::Continuation(Connection &conn, const CallMessage &call, const Tag *tag)
+: _conn(conn), _call(call), _return(_call), _tag(tag)
 {
 	_writer = _return.writer(); //todo: verify
 }
@@ -279,8 +279,8 @@ ObjectAdaptor::Continuation::Continuation(Connection &conn, const CallMessage &c
 /*
 */
 
-ObjectProxy::ObjectProxy(Connection &conn_, const Path &path_, const char *service_)
-: Object(conn_, path_, service_)
+ObjectProxy::ObjectProxy(Connection &conn, const Path &path, const char *service)
+: Object(conn, path, service)
 {
 	register_obj();
 }
