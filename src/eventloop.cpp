@@ -75,6 +75,11 @@ DefaultWatch::~DefaultWatch()
 	_disp->_mutex_w.unlock();
 }
 
+DefaultMutex::DefaultMutex()
+{
+	pthread_mutex_init(&_mutex, NULL);
+}
+
 DefaultMutex::DefaultMutex(bool recursive)
 {
 	if (recursive)
@@ -82,10 +87,10 @@ DefaultMutex::DefaultMutex(bool recursive)
 		pthread_mutex_t recmutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP; 
  		_mutex = recmutex;
 	}
-	else
+  else
 	{
 		pthread_mutex_init(&_mutex, NULL);
-	}
+	}  
 }
 
 DefaultMutex::~DefaultMutex()
