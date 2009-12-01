@@ -25,6 +25,9 @@
 #ifndef __DBUSXX_UTIL_H
 #define __DBUSXX_UTIL_H
 
+#include <sstream>
+#include <iostream>
+#include <iomanip>
 #include "api.h"
 #include "debug.h"
 
@@ -267,6 +270,15 @@ private:
 
 	C *_c; M _m;
 };
+
+/// create std::string from any number
+template <typename T>
+std::string toString (const T &thing, int w = 0, int p = 0)
+{
+	std::ostringstream os;
+	os << std::setw(w) << std::setprecision(p) << thing;
+	return os.str();
+}
 
 } /* namespace DBus */
 
