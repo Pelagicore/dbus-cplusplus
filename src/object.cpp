@@ -40,12 +40,20 @@
 using namespace DBus;
 
 Object::Object(Connection &conn, const Path &path, const char *service)
-: _conn(conn), _path(path), _service(service ? service : "")
+: _conn(conn), _path(path), _service(service ? service : ""), _default_timeout(-1)
 {
 }
 
 Object::~Object()
 {
+}
+
+void Object::set_timeout(int new_timeout)
+{
+	debug_log("%s: %d millies", __PRETTY_FUNCTION__, new_timeout);
+	if(new_timeout < 0 && new_timeout != -1)
+		throw ErrorInvalidArgs("Bad timeout, cannot set it");
+	_default_timeout = new_timeout;
 }
 
 struct ObjectAdaptor::Private
@@ -329,7 +337,7 @@ Message ObjectProxy::_invoke_method(CallMessage &call)
 	if (call.destination() == NULL)
 		call.destination(service().c_str());
 
-	return conn().send_blocking(call);
+	return conn().send_blocking(call, get_timeout());
 }
 
 bool ObjectProxy::_invoke_method_noreply(CallMessage &call)

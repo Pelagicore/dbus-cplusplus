@@ -109,8 +109,11 @@ Timeout *BusDispatcher::add_timeout(Timeout::Internal *ti)
 	bt->expired = new Callback<BusDispatcher, void, DefaultTimeout &>(this, &BusDispatcher::timeout_expired);
 	bt->data(bt);
 
-	debug_log("added timeout %p (%s) interval=%d",
-		bt, ((Timeout *)bt)->enabled() ? "on":"off", ((Timeout *)bt)->interval());
+	debug_log("added timeout %p (%s) (%d millies)",
+		  bt,
+		  ((Timeout*)bt)->enabled() ? "on":"off",
+		  ((Timeout*)bt)->interval()
+		  );
 
 	return bt;
 }
