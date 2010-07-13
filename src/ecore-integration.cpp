@@ -50,7 +50,7 @@ void Ecore::BusTimeout::toggle()
 	else			_disable();
 }
 
-int Ecore::BusTimeout::timeout_handler( void *data )
+Eina_Bool Ecore::BusTimeout::timeout_handler( void *data )
 {
 	Ecore::BusTimeout* t = reinterpret_cast<Ecore::BusTimeout*>(data);
 
@@ -118,7 +118,7 @@ void Ecore::BusWatch::toggle()
 	else			_disable();
 }
 
-int Ecore::BusWatch::watch_handler_read( void *data, Ecore_Fd_Handler *fdh  )
+Eina_Bool Ecore::BusWatch::watch_handler_read( void *data, Ecore_Fd_Handler *fdh  )
 {
 	Ecore::BusWatch* w = reinterpret_cast<Ecore::BusWatch*>(data);
 
@@ -133,7 +133,7 @@ int Ecore::BusWatch::watch_handler_read( void *data, Ecore_Fd_Handler *fdh  )
 	return 1;
 }
 
-int Ecore::BusWatch::watch_handler_error( void *data, Ecore_Fd_Handler *fdh  )
+Eina_Bool Ecore::BusWatch::watch_handler_error( void *data, Ecore_Fd_Handler *fdh  )
 {
 	//Ecore::BusWatch* w = reinterpret_cast<Ecore::BusWatch*>(data);
 
