@@ -7,6 +7,7 @@
 #include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
+#include <cstring>
 
 using namespace std;
 
@@ -31,22 +32,20 @@ static const int THREADS = 3;
 
 static bool spin = true;
 
+EchoClient *g_client = NULL;
+
+DBus::Pipe *thread_pipe_list[THREADS];
+
 void *greeter_thread(void *arg)
 {
-	DBus::Connection *conn = reinterpret_cast<DBus::Connection *>(arg);
-
-	EchoClient client(*conn, ECHO_SERVER_PATH, ECHO_SERVER_NAME);
-
 	char idstr[16];
+	int i = (int) arg;
 
 	snprintf(idstr, sizeof(idstr), "%lu", pthread_self());
 
-	for (int i = 0; i < 30 && spin; ++i)
-	{
-		cout << client.Hello(idstr) << endl;
-	}
+	thread_pipe_list[i]->write (idstr, strlen (idstr) + 1);
 
-	cout << idstr << " done " << endl;
+	cout << idstr << " done (" << i << ")" << endl;
 
 	return NULL;
 }
@@ -60,6 +59,36 @@ void niam(int sig)
 	dispatcher.leave();
 }
 
+void handler1 (const void *data, void *buffer, unsigned int nbyte)
+{
+	char *str = (char*) buffer;
+	cout << "buffer1: " << str << endl;
+	for (int i = 0; i < 30 && spin; ++i)
+	{
+		cout << g_client->Hello (str) << endl;
+	}
+}
+
+void handler2 (const void *data, void *buffer, unsigned int nbyte)
+{
+	char *str = (char*) buffer;
+	cout << "buffer2: " << str << endl;
+	for (int i = 0; i < 30 && spin; ++i)
+	{
+		cout << g_client->Hello (str) << endl;
+	}
+}
+
+void handler3 (const void *data, void *buffer, unsigned int nbyte)
+{
+	char *str = (char*) buffer;
+	cout << "buffer3: " << str << endl;
+	for (int i = 0; i < 30 && spin; ++i)
+	{
+		cout << g_client->Hello (str) << endl;
+	}
+}
+
 int main()
 {
 	signal(SIGTERM, niam);
@@ -71,13 +100,19 @@ int main()
 
 	DBus::Connection conn = DBus::Connection::SessionBus();
 
+	EchoClient client (conn, ECHO_SERVER_PATH, ECHO_SERVER_NAME);
+	g_client = &client;
+
 	pthread_t threads[THREADS];
 
+	thread_pipe_list[0] = dispatcher.add_pipe (handler1, NULL);
+	thread_pipe_list[1] = dispatcher.add_pipe (handler2, NULL);
+	thread_pipe_list[2] = dispatcher.add_pipe (handler3, NULL);
 	for (int i = 0; i < THREADS; ++i)
 	{
-		pthread_create(threads+i, NULL, greeter_thread, &conn);
+		pthread_create(threads+i, NULL, greeter_thread, (void*) i);
 	}
-
+	
 	dispatcher.enter();
 
 	cout << "terminating" << endl;
@@ -86,6 +121,10 @@ int main()
 	{
 		pthread_join(threads[i], NULL);
 	}
+
+	dispatcher.del_pipe (thread_pipe_list[0]);
+	dispatcher.del_pipe (thread_pipe_list[1]);
+	dispatcher.del_pipe (thread_pipe_list[2]);
 
 	return 0;
 }

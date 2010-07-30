@@ -31,11 +31,14 @@
 #include <dbus-c++/debug.h>
 
 #include <sys/poll.h>
+#include <fcntl.h>
 
 #include <dbus/dbus.h>
 #include <errno.h>
+#include <cassert>
 
 using namespace DBus;
+using namespace std;
 
 BusTimeout::BusTimeout(Timeout::Internal *ti, BusDispatcher *bd)
 : Timeout(ti), DefaultTimeout(Timeout::interval(), true, bd)
@@ -71,6 +74,28 @@ void BusWatch::toggle()
 	DefaultWatch::enabled(Watch::enabled());
 }
 
+void Pipe::write(const void *buffer, unsigned int nbytes)
+{
+	::write(fd_write, buffer, nbytes);
+}
+
+void Pipe::signal()
+{
+	::write(fd_write, '\0', 1);
+}
+
+BusDispatcher::BusDispatcher() :
+	_running(false)
+{
+	// pipe to create a new fd used to unlock a dispatcher at any
+  // moment (used by leave function)
+	int ret = pipe(_pipe);
+	if (ret == -1) throw Error("PipeError:errno", toString(errno).c_str());
+  
+	_fdunlock[0] = _pipe[0];
+	_fdunlock[1] = _pipe[1];
+}
+
 void BusDispatcher::enter()
 {
 	debug_log("entering dispatcher %p", this);
@@ -80,6 +105,27 @@ void BusDispatcher::enter()
 	while (_running)
 	{
 		do_iteration();
+
+		for (std::list <Pipe*>::const_iterator p_it = pipe_list.begin ();
+		     p_it != pipe_list.end ();
+		     ++p_it)
+		{
+			const Pipe* read_pipe = *p_it;
+			char buf;
+			char buf_str[1024];
+			int i = 0;
+			
+			while (read(read_pipe->fd_read, &buf, 1) > 0)
+			{
+				buf_str[i] = buf;
+				++i;
+			}
+
+			if (i > 0)
+			{
+				read_pipe->_handler (read_pipe->data, buf_str, i);
+			}
+		}
 	}
 
 	debug_log("leaving dispatcher %p", this);
@@ -94,6 +140,34 @@ void BusDispatcher::leave()
   
 	close(_fdunlock[1]);
 	close(_fdunlock[0]);
+}
+
+Pipe *BusDispatcher::add_pipe(void(*handler)(const void *data, void *buffer, unsigned int nbyte), const void *data)
+{
+	int fd[2];
+  Pipe *new_pipe = new Pipe ();
+  new_pipe->_handler = handler;
+	new_pipe->data = data;
+	pipe_list.push_back (new_pipe);
+
+	if (pipe(fd) == 0)
+  {
+    new_pipe->fd_read = fd[0];
+    new_pipe->fd_write = fd[1];
+    fcntl(new_pipe->fd_read, F_SETFL, O_NONBLOCK);
+  }
+  else
+  {
+		throw Error("PipeError:errno", toString(errno).c_str());
+  }
+
+	return new_pipe;
+}
+
+void BusDispatcher::del_pipe (Pipe *pipe)
+{
+	pipe_list.remove (pipe);
+	delete pipe;
 }
 
 void BusDispatcher::do_iteration()

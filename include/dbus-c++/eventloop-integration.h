@@ -57,30 +57,51 @@ class DXXAPI BusWatch : public Watch, public DefaultWatch
 friend class BusDispatcher;
 };
 
+class DXXAPI Pipe
+{
+public:
+	/*!
+	 * Write some data into the communication pipe.
+	 *
+	 * @param buffer The raw data to write.
+	 * @param nbytes The number of bytes to write from the buffer.
+	 */
+	void write(const void *buffer, unsigned int nbytes);
+
+	/*!
+	 * Simply write one single byte into the pipe. This is a shortcut
+	 * if there's really no data to transport, but to actvate the handler.
+	 */
+	void signal();
+	
+private:
+	void(*_handler)(const void *data, void *buffer, unsigned int nbyte);
+	int fd_write;
+  int fd_read;
+	const void *data;
+	
+	// allow construction only in BusDipatcher
+	Pipe () {};
+	~Pipe () {};
+
+friend class BusDispatcher;
+};
+
 class DXXAPI BusDispatcher : public Dispatcher, public DefaultMainLoop
 {
 public:
-
-	int _pipe[2];
-
-	BusDispatcher() : _running(false)
-	{
-		//pipe to create a new fd used to unlock a dispatcher at any
-    // moment (used by leave function)
-		int ret = pipe(_pipe);
-		if (ret == -1) throw Error("PipeError:errno", toString(errno).c_str());
-    
-		_fdunlock[0] = _pipe[0];
-		_fdunlock[1] = _pipe[1];
-	}
-
-	~BusDispatcher()
-	{}
+	BusDispatcher();
+	
+	~BusDispatcher() {}
 
 	virtual void enter();
 
 	virtual void leave();
 
+  virtual Pipe *add_pipe(void(*handler)(const void *data, void *buffer, unsigned int nbyte), const void *data);
+
+	virtual void del_pipe (Pipe *pipe);
+	
 	virtual void do_iteration();
 
 	virtual Timeout *add_timeout(Timeout::Internal *);
@@ -96,8 +117,9 @@ public:
 	void timeout_expired(DefaultTimeout &);
 
 private:
-
 	bool _running;
+	int _pipe[2];
+	std::list <Pipe*> pipe_list;
 };
 
 } /* namespace DBus */
