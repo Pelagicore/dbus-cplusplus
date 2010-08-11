@@ -70,7 +70,7 @@ public:
 
 	/*!
 	 * Simply write one single byte into the pipe. This is a shortcut
-	 * if there's really no data to transport, but to actvate the handler.
+	 * if there's really no data to transport, but to activate the handler.
 	 */
 	void signal();
 	
@@ -80,7 +80,7 @@ private:
   int fd_read;
 	const void *data;
 	
-	// allow construction only in BusDipatcher
+	// allow construction only in BusDispatcher
 	Pipe () {};
 	~Pipe () {};
 
