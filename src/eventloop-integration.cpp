@@ -25,18 +25,19 @@
 #include <config.h>
 #endif
 
-#include <string.h>
-
+/* Project */
 #include <dbus-c++/eventloop-integration.h>
 #include <dbus-c++/debug.h>
 #include <dbus-c++/pipe.h>
 
+/* DBus */
+#include <dbus/dbus.h>
+
+/* STD */
+#include <string.h>
+#include <cassert>
 #include <sys/poll.h>
 #include <fcntl.h>
-
-#include <dbus/dbus.h>
-#include <errno.h>
-#include <cassert>
 
 using namespace DBus;
 using namespace std;
@@ -97,16 +98,16 @@ void BusDispatcher::enter()
 	{
 		do_iteration();
 
-		for (std::list <Pipe*>::const_iterator p_it = pipe_list.begin ();
+		for (std::list <Pipe*>::iterator p_it = pipe_list.begin ();
 		     p_it != pipe_list.end ();
 		     ++p_it)
 		{
-			const Pipe* read_pipe = *p_it;
+			Pipe* read_pipe = *p_it;
 			char buf;
 			char buf_str[1024];
 			int i = 0;
 			
-			while (read(read_pipe->fd_read, &buf, 1) > 0)
+			while (read_pipe->read((void*) &buf, 1) > 0)
 			{
 				buf_str[i] = buf;
 				++i;
@@ -114,7 +115,7 @@ void BusDispatcher::enter()
 
 			if (i > 0)
 			{
-				read_pipe->_handler (read_pipe->data, buf_str, i);
+				read_pipe->_handler (read_pipe->_data, buf_str, i);
 			}
 		}
 	}
@@ -135,23 +136,8 @@ void BusDispatcher::leave()
 
 Pipe *BusDispatcher::add_pipe(void(*handler)(const void *data, void *buffer, unsigned int nbyte), const void *data)
 {
-	int fd[2];
-  Pipe *new_pipe = new Pipe ();
-  new_pipe->_handler = handler;
-	new_pipe->data = data;
+  Pipe *new_pipe = new Pipe (handler, data);
 	pipe_list.push_back (new_pipe);
-
-	if (pipe(fd) == 0)
-  {
-    new_pipe->fd_read = fd[0];
-    new_pipe->fd_write = fd[1];
-    fcntl(new_pipe->fd_read, F_SETFL, O_NONBLOCK);
-    fcntl(new_pipe->fd_write, F_SETFL, O_NONBLOCK);
-  }
-  else
-  {
-		throw Error("PipeError:errno", toString(errno).c_str());
-  }
 
 	return new_pipe;
 }

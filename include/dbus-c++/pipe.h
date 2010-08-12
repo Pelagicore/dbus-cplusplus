@@ -43,6 +43,8 @@ public:
 	 */
 	void write(const void *buffer, unsigned int nbytes);
 
+  ssize_t read(void *buffer, unsigned int nbytes);
+
 	/*!
 	 * Simply write one single byte into the pipe. This is a shortcut
 	 * if there's really no data to transport, but to activate the handler.
@@ -51,12 +53,12 @@ public:
 	
 private:
 	void(*_handler)(const void *data, void *buffer, unsigned int nbyte);
-	int fd_write;
-  int fd_read;
-	const void *data;
+	int _fd_write;
+  int _fd_read;
+	const void *_data;
 	
 	// allow construction only in BusDispatcher
-	Pipe ();
+	Pipe (void(*handler)(const void *data, void *buffer, unsigned int nbyte), const void *data);
 	~Pipe () {};
 
 friend class BusDispatcher;
