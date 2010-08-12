@@ -29,6 +29,7 @@
 
 #include <dbus-c++/eventloop-integration.h>
 #include <dbus-c++/debug.h>
+#include <dbus-c++/pipe.h>
 
 #include <sys/poll.h>
 #include <fcntl.h>
@@ -72,16 +73,6 @@ void BusWatch::toggle()
 	debug_log("watch %p toggled (%s)", this, Watch::enabled() ? "on":"off");
 
 	DefaultWatch::enabled(Watch::enabled());
-}
-
-void Pipe::write(const void *buffer, unsigned int nbytes)
-{
-	::write(fd_write, buffer, nbytes);
-}
-
-void Pipe::signal()
-{
-	::write(fd_write, '\0', 1);
 }
 
 BusDispatcher::BusDispatcher() :
@@ -155,6 +146,7 @@ Pipe *BusDispatcher::add_pipe(void(*handler)(const void *data, void *buffer, uns
     new_pipe->fd_read = fd[0];
     new_pipe->fd_write = fd[1];
     fcntl(new_pipe->fd_read, F_SETFL, O_NONBLOCK);
+    fcntl(new_pipe->fd_write, F_SETFL, O_NONBLOCK);
   }
   else
   {

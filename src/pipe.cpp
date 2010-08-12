@@ -21,26 +21,31 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#ifndef __DBUSXX_DBUS_H
-#define __DBUSXX_DBUS_H
+#include <dbus-c++/pipe.h>
 
-#include "types.h"
-#include "interface.h"
-#include "object.h"
-#include "property.h"
-#include "connection.h"
-#include "server.h"
-#include "error.h"
-#include "message.h"
-#include "debug.h"
-#include "pendingcall.h"
-#include "server.h"
-#include "util.h"
-#include "dispatcher.h"
-#include "eventloop.h"
-#include "eventloop-integration.h"
-#include "introspection.h"
-#include "pipe.h"
+#include <unistd.h>
 
-#endif//__DBUSXX_DBUS_H
+using namespace DBus;
+using namespace std;
+
+Pipe::Pipe () :
+  _handler (NULL),
+  fd_write (0),
+  fd_read (0),
+  data (NULL)
+{
+}
+
+void Pipe::write(const void *buffer, unsigned int nbytes)
+{
+	::write(fd_write, buffer, nbytes);
+}
+
+void Pipe::signal()
+{
+	::write(fd_write, '\0', 1);
+}

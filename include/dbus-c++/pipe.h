@@ -21,26 +21,47 @@
  *
  */
 
+#ifndef DBUSXX_PIPE_H
+#define DBUSXX_PIPE_H
 
-#ifndef __DBUSXX_DBUS_H
-#define __DBUSXX_DBUS_H
+/* Project */
+#include "api.h"
 
-#include "types.h"
-#include "interface.h"
-#include "object.h"
-#include "property.h"
-#include "connection.h"
-#include "server.h"
-#include "error.h"
-#include "message.h"
-#include "debug.h"
-#include "pendingcall.h"
-#include "server.h"
-#include "util.h"
-#include "dispatcher.h"
-#include "eventloop.h"
-#include "eventloop-integration.h"
-#include "introspection.h"
-#include "pipe.h"
+/* STD */
+#include <cstdlib>
 
-#endif//__DBUSXX_DBUS_H
+namespace DBus {
+
+class DXXAPI Pipe
+{
+public:
+	/*!
+	 * Write some data into the communication pipe.
+	 *
+	 * @param buffer The raw data to write.
+	 * @param nbytes The number of bytes to write from the buffer.
+	 */
+	void write(const void *buffer, unsigned int nbytes);
+
+	/*!
+	 * Simply write one single byte into the pipe. This is a shortcut
+	 * if there's really no data to transport, but to activate the handler.
+	 */
+	void signal();
+	
+private:
+	void(*_handler)(const void *data, void *buffer, unsigned int nbyte);
+	int fd_write;
+  int fd_read;
+	const void *data;
+	
+	// allow construction only in BusDispatcher
+	Pipe ();
+	~Pipe () {};
+
+friend class BusDispatcher;
+};
+
+} /* namespace DBus */
+
+#endif // DBUSXX_PIPE_H

@@ -38,6 +38,7 @@ namespace DBus {
  */
 
 class BusDispatcher;
+class Pipe;
 
 class DXXAPI BusTimeout : public Timeout, public DefaultTimeout
 {
@@ -53,36 +54,6 @@ class DXXAPI BusWatch : public Watch, public DefaultWatch
 	BusWatch(Watch::Internal *, BusDispatcher *);
 
 	void toggle();
-
-friend class BusDispatcher;
-};
-
-class DXXAPI Pipe
-{
-public:
-	/*!
-	 * Write some data into the communication pipe.
-	 *
-	 * @param buffer The raw data to write.
-	 * @param nbytes The number of bytes to write from the buffer.
-	 */
-	void write(const void *buffer, unsigned int nbytes);
-
-	/*!
-	 * Simply write one single byte into the pipe. This is a shortcut
-	 * if there's really no data to transport, but to activate the handler.
-	 */
-	void signal();
-	
-private:
-	void(*_handler)(const void *data, void *buffer, unsigned int nbyte);
-	int fd_write;
-  int fd_read;
-	const void *data;
-	
-	// allow construction only in BusDispatcher
-	Pipe () {};
-	~Pipe () {};
 
 friend class BusDispatcher;
 };
