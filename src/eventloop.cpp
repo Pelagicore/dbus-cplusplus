@@ -34,6 +34,7 @@
 #include <dbus/dbus.h>
 
 using namespace DBus;
+using namespace std;
 
 static double millis(timeval tv)
 {

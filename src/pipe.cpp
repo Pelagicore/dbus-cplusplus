@@ -35,6 +35,7 @@
 #include <sys/poll.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <cassert>
 
 using namespace DBus;
 using namespace std;
@@ -52,7 +53,6 @@ Pipe::Pipe(void(*handler)(const void *data, void *buffer, unsigned int nbyte), c
     _fd_read = fd[0];
     _fd_write = fd[1];
     fcntl(_fd_read, F_SETFL, O_NONBLOCK);
-    fcntl(_fd_write, F_SETFL, O_NONBLOCK);
   }
   else
   {
@@ -62,11 +62,19 @@ Pipe::Pipe(void(*handler)(const void *data, void *buffer, unsigned int nbyte), c
 
 void Pipe::write(const void *buffer, unsigned int nbytes)
 {
+  // first write the size into the pipe...
+  ::write(_fd_write, static_cast <const void*> (&nbytes), sizeof(nbytes));
+
+  // ...then write the real data
 	::write(_fd_write, buffer, nbytes);
 }
 
-ssize_t Pipe::read(void *buffer, unsigned int nbytes)
-{
+ssize_t Pipe::read(void *buffer, unsigned int &nbytes)
+{  
+  // first read the size from the pipe...
+  ::read(_fd_read, &nbytes, sizeof (nbytes));
+
+  //ssize_t size = 0;
   return ::read(_fd_read, buffer, nbytes);
 }
 

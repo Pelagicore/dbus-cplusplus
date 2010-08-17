@@ -103,20 +103,14 @@ void BusDispatcher::enter()
 		     ++p_it)
 		{
 			Pipe* read_pipe = *p_it;
-			char buf;
-			char buf_str[1024];
-			int i = 0;
+      char buffer[1024]; // TODO: should be max pipe size
+      unsigned int nbytes = 0;
 			
-			while (read_pipe->read((void*) &buf, 1) > 0)
-			{
-				buf_str[i] = buf;
-				++i;
-			}
+      while (read_pipe->read(buffer, nbytes) > 0)
+      {        
+        read_pipe->_handler (read_pipe->_data, buffer, nbytes);
+      }
 
-			if (i > 0)
-			{
-				read_pipe->_handler (read_pipe->_data, buf_str, i);
-			}
 		}
 	}
 

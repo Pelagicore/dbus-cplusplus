@@ -43,7 +43,7 @@ public:
 	 */
 	void write(const void *buffer, unsigned int nbytes);
 
-  ssize_t read(void *buffer, unsigned int nbytes);
+  ssize_t read(void *buffer, unsigned int &nbytes);
 
 	/*!
 	 * Simply write one single byte into the pipe. This is a shortcut

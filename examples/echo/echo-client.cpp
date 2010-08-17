@@ -36,6 +36,9 @@ EchoClient *g_client = NULL;
 
 DBus::Pipe *thread_pipe_list[THREADS];
 
+DBus::BusDispatcher dispatcher;
+DBus::DefaultTimeout *timeout;
+
 void *greeter_thread(void *arg)
 {
 	char idstr[16];
@@ -50,8 +53,6 @@ void *greeter_thread(void *arg)
 	return NULL;
 }
 
-DBus::BusDispatcher dispatcher;
-
 void niam(int sig)
 {
 	spin = false;
@@ -62,30 +63,30 @@ void niam(int sig)
 void handler1 (const void *data, void *buffer, unsigned int nbyte)
 {
 	char *str = (char*) buffer;
-	cout << "buffer1: " << str << endl;
+	cout << "buffer1: " << str << ", size: " << nbyte << endl;
 	for (int i = 0; i < 30 && spin; ++i)
 	{
-		cout << g_client->Hello (str) << endl;
+		cout << "call1: " << g_client->Hello (str) << endl;
 	}
 }
 
 void handler2 (const void *data, void *buffer, unsigned int nbyte)
 {
 	char *str = (char*) buffer;
-	cout << "buffer2: " << str << endl;
+	cout << "buffer2: " << str << ", size: " << nbyte <<endl;
 	for (int i = 0; i < 30 && spin; ++i)
 	{
-		cout << g_client->Hello (str) << endl;
+		cout << "call2: " << g_client->Hello (str) << endl;
 	}
 }
 
 void handler3 (const void *data, void *buffer, unsigned int nbyte)
 {
 	char *str = (char*) buffer;
-	cout << "buffer3: " << str << endl;
+	cout << "buffer3: " << str << ", size: " << nbyte <<endl;
 	for (int i = 0; i < 30 && spin; ++i)
 	{
-		cout << g_client->Hello (str) << endl;
+		cout << "call3: " << g_client->Hello (str) << endl;
 	}
 }
 
@@ -96,7 +97,10 @@ int main()
 
 	DBus::_init_threading();
 
-	DBus::default_dispatcher = &dispatcher;
+  DBus::default_dispatcher = &dispatcher;
+
+  // increase DBus-C++ frequency
+  new DBus::DefaultTimeout(100, false, &dispatcher);
 
 	DBus::Connection conn = DBus::Connection::SessionBus();
 
