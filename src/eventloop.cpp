@@ -109,7 +109,8 @@ void DefaultMutex::unlock()
 	pthread_mutex_unlock(&_mutex);
 }
 
-DefaultMainLoop::DefaultMainLoop()
+DefaultMainLoop::DefaultMainLoop() :
+	_mutex_w(true)
 {
 }
 
