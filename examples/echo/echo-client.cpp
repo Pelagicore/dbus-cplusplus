@@ -28,7 +28,7 @@ void EchoClient::Echoed(const DBus::Variant &value)
  * For some strange reason, libdbus frequently dies with an OOM
  */
 
-static const int THREADS = 3;
+static const size_t THREADS = 3;
 
 static bool spin = true;
 
@@ -42,7 +42,7 @@ DBus::DefaultTimeout *timeout;
 void *greeter_thread(void *arg)
 {
 	char idstr[16];
-	int i = (int) arg;
+	size_t i = (size_t) arg;
 
 	snprintf(idstr, sizeof(idstr), "%lu", pthread_self());
 
@@ -92,6 +92,8 @@ void handler3 (const void *data, void *buffer, unsigned int nbyte)
 
 int main()
 {
+	size_t i;
+
 	signal(SIGTERM, niam);
 	signal(SIGINT, niam);
 
@@ -112,7 +114,7 @@ int main()
 	thread_pipe_list[0] = dispatcher.add_pipe (handler1, NULL);
 	thread_pipe_list[1] = dispatcher.add_pipe (handler2, NULL);
 	thread_pipe_list[2] = dispatcher.add_pipe (handler3, NULL);
-	for (int i = 0; i < THREADS; ++i)
+	for (i = 0; i < THREADS; ++i)
 	{
 		pthread_create(threads+i, NULL, greeter_thread, (void*) i);
 	}
@@ -121,7 +123,7 @@ int main()
 
 	cout << "terminating" << endl;
 
-	for (int i = 0; i < THREADS; ++i)
+	for (i = 0; i < THREADS; ++i)
 	{
 		pthread_join(threads[i], NULL);
 	}
