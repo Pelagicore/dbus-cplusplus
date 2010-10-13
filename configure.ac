@@ -142,13 +142,6 @@ if test x"$acx_pthread_ok" = xyes; then
 	AM_CONDITIONAL(HAVE_PTHREAD, test x"$acx_pthread_ok" = xyes)
 fi
 
-if test "$enable_debug" = "yes" ; then
-	CXXFLAGS="$CXXFLAGS -Wall -ggdb -O0"
-	AC_DEFINE(DEBUG, 1, [Define to enable debug build])
-else
-	CXXFLAGS="$CXXFLAGS -Wall -O3"
-fi
-
 # Doxygen Documentation
 
 AC_PATH_PROG(DOXYGEN, doxygen, no)
