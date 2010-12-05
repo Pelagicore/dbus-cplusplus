@@ -362,19 +362,19 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 					// generate basic signature only if no object name available...
 					if (!arg_object.length())
 					{
-						body << "const " << signature_to_type(arg.get("type")) << "& ";
+						body << signature_to_type(arg.get("type")) << "& ";
 					}
 					// ...or generate object style if available
 					else
 					{
-						body << "const " << arg_object << "& ";
+						body << arg_object << "& ";
 
 						// store a object name to later generate header includes
 						include_vector.push_back (arg_object);
 					}
 
 					if (arg_name.length())
-						body << " " << arg_name;
+						body << arg_name;
 
 					if (i+1 != args_out.size())
 						body << ", ";
