@@ -34,6 +34,7 @@
 #include <dbus/dbus.h>
 
 using namespace DBus;
+using namespace std;
 
 static double millis(timeval tv)
 {
@@ -108,7 +109,8 @@ void DefaultMutex::unlock()
 	pthread_mutex_unlock(&_mutex);
 }
 
-DefaultMainLoop::DefaultMainLoop()
+DefaultMainLoop::DefaultMainLoop() :
+	_mutex_w(true)
 {
 }
 

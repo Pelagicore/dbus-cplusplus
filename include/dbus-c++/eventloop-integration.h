@@ -38,6 +38,7 @@ namespace DBus {
  */
 
 class BusDispatcher;
+class Pipe;
 
 class DXXAPI BusTimeout : public Timeout, public DefaultTimeout
 {
@@ -60,27 +61,18 @@ friend class BusDispatcher;
 class DXXAPI BusDispatcher : public Dispatcher, public DefaultMainLoop
 {
 public:
-
-	int _pipe[2];
-
-	BusDispatcher() : _running(false)
-	{
-		//pipe to create a new fd used to unlock a dispatcher at any
-    // moment (used by leave function)
-		int ret = pipe(_pipe);
-		if (ret == -1) throw Error("PipeError:errno", toString(errno).c_str());
-    
-		_fdunlock[0] = _pipe[0];
-		_fdunlock[1] = _pipe[1];
-	}
-
-	~BusDispatcher()
-	{}
+	BusDispatcher();
+	
+	~BusDispatcher() {}
 
 	virtual void enter();
 
 	virtual void leave();
 
+  virtual Pipe *add_pipe(void(*handler)(const void *data, void *buffer, unsigned int nbyte), const void *data);
+
+	virtual void del_pipe (Pipe *pipe);
+	
 	virtual void do_iteration();
 
 	virtual Timeout *add_timeout(Timeout::Internal *);
@@ -96,8 +88,9 @@ public:
 	void timeout_expired(DefaultTimeout &);
 
 private:
-
 	bool _running;
+	int _pipe[2];
+	std::list <Pipe*> pipe_list;
 };
 
 } /* namespace DBus */

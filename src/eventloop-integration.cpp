@@ -25,17 +25,22 @@
 #include <config.h>
 #endif
 
-#include <string.h>
-
+/* Project */
 #include <dbus-c++/eventloop-integration.h>
 #include <dbus-c++/debug.h>
+#include <dbus-c++/pipe.h>
 
-#include <sys/poll.h>
-
+/* DBus */
 #include <dbus/dbus.h>
-#include <errno.h>
+
+/* STD */
+#include <string.h>
+#include <cassert>
+#include <sys/poll.h>
+#include <fcntl.h>
 
 using namespace DBus;
+using namespace std;
 
 BusTimeout::BusTimeout(Timeout::Internal *ti, BusDispatcher *bd)
 : Timeout(ti), DefaultTimeout(Timeout::interval(), true, bd)
@@ -71,6 +76,18 @@ void BusWatch::toggle()
 	DefaultWatch::enabled(Watch::enabled());
 }
 
+BusDispatcher::BusDispatcher() :
+	_running(false)
+{
+	// pipe to create a new fd used to unlock a dispatcher at any
+  // moment (used by leave function)
+	int ret = pipe(_pipe);
+	if (ret == -1) throw Error("PipeError:errno", toString(errno).c_str());
+  
+	_fdunlock[0] = _pipe[0];
+	_fdunlock[1] = _pipe[1];
+}
+
 void BusDispatcher::enter()
 {
 	debug_log("entering dispatcher %p", this);
@@ -80,6 +97,21 @@ void BusDispatcher::enter()
 	while (_running)
 	{
 		do_iteration();
+
+		for (std::list <Pipe*>::iterator p_it = pipe_list.begin ();
+		     p_it != pipe_list.end ();
+		     ++p_it)
+		{
+			Pipe* read_pipe = *p_it;
+      char buffer[1024]; // TODO: should be max pipe size
+      unsigned int nbytes = 0;
+			
+      while (read_pipe->read(buffer, nbytes) > 0)
+      {        
+        read_pipe->_handler (read_pipe->_data, buffer, nbytes);
+      }
+
+		}
 	}
 
 	debug_log("leaving dispatcher %p", this);
@@ -94,6 +126,20 @@ void BusDispatcher::leave()
   
 	close(_fdunlock[1]);
 	close(_fdunlock[0]);
+}
+
+Pipe *BusDispatcher::add_pipe(void(*handler)(const void *data, void *buffer, unsigned int nbyte), const void *data)
+{
+  Pipe *new_pipe = new Pipe (handler, data);
+	pipe_list.push_back (new_pipe);
+
+	return new_pipe;
+}
+
+void BusDispatcher::del_pipe (Pipe *pipe)
+{
+	pipe_list.remove (pipe);
+	delete pipe;
 }
 
 void BusDispatcher::do_iteration()
