@@ -14,13 +14,6 @@ AC_SUBST(PACKAGE_VERSION)
 
 # Set configuration options
 
-AC_ARG_ENABLE(debug,
-	AS_HELP_STRING([--enable-debug],
-		[enable debugging support]),
-	[enable_debug=$enableval],
-	[enable_debug=no]
-)
-
 AC_ARG_ENABLE(ecore,
 	AS_HELP_STRING([--enable-ecore],
 		[enable ecore integration]),
@@ -65,7 +58,7 @@ if test -n "$vtest"; then
 	AC_MSG_RESULT(yes)
 
 	AC_DEFINE(GCC_HASCLASSVISIBILITY, 1, [to enable hidden symbols])
-	CXXFLAGS="-fvisibility=hidden"
+	CXXFLAGS="$CXXFLAGS -fvisibility=hidden"
 else
 	AC_MSG_RESULT(no)
 fi 

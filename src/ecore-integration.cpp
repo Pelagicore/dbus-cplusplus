@@ -100,9 +100,12 @@ static bool watch_dispatch( void *data )
 }
 
 Ecore::BusWatch::BusWatch( Watch::Internal* wi)
-: Watch(wi)
+: Watch(wi), fd_handler_read (NULL)
 {
-	_enable();
+  if (Watch::enabled())
+  {
+	  _enable();
+  }
 }
 
 Ecore::BusWatch::~BusWatch()
@@ -133,7 +136,7 @@ Eina_Bool Ecore::BusWatch::watch_handler_read( void *data, Ecore_Fd_Handler *fdh
 	return 1;
 }
 
-Eina_Bool Ecore::BusWatch::watch_handler_error( void *data, Ecore_Fd_Handler *fdh  )
+/*Eina_Bool Ecore::BusWatch::watch_handler_error( void *data, Ecore_Fd_Handler *fdh  )
 {
 	//Ecore::BusWatch* w = reinterpret_cast<Ecore::BusWatch*>(data);
 
@@ -144,13 +147,11 @@ Eina_Bool Ecore::BusWatch::watch_handler_error( void *data, Ecore_Fd_Handler *fd
 	watch_dispatch(NULL);
 
 	return 1;
-}
+}*/
 
 void Ecore::BusWatch::_enable()
 {
   debug_log("Ecore::BusWatch::_enable()");
-  
-  //int flags = Watch::flags();
   
   fd_handler_read = ecore_main_fd_handler_add (Watch::descriptor(),
                                                             ECORE_FD_READ,
@@ -159,20 +160,15 @@ void Ecore::BusWatch::_enable()
                                                             NULL, NULL);
   
   ecore_main_fd_handler_active_set(fd_handler_read, ECORE_FD_READ);
-  
-  fd_handler_error = ecore_main_fd_handler_add (Watch::descriptor(),
-                                                            ECORE_FD_ERROR,
-                                                            watch_handler_error,
-                                                            this,
-                                                            NULL, NULL);
-  
-  ecore_main_fd_handler_active_set(fd_handler_error, ECORE_FD_ERROR);
 }
 
 void Ecore::BusWatch::_disable()
 {
-  ecore_main_fd_handler_del (fd_handler_read);
-  ecore_main_fd_handler_del (fd_handler_error);
+  if (fd_handler_read)
+  {
+    ecore_main_fd_handler_del (fd_handler_read);
+    fd_handler_read = NULL;
+  }
 }
 
 void Ecore::BusDispatcher::attach( )

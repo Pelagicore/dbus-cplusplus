@@ -79,7 +79,6 @@ private:
 
 private:
   Ecore_Fd_Handler *fd_handler_read;
-  Ecore_Fd_Handler *fd_handler_error;
 
 friend class BusDispatcher;
 };
