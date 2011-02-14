@@ -26,5 +26,10 @@
     <method name="Info">
       <arg type="a{ss}" name="info" direction="out"/>
     </method>
+    
+    <method name="Foo">
+      <arg type="a(a(uu)s)" name="array" direction="out" />
+    </method>
+    
   </interface>
 </node>

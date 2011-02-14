@@ -24,6 +24,8 @@ public:
 	int32_t Sum(const std::vector<int32_t> & ints);
 
 	std::map< std::string, std::string > Info();
+
+  std::vector< ::DBus::Struct< std::vector< ::DBus::Struct< uint32_t, uint32_t > >, std::string > > Foo() {};
 };
 
 #endif//__DEMO_ECHO_SERVER_H

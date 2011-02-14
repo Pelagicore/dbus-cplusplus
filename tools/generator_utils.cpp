@@ -87,12 +87,90 @@ const char *atomic_type_to_string(char t)
 
 void _parse_signature(const string &signature, string &type, unsigned int &i)
 {
+  cout << "signature: " << signature << endl;
+  cout << "type: " << type << endl;
+  cout << "i: " << i << ", signature[i]: " << signature[i] << endl;
+  
 	for (; i < signature.length(); ++i)
-	{
+	{    
 		switch (signature[i])
 		{
 			case 'a':
 			{
+				switch (signature[++i])
+				{
+					case '{':
+					{
+						type += "std::map< ";
+            ++i;
+            _parse_signature(signature, type, i);
+            type += " >";
+            
+						break;
+					}
+					case '(':
+					{
+						type += "std::vector< ::DBus::Struct< ";
+            ++i;
+            _parse_signature(signature, type, i);
+            type += " > >";
+
+						break;
+					}            
+					default:
+					{
+						type += "std::vector< ";
+            _parse_signature(signature, type, i);
+
+            type += " >";
+              
+						break;
+					}
+				}
+
+				if (i+1 < signature.length() && signature[i+1] != ')' && signature[i+1] != '}')
+				{
+					type += ", ";
+				}
+
+				break;
+			}
+			case ')':
+			case '}':	
+			{        
+        return;
+			}
+			default:
+			{
+				const char *atom = atomic_type_to_string(signature[i]);
+				if (!atom)
+				{
+					cerr << "invalid signature" << endl;
+					exit(-1);
+				}
+				type += atom;
+
+				if (i+1 < signature.length() && signature[i+1] != ')' && signature[i+1] != '}')
+				{
+					type += ", ";
+				}
+				break;
+			}
+		}
+	}
+}
+
+/*{
+	for (; i < signature.length(); ++i)
+	{
+    cout << "i: " << i << ", sig(i): " << signature[i] << endl;
+    cout << "Type: " << type << endl;
+    
+		switch (signature[i])
+		{
+			case 'a':
+			{
+        bool multi = false;
 				switch (signature[++i])
 				{
 					case '{':
@@ -108,16 +186,27 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 						type += atom;
 						type += ", ";
 						++i;
+            _parse_signature(signature, type, i);
+            multi = true;
 						break;
 					}
 					default:
 					{
 						type += "std::vector< ";
+            _parse_signature(signature, type, i);
+            type += " >V";
+            multi = true;
 						break;
 					}
 				}
-				_parse_signature(signature, type, i);
-				type += " >";
+        if (!multi)
+        {
+          _parse_signature(signature, type, i);
+        }
+        cout << "signature1: " << signature << endl;
+        cout << "type1: " << type << endl;
+        cout << "i1: " << i << ", sig(i): " << signature[i-1] << endl;
+			  
 				continue;
 			}
 			case '(':	
@@ -125,9 +214,12 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 				type += "::DBus::Struct< ";
 				++i;
 				_parse_signature(signature, type, i);
-				type += " >";
-				if (signature[i+1])
-				{
+				type += " >S";
+        cout << "signature2: " << signature << endl;
+        cout << "type2: " << type << endl;
+        cout << "i2: " << i << ", sig(i): " << signature[i] << endl;
+				if ((i+1 < signature.length()) && (signature[i+1] != ')') )
+        {
 					type += ", ";
 				}
 				continue;
@@ -135,7 +227,11 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 			case ')':
 			case '}':	
 			{
-				return;
+        type += " >?";
+        cout << "close tag>" << endl;
+        cout << "type3: " << type << endl;
+
+        return;
 			}
 			default:
 			{
@@ -147,7 +243,7 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 				}
 				type += atom;
 
-				if (signature[i+1] != ')' && signature[i+1] != '}' && i+1 < signature.length())
+				if (i+1 < signature.length() && signature[i+1] != ')' && signature[i+1] != '}')
 				{
 					type += ", ";
 				}
@@ -155,7 +251,7 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 			}
 		}
 	}
-}
+}*/
 
 string signature_to_type(const string &signature)
 {
