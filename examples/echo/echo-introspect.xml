@@ -31,5 +31,11 @@
       <arg type="a(a(uu)s)" name="array" direction="out" />
     </method>
     
+    <method name="Foo2">
+      <arg type="i" name="result" direction="out" />
+      <arg type="i" name="direction" direction="in" />
+      <arg type="a(a(uu)s)" name="array" direction="out" />
+    </method>
+    
   </interface>
 </node>
