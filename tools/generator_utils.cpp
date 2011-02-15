@@ -122,7 +122,7 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 						type += "std::vector< ";
             _parse_signature(signature, type, i);
 
-            type += " >";            
+            type += " >";
               
 						break;
 					}
@@ -135,6 +135,16 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 
 				break;
 			}
+      case '(':
+      {
+        type += "::DBus::Struct< ";
+        ++i;
+
+        _parse_signature(signature, type, i);
+
+        type += " >";
+        break;
+      }
 			case ')':
 			case '}':	
 			{        

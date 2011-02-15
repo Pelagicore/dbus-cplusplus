@@ -1,4 +1,4 @@
-SUBDIRS = src tools data doc examples
+SUBDIRS = src tools data doc examples  test
 
 EXTRA_DIST = autogen.sh bootstrap libdbus-c++.spec libdbus-c++.spec.in
 

@@ -182,7 +182,9 @@ AC_OUTPUT(
 	Makefile
 	src/Makefile
 	tools/Makefile
-	data/Makefile
+        test/Makefile
+        test/generator/Makefile
+        data/Makefile
 	doc/Makefile
 	doc/Doxyfile
 	examples/Makefile
