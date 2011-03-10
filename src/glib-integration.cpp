@@ -87,7 +87,7 @@ struct BusSource
 
 static gboolean watch_prepare(GSource *source, gint *timeout)
 {
-	//debug_log("glib: watch_prepare");
+	debug_log("glib: watch_prepare");
 
 	*timeout = -1;
 	return FALSE;
@@ -95,7 +95,7 @@ static gboolean watch_prepare(GSource *source, gint *timeout)
 
 static gboolean watch_check(GSource *source)
 {
-	//debug_log("glib: watch_check");
+	debug_log("glib: watch_check");
 
 	BusSource *io = (BusSource *)source;
 	return io->poll.revents ? TRUE : FALSE;

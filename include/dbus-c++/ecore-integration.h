@@ -69,16 +69,19 @@ private:
 
 	void toggle();
 
-	static Eina_Bool watch_handler_read ( void*, Ecore_Fd_Handler *fdh);
-    
-  static Eina_Bool watch_handler_error ( void*, Ecore_Fd_Handler *fdh);
+  static Eina_Bool watch_check ( void *data, Ecore_Fd_Handler *fdh);  
+  static Eina_Bool watch_prepare ( void *data, Ecore_Fd_Handler *fdh);  
+	static Eina_Bool watch_dispatch ( void *data, Ecore_Fd_Handler *fdh);  
 
 	void _enable();
 
 	void _disable();
 
+  void data (Ecore::BusDispatcher *bd);
+
 private:
-  Ecore_Fd_Handler *fd_handler_read;
+  Ecore_Fd_Handler *fd_handler;
+  Ecore::BusDispatcher *_bd;
 
 friend class BusDispatcher;
 };
@@ -86,9 +89,7 @@ friend class BusDispatcher;
 class DXXAPI BusDispatcher : public Dispatcher
 {
 public:
-	BusDispatcher() {}
-
-	void attach();
+	BusDispatcher();
 
 	void enter() {}
 
@@ -102,8 +103,10 @@ public:
 
 	void rem_watch( Watch* );
 
-private:
+  static Eina_Bool dispatch ( void *data, Ecore_Fd_Handler *fdh);
+  static Eina_Bool check ( void *data, Ecore_Fd_Handler *fdh);
 
+private:
 };
 
 } /* namespace Ecore */

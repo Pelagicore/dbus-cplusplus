@@ -33,7 +33,7 @@
 
 static void _debug_log_default(const char *format, ...)
 {
-#ifdef DEBUG
+//#ifdef DEBUG
 
 	static int debug_env = getenv("DBUSXX_VERBOSE") ? 1 : 0;
 
@@ -49,7 +49,7 @@ static void _debug_log_default(const char *format, ...)
 	        va_end(args);
 	}
 
-#endif//DEBUG
+//#endif//DEBUG
 }
 
 DBus::LogFunction DBus::debug_log = _debug_log_default;
