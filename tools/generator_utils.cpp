@@ -85,7 +85,7 @@ const char *atomic_type_to_string(char t)
 	return atos[i].name;
 }
 
-void _parse_signature(const string &signature, string &type, unsigned int &i)
+static void _parse_signature(const string &signature, string &type, unsigned int &i, bool only_once = false)
 {
   cout << "signature: " << signature << endl;
   cout << "type: " << type << endl;
@@ -120,7 +120,7 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 					default:
 					{
 						type += "std::vector< ";
-            _parse_signature(signature, type, i);
+            _parse_signature(signature, type, i, true);
 
             type += " >";
               
@@ -157,6 +157,9 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 				break;
 			}
 		}
+
+		if (only_once)
+			return;
 
 				if (i+1 < signature.length() && signature[i+1] != ')' && signature[i+1] != '}')
 				{
