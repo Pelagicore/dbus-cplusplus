@@ -127,12 +127,6 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 						break;
 					}
                  }
-
-				if (i+1 < signature.length() && signature[i+1] != ')' && signature[i+1] != '}')
-				{
-					type += ", ";
-				}
-
 				break;
 			}
       case '(':
@@ -160,14 +154,14 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 				}
 				type += atom;
 
+				break;
+			}
+		}
+
 				if (i+1 < signature.length() && signature[i+1] != ')' && signature[i+1] != '}')
 				{
 					type += ", ";
 				}
-
-				break;
-			}
-		}
 	}
 }
 
