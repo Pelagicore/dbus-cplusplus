@@ -228,5 +228,17 @@
       <arg type="a(a(uu)s)" name="array" direction="out" />
     </method>
 
+   <method name="Unsorted3">
+      <arg type="a(uq(udu))" name="array" direction="out" />
+    </method>
+
+   <method name="Unsorted4">
+      <arg type="a(uqa(udyu))" name="array" direction="out" />
+    </method>
+
+   <method name="Unsorted5">
+      <arg type="a(a(yq)u)" name="array" direction="out" />
+    </method>
+
   </interface>
 </node>
