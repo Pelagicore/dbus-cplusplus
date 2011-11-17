@@ -193,6 +193,7 @@ AC_OUTPUT(
 	examples/ecore/Makefile
 	examples/hal/Makefile
 	examples/glib/Makefile
+        examples/echo_ecore/Makefile
 	dbus-c++-1.pc
 	dbus-c++-1-uninstalled.pc
 	libdbus-c++.spec
