@@ -36,8 +36,8 @@ EchoClient *g_client = NULL;
 
 DBus::Pipe *thread_pipe_list[THREADS];
 
-DBus::BusDispatcher dispatcher;
-DBus::DefaultTimeout *timeout;
+DBus::Ecore::BusDispatcher dispatcher;
+//DBus::BusDispatcher dispatcher;
 
 void *greeter_thread(void *arg)
 {
@@ -57,7 +57,7 @@ void niam(int sig)
 {
 	spin = false;
 
-	dispatcher.leave();
+	ecore_main_loop_quit();
 }
 
 void handler1 (const void *data, void *buffer, unsigned int nbyte)
@@ -97,12 +97,14 @@ int main()
 	signal(SIGTERM, niam);
 	signal(SIGINT, niam);
 
-	DBus::_init_threading();
+  ecore_init();
+  
+	//DBus::_init_threading();
 
   DBus::default_dispatcher = &dispatcher;
 
   // increase DBus-C++ frequency
-  new DBus::DefaultTimeout(100, false, &dispatcher);
+  //new DBus::DefaultTimeout(100, false, &dispatcher);
 
 	DBus::Connection conn = DBus::Connection::SessionBus();
 
@@ -111,15 +113,15 @@ int main()
 
 	pthread_t threads[THREADS];
 
-	thread_pipe_list[0] = dispatcher.add_pipe (handler1, NULL);
+/*	thread_pipe_list[0] = dispatcher.add_pipe (handler1, NULL);
 	thread_pipe_list[1] = dispatcher.add_pipe (handler2, NULL);
-	thread_pipe_list[2] = dispatcher.add_pipe (handler3, NULL);
+	thread_pipe_list[2] = dispatcher.add_pipe (handler3, NULL);*/
 	for (i = 0; i < THREADS; ++i)
 	{
-		pthread_create(threads+i, NULL, greeter_thread, (void*) i);
+		//pthread_create(threads+i, NULL, greeter_thread, (void*) i);
 	}
 	
-	dispatcher.enter();
+	//dispatcher.enter();
 
 	cout << "terminating" << endl;
 
@@ -128,9 +130,12 @@ int main()
 		pthread_join(threads[i], NULL);
 	}
 
-	dispatcher.del_pipe (thread_pipe_list[0]);
+	/*dispatcher.del_pipe (thread_pipe_list[0]);
 	dispatcher.del_pipe (thread_pipe_list[1]);
-	dispatcher.del_pipe (thread_pipe_list[2]);
+	dispatcher.del_pipe (thread_pipe_list[2]);*/
 
+  ecore_main_loop_begin();
+  ecore_shutdown();
+  
 	return 0;
 }

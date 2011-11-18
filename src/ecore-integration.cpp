@@ -112,9 +112,9 @@ Eina_Bool Ecore::BusWatch::watch_dispatch( void *data, Ecore_Fd_Handler *fdh  )
 {
 	Ecore::BusWatch* w = reinterpret_cast<Ecore::BusWatch*>(data);
 
-	debug_log("Ecore::BusWatch watch_handler_read");
+	debug_log("Ecore::BusWatch watch_handler");
 
-	int flags = flags;
+	int flags = w->flags();
 
 	if (w->flags() & DBUS_WATCH_READABLE)
 		ecore_main_fd_handler_active_set(w->fd_handler, ECORE_FD_READ);

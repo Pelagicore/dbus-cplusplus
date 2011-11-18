@@ -1,13 +1,15 @@
 EXTRA_DIST = README echo-introspect.xml
 
-AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_builddir)/include 
+AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_builddir)/include \
+	$(ecore_CFLAGS)
 
 if ENABLE_ECORE
 noinst_PROGRAMS = echo-server
 endif
 
 echo_server_SOURCES = echo-server-glue.h echo-server.h echo-server.cpp
-echo_server_LDADD = $(top_builddir)/src/libdbus-c++-1.la
+echo_server_LDADD = $(top_builddir)/src/libdbus-c++-1.la \
+	$(ecore_LIBS)
 
 echo-server-glue.h: echo-introspect.xml
 	$(top_builddir)/tools/dbusxx-xml2cpp $^ --adaptor=$@
@@ -17,7 +19,8 @@ noinst_PROGRAMS += echo-client-mt
 endif
 
 echo_client_mt_SOURCES = echo-client-glue.h echo-client.h echo-client.cpp
-echo_client_mt_LDADD = $(top_builddir)/src/libdbus-c++-1.la @PTHREAD_LIBS@
+echo_client_mt_LDADD = $(top_builddir)/src/libdbus-c++-1.la \
+	@PTHREAD_LIBS@ $(ecore_LIBS)
 echo_client_mt_CXXFLAGS = @PTHREAD_CFLAGS@
 
 echo-client-glue.h: echo-introspect.xml

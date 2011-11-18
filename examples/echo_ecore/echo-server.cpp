@@ -70,12 +70,12 @@ std::map< std::string, std::string > EchoServer::Info()
 	return info;
 }
 
-
-DBus::BusDispatcher dispatcher;
+DBus::Ecore::BusDispatcher dispatcher;
+//DBus::BusDispatcher dispatcher;
 
 void niam(int sig)
 {
-	dispatcher.leave();
+	ecore_main_loop_quit();
 }
 
 int main()
@@ -83,14 +83,17 @@ int main()
 	signal(SIGTERM, niam);
 	signal(SIGINT, niam);
 
+  ecore_init();
+
 	DBus::default_dispatcher = &dispatcher;
 
 	DBus::Connection conn = DBus::Connection::SessionBus();
 	conn.request_name(ECHO_SERVER_NAME);
 
 	EchoServer server(conn);
-
-	dispatcher.enter();
+ 
+  ecore_main_loop_begin();
+  ecore_shutdown();
 
 	return 0;
 }
