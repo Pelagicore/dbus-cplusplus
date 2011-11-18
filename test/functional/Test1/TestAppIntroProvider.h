@@ -2,10 +2,12 @@
 #define TEST_APP_INTRO_PROVIDER_H
 
 #include "TestAppIntroProviderPrivate.h"
-
 #include "TestAppIntro.h"
+#include "../../../tools/generator_utils.h"
 
 #include <iostream>
+
+using namespace std;
 
 class TestAppIntroProvider : 
   public DBusCpp::Test::Com::Intro_adaptor,
@@ -20,8 +22,14 @@ public:
 
   void test1 ()
   {
-    std::cout << "Test1" << std::endl;
+    cout << "Test1" << endl;
     mTestAppIntro->test1Result ();
+  }
+
+  void testByte (const uint8_t& Byte)
+  {
+    printf ("TestByte: %d\n", Byte);
+    mTestAppIntro->testByteResult (Byte);
   }
 
 private:

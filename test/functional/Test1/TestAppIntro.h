@@ -2,8 +2,12 @@
 #define TEST_APP_INTRO_H
 
 #include "TestAppIntroPrivate.h"
+#include "../../../tools/generator_utils.h"
 
 #include <iostream>
+#include <cstdio>
+
+using namespace std;
 
 class TestAppIntro :
   public DBusCpp::Test::Com::Intro_proxy,
@@ -19,7 +23,14 @@ public:
 
   void test1Result ()
   {
-    std::cout << "Test1Result" << std::endl;
+    cout << "Test1Result" << endl;
+    mTestResult = true;
+    pthread_cond_signal (&mCondition);
+  }
+
+  void testByteResult (const uint8_t& Byte)
+  {
+    printf ("TestByteResult: %d\n", Byte);
     mTestResult = true;
     pthread_cond_signal (&mCondition);
   }

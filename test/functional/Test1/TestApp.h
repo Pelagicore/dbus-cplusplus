@@ -2,7 +2,9 @@
 #define TEST_APP_H
 
 // STD
-#include <string.h>
+#include <cstring>
+#include <list>
+#include <string>
 
 /* DBus-cxx */
 #include <dbus-c++/dbus.h>
@@ -21,8 +23,7 @@ private:
   static void *testThreadRunnerProvider (void *arg);
   
   // variables
-  
-  pthread_t testThread;    
+  pthread_t testThread;
 };
 
 #endif // TEST_APP_H
