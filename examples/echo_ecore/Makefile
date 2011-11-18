@@ -34,8 +34,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = i686-pc-linux-gnu
 host_triplet = i686-pc-linux-gnu
-noinst_PROGRAMS = echo-server$(EXEEXT) \
-	echo-client-mt$(EXEEXT)
+#noinst_PROGRAMS = echo-server$(EXEEXT) \
+#	echo-client-mt$(EXEEXT)
 subdir = examples/echo_ecore
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -100,6 +100,8 @@ CCDEPMODE = depmode=gcc3
 CFLAGS = -O0 -ggdb
 CPP = gcc -E
 CPPFLAGS = 
+CPPUNIT_CFLAGS =  
+CPPUNIT_LIBS = -lcppunit  
 CXX = g++
 CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
@@ -183,13 +185,13 @@ dbus_CFLAGS = -I/usr/include/dbus-1.0 -I/usr/lib/dbus-1.0/include
 dbus_LIBS = -L/lib -ldbus-1 -lpthread -lrt  
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
-ecore_CFLAGS = -I/opt/e17/include/ecore-1 -I/opt/e17/include/eina-1 -I/opt/e17/include/eina-1/eina -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/valgrind  
-ecore_LIBS = -L/opt/e17/lib -lecore  
+ecore_CFLAGS = 
+ecore_LIBS = 
 exec_prefix = ${prefix}
-glib_CFLAGS = -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
-glib_LIBS = -lglib-2.0  
-gtkmm_CFLAGS = -pthread -D_REENTRANT -I/usr/include/gtkmm-2.4 -I/usr/lib/gtkmm-2.4/include -I/usr/include/giomm-2.4 -I/usr/lib/giomm-2.4/include -I/usr/include/pangomm-1.4 -I/usr/lib/pangomm-1.4/include -I/usr/include/gtk-2.0 -I/usr/include/gtk-unix-print-2.0 -I/usr/include/atkmm-1.6 -I/usr/include/gdkmm-2.4 -I/usr/lib/gdkmm-2.4/include -I/usr/include/glibmm-2.4 -I/usr/lib/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/sigc++-2.0/include -I/usr/include/cairomm-1.0 -I/usr/lib/cairomm-1.0/include -I/usr/include/pango-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/directfb -I/usr/include/libpng12 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/gio-unix-2.0/  
-gtkmm_LIBS = -pthread -lgtkmm-2.4 -latkmm-1.6 -lgdkmm-2.4 -lgiomm-2.4 -lpangomm-1.4 -lgtk-x11-2.0 -lglibmm-2.4 -lcairomm-1.0 -lsigc-2.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lcairo -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0  
+glib_CFLAGS = 
+glib_LIBS = 
+gtkmm_CFLAGS = 
+gtkmm_LIBS = 
 host = i686-pc-linux-gnu
 host_alias = 
 host_cpu = i686

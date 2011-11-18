@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<node name="/DBusCpp/Test/Com/Intro">
+  <interface name="DBusCpp.Test.Com.Intro">
+
+    <method name="test1">
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+
+    <signal name="test1Result">
+    </signal>
+
+  </interface>
+</node>

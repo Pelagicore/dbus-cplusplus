@@ -24,10 +24,6 @@ void EchoClient::Echoed(const DBus::Variant &value)
 	cout << "!";
 }
 
-/*
- * For some strange reason, libdbus frequently dies with an OOM
- */
-
 static const size_t THREADS = 3;
 
 static bool spin = true;

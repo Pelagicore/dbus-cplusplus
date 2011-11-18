@@ -178,12 +178,15 @@ AC_SUBST(BUILD_LIBDBUS_CXX_DIR)
 
 # Save processed files
 
+PKG_CHECK_MODULES(CPPUNIT, cppunit)
 AC_OUTPUT(
 	Makefile
 	src/Makefile
 	tools/Makefile
         test/Makefile
         test/generator/Makefile
+        test/functional/Makefile
+        test/functional/Test1/Makefile
         data/Makefile
 	doc/Makefile
 	doc/Doxyfile
