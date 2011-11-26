@@ -109,11 +109,20 @@ template <
 	typename T5 = Invalid,
 	typename T6 = Invalid,
 	typename T7 = Invalid,
-	typename T8 = Invalid	// who needs more than eight?
+	typename T8 = Invalid,
+  typename T9 = Invalid,
+  typename T10 = Invalid,
+  typename T11 = Invalid,
+  typename T12 = Invalid,
+  typename T13 = Invalid,
+  typename T14 = Invalid,
+  typename T15 = Invalid,
+  typename T16 = Invalid // nobody needs more than 16
 >
 struct Struct
 {
-	T1 _1; T2 _2; T3 _3; T4 _4; T5 _5; T6 _6; T7 _7; T8 _8; 
+	T1 _1; T2 _2; T3 _3; T4 _4; T5 _5; T6 _6; T7 _7; T8 _8; T9 _9;
+  T10 _10; T11 _11; T12 _12; T13 _13; T14 _14; T15 _15; T16 _16;
 };
 
 template<typename K, typename V>
@@ -163,9 +172,17 @@ template <
 	typename T5,
 	typename T6,
 	typename T7,
-	typename T8 // who needs more than eight?
+	typename T8,
+  typename T9,
+  typename T10,
+  typename T11,
+  typename T12,
+  typename T13,
+  typename T14,
+  typename T15,
+  typename T16 // nobody needs more than 16
 >
-struct type< Struct<T1,T2,T3,T4,T5,T6,T7,T8> >
+struct type< Struct<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16> >
 { 
 	static std::string sig()
 	{ 
@@ -178,6 +195,14 @@ struct type< Struct<T1,T2,T3,T4,T5,T6,T7,T8> >
 			+ type<T6>::sig()
 			+ type<T7>::sig()
 			+ type<T8>::sig()
+ 			+ type<T9>::sig()
+ 			+ type<T10>::sig()
+ 			+ type<T11>::sig()
+ 			+ type<T12>::sig()
+ 			+ type<T13>::sig()
+ 			+ type<T14>::sig()
+ 			+ type<T15>::sig()
+			+ type<T16>::sig()
 			+ ")";
 	}
 };
@@ -314,17 +339,24 @@ template <
 	typename T5,
 	typename T6,
 	typename T7,
-	typename T8
+	typename T8,
+  typename T9,
+  typename T10,
+  typename T11,
+  typename T12,
+  typename T13,
+  typename T14,
+  typename T15,
+  typename T16
 >
-inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Struct<T1,T2,T3,T4,T5,T6,T7,T8>& val)
+inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Struct<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16>& val)
 {
-/*	const std::string sig = 
-		DBus::type<T1>::sig() + DBus::type<T2>::sig() + DBus::type<T3>::sig() + DBus::type<T4>::sig() +
-		DBus::type<T5>::sig() + DBus::type<T6>::sig() + DBus::type<T7>::sig() + DBus::type<T8>::sig();
-*/
-	DBus::MessageIter sit = iter.new_struct(/*sig.c_str()*/);
+	DBus::MessageIter sit = iter.new_struct();
 
-	sit << val._1 << val._2 << val._3 << val._4 << val._5 << val._6 << val._7 << val._8;
+	sit << val._1 << val._2 << val._3 << val._4
+      << val._5 << val._6 << val._7 << val._8
+      << val._9 << val._10 << val._11 << val._12
+      << val._13 << val._14 << val._15 << val._16;
 
 	iter.close_container(sit);
 
@@ -332,9 +364,6 @@ inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Stru
 }
 
 extern DXXAPI DBus::MessageIter &operator << (DBus::MessageIter &iter, const DBus::Variant &val);
-
-/*
- */
 
 inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Invalid &)
 {
@@ -483,13 +512,24 @@ template <
 	typename T5,
 	typename T6,
 	typename T7,
-	typename T8
+	typename T8,
+  typename T9,
+  typename T10,
+  typename T11,
+  typename T12,
+  typename T13,
+  typename T14,
+  typename T15,
+  typename T16
 >
-inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Struct<T1,T2,T3,T4,T5,T6,T7,T8>& val)
+inline DBus::MessageIter &operator >> (DBus::MessageIter &iter, DBus::Struct<T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16>& val)
 {
 	DBus::MessageIter sit = iter.recurse();
 
-	sit >> val._1 >> val._2 >> val._3 >> val._4 >> val._5 >> val._6 >> val._7 >> val._8;
+	sit >> val._1 >> val._2 >> val._3 >> val._4
+      >> val._5 >> val._6 >> val._7 >> val._8
+      >> val._9 >> val._10 >> val._11 >> val._12
+      >> val._13 >> val._14 >> val._15 >> val._16;
 
 	return ++iter;
 }
