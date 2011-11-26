@@ -42,12 +42,13 @@
 using namespace DBus;
 
 Connection::Private::Private(DBusConnection *c, Server::Private *s)
-: conn(c) , dispatcher(0), server(s)
+: conn(c) , dispatcher(NULL), server(s)
 {
 	init();
 }
 
 Connection::Private::Private(DBusBusType type)
+  : dispatcher(NULL), server(NULL)
 {
 	InternalError e;
 
