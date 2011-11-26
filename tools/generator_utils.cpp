@@ -87,9 +87,9 @@ const char *atomic_type_to_string(char t)
 
 static void _parse_signature(const string &signature, string &type, unsigned int &i, bool only_once = false)
 {
-  cout << "signature: " << signature << endl;
+  /*cout << "signature: " << signature << endl;
   cout << "type: " << type << endl;
-  cout << "i: " << i << ", signature[i]: " << signature[i] << endl;
+  cout << "i: " << i << ", signature[i]: " << signature[i] << endl;*/
   
 	for (; i < signature.length(); ++i)
 	{    
