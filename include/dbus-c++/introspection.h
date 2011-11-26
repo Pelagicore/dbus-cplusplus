@@ -69,7 +69,7 @@ public:
 
 protected:
 
-	IntrospectedInterface *const introspect() const;
+	IntrospectedInterface * introspect() const;
 };
 
 class DXXAPI IntrospectableProxy : public InterfaceProxy

@@ -96,7 +96,7 @@ Message PropertiesAdaptor::Set(const CallMessage &call)
 	return reply;
 }
 
-IntrospectedInterface *const PropertiesAdaptor::introspect() const
+IntrospectedInterface * PropertiesAdaptor::introspect() const
 {
 	static IntrospectedArgument Get_args[] =
 	{

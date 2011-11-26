@@ -144,7 +144,7 @@ Message IntrospectableAdaptor::Introspect(const CallMessage &call)
 	return reply;
 }
 
-IntrospectedInterface *const IntrospectableAdaptor::introspect() const
+IntrospectedInterface * IntrospectableAdaptor::introspect() const
 {
 	static IntrospectedArgument Introspect_args[] =
 	{
