@@ -24,8 +24,6 @@
 
 #include "xml.h"
 
-#include <dbus-c++/debug.h>
-
 #include <expat.h>
 
 std::istream &operator >> (std::istream &in, DBus::Xml::Document &doc)

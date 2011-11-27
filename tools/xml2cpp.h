@@ -29,9 +29,6 @@
 #include "config.h"
 #endif
 
-#include <dbus-c++/dbus.h>
-#include <dbus/dbus.h>
-
 #include "xml.h"
 
 #endif//__DBUSXX_TOOLS_XML2CPP_H
