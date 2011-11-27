@@ -164,7 +164,7 @@ ObjectAdaptor::ObjectAdaptor(Connection &conn, const Path &path)
 
 ObjectAdaptor::~ObjectAdaptor()
 {
-	unregister_obj();
+	unregister_obj(false);
 }
 
 void ObjectAdaptor::register_obj()
@@ -179,7 +179,7 @@ void ObjectAdaptor::register_obj()
 	_adaptor_table[path()] = this;
 }
 
-void ObjectAdaptor::unregister_obj()
+void ObjectAdaptor::unregister_obj(bool)
 {
 	_adaptor_table.erase(path());
 
@@ -295,7 +295,7 @@ ObjectProxy::ObjectProxy(Connection &conn, const Path &path, const char *service
 
 ObjectProxy::~ObjectProxy()
 {
-	unregister_obj();
+	unregister_obj(false);
 }
 
 void ObjectProxy::register_obj()
@@ -315,15 +315,15 @@ void ObjectProxy::register_obj()
 	}
 }
 
-void ObjectProxy::unregister_obj()
+void ObjectProxy::unregister_obj(bool throw_on_error)
 {
 	debug_log("unregistering remote object %s", path().c_str());
-	
+
 	InterfaceProxyTable::const_iterator ii = _interfaces.begin();
 	while (ii != _interfaces.end())
 	{
 		std::string im = "type='signal',interface='"+ii->first+"',path='"+path()+"'";
-		conn().remove_match(im.c_str());
+		conn().remove_match(im.c_str(), throw_on_error);
 		++ii;
 	}
 	conn().remove_filter(_filtered);

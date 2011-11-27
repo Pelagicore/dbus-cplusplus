@@ -329,7 +329,8 @@ void Connection::add_match(const char *rule)
 	if (e) throw Error(e);
 }
 
-void Connection::remove_match(const char *rule)
+void Connection::remove_match(const char	*rule,
+			      bool		throw_on_error)
 {
 	InternalError e;
 	
@@ -337,7 +338,14 @@ void Connection::remove_match(const char *rule)
 
 	debug_log("%s: removed match rule %s", unique_name(), rule);
 
-	if (e) throw Error(e);
+	if (e) {
+	  if (throw_on_error)
+	    throw Error(e);
+	  else
+	    debug_log("DBus::Connection::remove_match: %s (%s).",
+		      static_cast<DBusError*>(e)->message,
+		      static_cast<DBusError*>(e)->name);
+	}
 }
 
 bool Connection::add_filter(MessageSlot &s)

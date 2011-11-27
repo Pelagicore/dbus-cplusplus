@@ -60,7 +60,7 @@ private:
 
 	DXXAPILOCAL virtual bool handle_message(const Message &) = 0;
 	DXXAPILOCAL virtual void register_obj() = 0;
-	DXXAPILOCAL virtual void unregister_obj() = 0;
+	DXXAPILOCAL virtual void unregister_obj(bool throw_on_error = true) = 0;
 
 private:
 
@@ -168,7 +168,7 @@ private:
 	bool handle_message(const Message &);
 
 	void register_obj();
-	void unregister_obj();
+	void unregister_obj(bool throw_on_error = true);
 
 	typedef std::map<const Tag *, Continuation *> ContinuationMap;
 	ContinuationMap _continuations;
@@ -217,7 +217,7 @@ private:
 	bool handle_message(const Message &);
 
 	void register_obj();
-	void unregister_obj();
+	void unregister_obj(bool throw_on_error = true);
 
 private:
 

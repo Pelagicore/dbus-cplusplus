@@ -140,7 +140,7 @@ public:
 	 * \param rule Textual form of match rule.
 	 * \throw Error
 	 */
-	void remove_match( const char* rule );
+	void remove_match( const char* rule, bool		throw_on_error );
 
 	/*!
 	 * \brief Adds a message filter.
