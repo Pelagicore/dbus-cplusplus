@@ -174,8 +174,11 @@ public:
 	struct Private;
 
 private:
+	void dispatch_pending(Connection::PrivatePList& pending_queue);
 
 	DefaultMutex _mutex_p;
+	DefaultMutex _mutex_p_copy;
+
 	Connection::PrivatePList _pending_queue;
 };
 

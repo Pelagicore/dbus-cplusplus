@@ -181,29 +181,67 @@ bool Dispatcher::has_something_to_dispatch()
 
 void Dispatcher::dispatch_pending()
 {
-	_mutex_p.lock();
-
-	// SEEME: dbus-glib is dispatching only one message at a time to not starve the loop/other things...
-
-	while (_pending_queue.size() > 0)
+	while (1)
 	{
-		Connection::PrivatePList::iterator i, j;
-		
-		i = _pending_queue.begin();
+		_mutex_p.lock();
+		if (_pending_queue.empty())
+		{
+			_mutex_p.unlock();
+			break;
+		}
 
-		while (i != _pending_queue.end())
+		Connection::PrivatePList pending_queue_copy(_pending_queue);
+		_mutex_p.unlock();
+
+		size_t copy_elem_num(pending_queue_copy.size());
+
+		dispatch_pending(pending_queue_copy);
+
+		//only push_back on list is mandatory!
+		_mutex_p.lock();
+
+		Connection::PrivatePList::iterator i, j;
+		i = _pending_queue.begin();
+		size_t counter = 0;
+		while (counter < copy_elem_num && i != _pending_queue.end())
 		{
 			j = i; 
-			
+			++j;
+			_pending_queue.erase(i);
+			i = j;
+			++counter;
+		}
+
+		_mutex_p.unlock();
+	}
+}
+
+void Dispatcher::dispatch_pending(Connection::PrivatePList& pending_queue)
+{
+	// SEEME: dbus-glib is dispatching only one message at a time to not starve the loop/other things...
+
+	_mutex_p_copy.lock();
+	while (pending_queue.size() > 0)
+	{
+		Connection::PrivatePList::iterator i, j;
+
+		i = pending_queue.begin();
+
+		while (i != pending_queue.end())
+		{
+			j = i;
+
 			++j;
 
 			if ((*i)->do_dispatch())
-				_pending_queue.erase(i);
+				pending_queue.erase(i);
+			else
+				debug_log("dispatch_pending_private: do_dispatch error");
 
 			i = j;
 		}
 	}
-	_mutex_p.unlock();
+	_mutex_p_copy.unlock();
 }
 
 void DBus::_init_threading()
