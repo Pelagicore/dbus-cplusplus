@@ -18,14 +18,14 @@ AC_ARG_ENABLE(ecore,
 	AS_HELP_STRING([--enable-ecore],
 		[enable ecore integration]),
 	[enable_ecore=$enableval],
-	[enable_ecore=no]
+	[enable_ecore=yes]
 )
 
 AC_ARG_ENABLE(glib,
 	AS_HELP_STRING([--enable-glib],
 		[enable glib integration]),
 	[enable_glib=$enableval],
-	[enable_glib=no]
+	[enable_glib=yes]
 )
 
 AC_ARG_ENABLE(doxygen-docs,
@@ -183,11 +183,11 @@ AC_OUTPUT(
 	Makefile
 	src/Makefile
 	tools/Makefile
-        test/Makefile
-        test/generator/Makefile
-        test/functional/Makefile
-        test/functional/Test1/Makefile
-        data/Makefile
+	test/Makefile
+	test/generator/Makefile
+	test/functional/Makefile
+	test/functional/Test1/Makefile
+	data/Makefile
 	doc/Makefile
 	doc/Doxyfile
 	examples/Makefile
@@ -196,7 +196,7 @@ AC_OUTPUT(
 	examples/ecore/Makefile
 	examples/hal/Makefile
 	examples/glib/Makefile
-        examples/echo_ecore/Makefile
+	examples/echo_ecore/Makefile
 	dbus-c++-1.pc
 	dbus-c++-1-uninstalled.pc
 	libdbus-c++.spec
