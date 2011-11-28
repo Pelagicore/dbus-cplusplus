@@ -27,7 +27,8 @@
 
 #include "api.h"
 
-namespace DBus {
+namespace DBus
+{
 
 typedef void (*LogFunction)(const char *format, ...);
 

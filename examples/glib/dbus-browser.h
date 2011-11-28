@@ -8,55 +8,58 @@
 #include "dbus-glue.h"
 
 class DBusInspector
-: public DBus::IntrospectableProxy,
+  : public DBus::IntrospectableProxy,
   public DBus::ObjectProxy
 {
 public:
 
-	DBusInspector(DBus::Connection &conn, const char *path, const char *service)
-	: DBus::ObjectProxy(conn, path, service)
-	{}
+  DBusInspector(DBus::Connection &conn, const char *path, const char *service)
+    : DBus::ObjectProxy(conn, path, service)
+  {}
 };
 
 class DBusBrowser
-: public org::freedesktop::DBus_proxy,
+  : public org::freedesktop::DBus_proxy,
   public DBus::IntrospectableProxy,
   public DBus::ObjectProxy,
   public Gtk::Window
 {
 public:
 
-	DBusBrowser(::DBus::Connection &);
+  DBusBrowser(::DBus::Connection &);
 
 private:
 
-	void NameOwnerChanged(const std::string &, const std::string &, const std::string &);
+  void NameOwnerChanged(const std::string &, const std::string &, const std::string &);
 
-	void NameLost(const std::string &);
+  void NameLost(const std::string &);
 
-	void NameAcquired(const std::string &);
+  void NameAcquired(const std::string &);
 
-	void on_select_busname();
+  void on_select_busname();
 
-	void _inspect_append(Gtk::TreeModel::Row *, const std::string &, const std::string &);
+  void _inspect_append(Gtk::TreeModel::Row *, const std::string &, const std::string &);
 
 private:
 
-	class InspectRecord : public Gtk::TreeModel::ColumnRecord
-	{
-	public:
+  class InspectRecord : public Gtk::TreeModel::ColumnRecord
+  {
+  public:
 
-		InspectRecord() { add(name); }
+    InspectRecord()
+    {
+      add(name);
+    }
 
-		Gtk::TreeModelColumn<Glib::ustring> name;
-	};
+    Gtk::TreeModelColumn<Glib::ustring> name;
+  };
 
-	Gtk::VBox			_vbox;
-	Gtk::ScrolledWindow		_sc_tree;
-	Gtk::ComboBoxText		_cb_busnames;
-	Gtk::TreeView			_tv_inspect;
-	Glib::RefPtr<Gtk::TreeStore>	_tm_inspect;
-	InspectRecord			_records;
+  Gtk::VBox			_vbox;
+  Gtk::ScrolledWindow		_sc_tree;
+  Gtk::ComboBoxText		_cb_busnames;
+  Gtk::TreeView			_tv_inspect;
+  Glib::RefPtr<Gtk::TreeStore>	_tm_inspect;
+  InspectRecord			_records;
 };
 
 #endif//__DEMO_DBUS_BROWSER_H

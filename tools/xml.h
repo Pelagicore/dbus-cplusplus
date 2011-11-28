@@ -36,27 +36,29 @@
 #include <iostream>
 #include <sstream>
 
-namespace DBus {
+namespace DBus
+{
 
-namespace Xml {
+namespace Xml
+{
 
 class Error : public std::exception
 {
 public:
 
-	Error(const char *error, int line, int column);
+  Error(const char *error, int line, int column);
 
-	~Error() throw()
-	{}
+  ~Error() throw()
+  {}
 
-	const char *what() const throw()
-	{
-		return _error.c_str();
-	}
+  const char *what() const throw()
+  {
+    return _error.c_str();
+  }
 
 private:
 
-	std::string _error;
+  std::string _error;
 };
 
 class Node;
@@ -65,71 +67,71 @@ class Nodes : public std::vector<Node *>
 {
 public:
 
-	Nodes operator[](const std::string &key);
+  Nodes operator[](const std::string &key);
 
-	Nodes select(const std::string &attr, const std::string &value);
+  Nodes select(const std::string &attr, const std::string &value);
 };
 
 class Node
 {
 public:
 
-	typedef std::map<std::string, std::string> Attributes;
+  typedef std::map<std::string, std::string> Attributes;
 
-	typedef std::vector<Node> Children;
+  typedef std::vector<Node> Children;
 
-	std::string name;
-	std::string cdata;
-	Children children;
+  std::string name;
+  std::string cdata;
+  Children children;
 
-	Node(std::string &n, Attributes &a)
-	: name(n), _attrs(a)
-	{}
+  Node(std::string &n, Attributes &a)
+    : name(n), _attrs(a)
+  {}
 
-	Node(const char *n, const char ** a = NULL);
+  Node(const char *n, const char **a = NULL);
 
-	Nodes operator[](const std::string &key);
+  Nodes operator[](const std::string &key);
 
-	std::string get(const std::string &attribute);
+  std::string get(const std::string &attribute);
 
-	void set(const std::string &attribute, std::string value);
+  void set(const std::string &attribute, std::string value);
 
-	std::string to_xml() const;
+  std::string to_xml() const;
 
-	Node &add(Node child)
-	{
-		children.push_back(child);
-		return children.back();
-	}
+  Node &add(Node child)
+  {
+    children.push_back(child);
+    return children.back();
+  }
 
 private:
 
-	void _raw_xml(std::string &xml, int &depth) const;
+  void _raw_xml(std::string &xml, int &depth) const;
 
-	Attributes _attrs;
+  Attributes _attrs;
 };
 
 class Document
 {
 public:
 
-	struct Expat;
+  struct Expat;
 
-	Node *root;
+  Node *root;
 
-	Document();
+  Document();
 
-	Document(const std::string &xml);
+  Document(const std::string &xml);
 
-	~Document();
+  ~Document();
 
-	void from_xml(const std::string &xml);
+  void from_xml(const std::string &xml);
 
-	std::string to_xml() const;
+  std::string to_xml() const;
 
 private:
 
-	int _depth;
+  int _depth;
 };
 
 } /* namespace Xml */

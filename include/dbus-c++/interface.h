@@ -33,15 +33,16 @@
 
 #include "message.h"
 
-namespace DBus {
+namespace DBus
+{
 
 //todo: this should belong to to properties.h
 struct DXXAPI PropertyData
 {
-	bool		read;
-	bool		write;
-	std::string	sig;
-	Variant		value;
+  bool		read;
+  bool		write;
+  std::string	sig;
+  Variant		value;
 };
 
 typedef std::map<std::string, PropertyData>	PropertyTable;
@@ -58,18 +59,18 @@ class DXXAPI AdaptorBase
 {
 public:
 
-	virtual const ObjectAdaptor *object() const = 0 ;
+  virtual const ObjectAdaptor *object() const = 0 ;
 
 protected:
 
-	InterfaceAdaptor *find_interface(const std::string &name);
+  InterfaceAdaptor *find_interface(const std::string &name);
 
-	virtual ~AdaptorBase()
-	{}
+  virtual ~AdaptorBase()
+  {}
 
-	virtual void _emit_signal(SignalMessage &) = 0;
+  virtual void _emit_signal(SignalMessage &) = 0;
 
-	InterfaceAdaptorTable _interfaces;
+  InterfaceAdaptorTable _interfaces;
 };
 
 /*
@@ -85,35 +86,35 @@ class DXXAPI ProxyBase
 {
 public:
 
-	virtual const ObjectProxy *object() const = 0 ;
+  virtual const ObjectProxy *object() const = 0 ;
 
 protected:
 
-	InterfaceProxy *find_interface(const std::string &name);
+  InterfaceProxy *find_interface(const std::string &name);
 
-	virtual ~ProxyBase()
-	{}
+  virtual ~ProxyBase()
+  {}
 
-	virtual Message _invoke_method(CallMessage &) = 0;
-	
-	virtual bool _invoke_method_noreply(CallMessage &call) = 0;
+  virtual Message _invoke_method(CallMessage &) = 0;
 
-	InterfaceProxyTable _interfaces;
+  virtual bool _invoke_method_noreply(CallMessage &call) = 0;
+
+  InterfaceProxyTable _interfaces;
 };
 
 class DXXAPI Interface
 {
 public:
-	
-	Interface(const std::string &name);
-	
-	virtual ~Interface();
 
-	inline const std::string &name() const;
+  Interface(const std::string &name);
+
+  virtual ~Interface();
+
+  inline const std::string &name() const;
 
 private:
 
-	std::string 	_name;
+  std::string 	_name;
 };
 
 /*
@@ -121,7 +122,7 @@ private:
 
 const std::string &Interface::name() const
 {
-	return _name;
+  return _name;
 }
 
 /*
@@ -133,25 +134,25 @@ class DXXAPI InterfaceAdaptor : public Interface, public virtual AdaptorBase
 {
 public:
 
-	InterfaceAdaptor(const std::string &name);
+  InterfaceAdaptor(const std::string &name);
 
-	Message dispatch_method(const CallMessage &);
+  Message dispatch_method(const CallMessage &);
 
-	void emit_signal(const SignalMessage &);
+  void emit_signal(const SignalMessage &);
 
-	Variant *get_property(const std::string &name);
+  Variant *get_property(const std::string &name);
 
-	void set_property(const std::string &name, Variant &value);
+  void set_property(const std::string &name, Variant &value);
 
-	virtual IntrospectedInterface * introspect() const
-	{
-		return NULL;
-	}
+  virtual IntrospectedInterface *introspect() const
+  {
+    return NULL;
+  }
 
 protected:
 
-	MethodTable	_methods;
-	PropertyTable	_properties;
+  MethodTable	_methods;
+  PropertyTable	_properties;
 };
 
 /*
@@ -163,17 +164,17 @@ class DXXAPI InterfaceProxy : public Interface, public virtual ProxyBase
 {
 public:
 
-	InterfaceProxy(const std::string &name);
+  InterfaceProxy(const std::string &name);
 
-	Message invoke_method(const CallMessage &);
+  Message invoke_method(const CallMessage &);
 
-	bool invoke_method_noreply(const CallMessage &call);
+  bool invoke_method_noreply(const CallMessage &call);
 
-	bool dispatch_signal(const SignalMessage &);
+  bool dispatch_signal(const SignalMessage &);
 
 protected:
 
-	SignalTable	_signals;
+  SignalTable	_signals;
 };
 
 # define register_method(interface, method, callback) \
@@ -185,7 +186,7 @@ protected:
 	InterfaceAdaptor::_properties[ #variable ].write = can_write; \
 	InterfaceAdaptor::_properties[ #variable ].sig = type; \
 	variable.bind(InterfaceAdaptor::_properties[ #variable ]);
-	
+
 # define connect_signal(interface, signal, callback) \
 	InterfaceProxy::_signals[ #signal ] = \
 		new ::DBus::Callback< interface, void, const ::DBus::SignalMessage &>(this, & interface :: callback);

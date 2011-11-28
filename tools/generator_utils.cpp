@@ -42,136 +42,140 @@ const char *dbus_includes = "\n\
 #include <cassert>\n\
 ";
 
-void underscorize(string &str)
-{
-	for (unsigned int i = 0; i < str.length(); ++i)
-	{
-		if (!isalpha(str[i]) && !isdigit(str[i])) str[i] = '_';
-	}
-}
+                            void underscorize(string &str)
+                            {
+                            for (unsigned int i = 0; i < str.length(); ++i)
+                            {
+                            if (!isalpha(str[i]) && !isdigit(str[i])) str[i] = '_';
+                            }
+                            }
 
-string stub_name(string name)
-{
-	underscorize(name);
+                            string stub_name(string name)
+                            {
+                            underscorize(name);
 
-	return "_" + name + "_stub";
-}
+                            return "_" + name + "_stub";
+                            }
 
-const char *atomic_type_to_string(char t)
-{
-	static struct { char type; const char *name; } atos[] =
-	{
-		{ 'y', "uint8_t" },
-		{ 'b', "bool" },
-		{ 'n', "int16_t" },
-		{ 'q', "uint16_t" },
-		{ 'i', "int32_t" },
-		{ 'u', "uint32_t" },
-		{ 'x', "int64_t" },
-		{ 't', "uint64_t" },
-		{ 'd', "double" },
-		{ 's', "std::string" },
-		{ 'o', "::DBus::Path" },
-		{ 'g', "::DBus::Signature" },
-		{ 'v', "::DBus::Variant" },
-		{ '\0', "" }
-	};
-	int i;
+                            const char *atomic_type_to_string(char t)
+                            {
+                            static struct
+                            {
+                            char type;
+                            const char *name;
+                            } atos[] =
+                            {
+                            { 'y', "uint8_t" },
+                            { 'b', "bool" },
+                            { 'n', "int16_t" },
+                            { 'q', "uint16_t" },
+                            { 'i', "int32_t" },
+                            { 'u', "uint32_t" },
+                            { 'x', "int64_t" },
+                            { 't', "uint64_t" },
+                            { 'd', "double" },
+                            { 's', "std::string" },
+                            { 'o', "::DBus::Path" },
+                            { 'g', "::DBus::Signature" },
+                            { 'v', "::DBus::Variant" },
+                            { '\0', "" }
+                            };
+                            int i;
 
-	for (i = 0; atos[i].type; ++i)
-	{
-		if (atos[i].type == t) break;
-	}
-	return atos[i].name;
-}
+                            for (i = 0; atos[i].type; ++i)
+                            {
+                            if (atos[i].type == t) break;
+                            }
+                            return atos[i].name;
+                            }
 
-static void _parse_signature(const string &signature, string &type, unsigned int &i, bool only_once = false)
-{
-  /*cout << "signature: " << signature << endl;
-  cout << "type: " << type << endl;
-  cout << "i: " << i << ", signature[i]: " << signature[i] << endl;*/
-  
-	for (; i < signature.length(); ++i)
-	{    
-		switch (signature[i])
-		{
-			case 'a':
-			{
-				switch (signature[++i])
-				{
-					case '{':
-					{
-						type += "std::map< ";
-            ++i;
-            _parse_signature(signature, type, i);
-            type += " >";
-            
-						break;
-					}
-					case '(':
-					{
-						type += "std::vector< ::DBus::Struct< ";
-            ++i;
-            _parse_signature(signature, type, i);
-            type += " > >";
+                            static void _parse_signature(const string &signature, string &type, unsigned int &i, bool only_once = false)
+                            {
+                            /*cout << "signature: " << signature << endl;
+                            cout << "type: " << type << endl;
+                            cout << "i: " << i << ", signature[i]: " << signature[i] << endl;*/
 
-						break;
-					}            
-					default:
-					{
-						type += "std::vector< ";
-            _parse_signature(signature, type, i, true);
+                            for (; i < signature.length(); ++i)
+                            {
+                            switch (signature[i])
+                            {
+                            case 'a':
+                          {
+                          switch (signature[++i])
+                          {
+                          case '{':
+                        {
+                        type += "std::map< ";
+                        ++i;
+                        _parse_signature(signature, type, i);
+                        type += " >";
 
-            type += " >";
-              
-						break;
-					}
-                 }
-				break;
-			}
-      case '(':
-      {
-        type += "::DBus::Struct< ";
-        ++i;
+                        break;
+                        }
+                          case '(':
+                        {
+                        type += "std::vector< ::DBus::Struct< ";
+                        ++i;
+                        _parse_signature(signature, type, i);
+                        type += " > >";
 
-        _parse_signature(signature, type, i);
+                        break;
+                        }
+                          default:
+                        {
+                        type += "std::vector< ";
+                        _parse_signature(signature, type, i, true);
 
-        type += " >";
-        break;
-      }
-			case ')':
-			case '}':	
-			{        
-        return;
-			}
-			default:
-			{
-				const char *atom = atomic_type_to_string(signature[i]);
-				if (!atom)
-				{
-					cerr << "invalid signature" << endl;
-					exit(-1);
-				}
-				type += atom;
+                        type += " >";
 
-				break;
-			}
-		}
+                        break;
+                        }
+                          }
+                          break;
+                          }
+                            case '(':
+                          {
+                          type += "::DBus::Struct< ";
+                          ++i;
 
-		if (only_once)
-			return;
+                          _parse_signature(signature, type, i);
 
-				if (i+1 < signature.length() && signature[i+1] != ')' && signature[i+1] != '}')
-				{
-					type += ", ";
-				}
-	}
-}
+                          type += " >";
+                          break;
+                          }
+                            case ')':
+                            case '}':
+                          {
+                          return;
+                          }
+                            default:
+                          {
+                          const char *atom = atomic_type_to_string(signature[i]);
+                          if (!atom)
+                          {
+                          cerr << "invalid signature" << endl;
+                          exit(-1);
+                          }
+                          type += atom;
 
-string signature_to_type(const string &signature)
-{
-	string type;
-	unsigned int i = 0;
-	_parse_signature(signature, type, i);
-	return type;
-}
+                          break;
+                          }
+                            }
+
+                            if (only_once)
+                            return;
+
+                            if (i + 1 < signature.length() && signature[i + 1] != ')' && signature[i + 1] != '}')
+                            {
+                            type += ", ";
+                            }
+                            }
+                            }
+
+                            string signature_to_type(const string &signature)
+                            {
+                            string type;
+                            unsigned int i = 0;
+                            _parse_signature(signature, type, i);
+                            return type;
+                            }

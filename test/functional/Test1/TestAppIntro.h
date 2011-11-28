@@ -15,24 +15,24 @@ class TestAppIntro :
   public DBus::ObjectProxy
 {
 public:
-  TestAppIntro (DBus::Connection& connection, pthread_cond_t &condition, bool &testResult) :
-    DBus::ObjectProxy (connection, "/DBusCpp/Test/Com/Intro", "DBusCpp.Test.Com.Intro"),
-    mCondition (condition),
-    mTestResult (testResult)
+  TestAppIntro(DBus::Connection &connection, pthread_cond_t &condition, bool &testResult) :
+    DBus::ObjectProxy(connection, "/DBusCpp/Test/Com/Intro", "DBusCpp.Test.Com.Intro"),
+    mCondition(condition),
+    mTestResult(testResult)
   {}
 
-  void test1Result ()
+  void test1Result()
   {
     cout << "Test1Result" << endl;
     mTestResult = true;
-    pthread_cond_signal (&mCondition);
+    pthread_cond_signal(&mCondition);
   }
 
-  void testByteResult (const uint8_t& Byte)
+  void testByteResult(const uint8_t &Byte)
   {
-    printf ("TestByteResult: %d\n", Byte);
+    printf("TestByteResult: %d\n", Byte);
     mTestResult = true;
-    pthread_cond_signal (&mCondition);
+    pthread_cond_signal(&mCondition);
   }
 
 private:

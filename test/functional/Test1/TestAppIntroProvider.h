@@ -9,27 +9,27 @@
 
 using namespace std;
 
-class TestAppIntroProvider : 
+class TestAppIntroProvider :
   public DBusCpp::Test::Com::Intro_adaptor,
   public DBus::IntrospectableAdaptor,
   public DBus::ObjectAdaptor
 {
 public:
-  TestAppIntroProvider (DBus::Connection& connection, TestAppIntro *testComIntro) :
+  TestAppIntroProvider(DBus::Connection &connection, TestAppIntro *testComIntro) :
     DBus::ObjectAdaptor(connection, "/DBusCpp/Test/Com/Intro"),
-    mTestAppIntro (testComIntro)
+    mTestAppIntro(testComIntro)
   {}
 
-  void test1 ()
+  void test1()
   {
     cout << "Test1" << endl;
-    mTestAppIntro->test1Result ();
+    mTestAppIntro->test1Result();
   }
 
-  void testByte (const uint8_t& Byte)
+  void testByte(const uint8_t &Byte)
   {
-    printf ("TestByte: %d\n", Byte);
-    mTestAppIntro->testByteResult (Byte);
+    printf("TestByte: %d\n", Byte);
+    mTestAppIntro->testByteResult(Byte);
   }
 
 private:

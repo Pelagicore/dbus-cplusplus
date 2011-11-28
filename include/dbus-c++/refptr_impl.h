@@ -28,17 +28,18 @@
 #include "api.h"
 #include "util.h"
 
-namespace DBus {
-	
+namespace DBus
+{
+
 template <class T>
 RefPtrI<T>::RefPtrI(T *ptr)
-: __ptr(ptr)
+  : __ptr(ptr)
 {}
 
 template <class T>
 RefPtrI<T>::~RefPtrI()
 {
-	if (__cnt.one()) delete __ptr;
+  if (__cnt.one()) delete __ptr;
 }
 
 } /* namespace DBus */

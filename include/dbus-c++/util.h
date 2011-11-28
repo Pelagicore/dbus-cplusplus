@@ -33,7 +33,8 @@
 #include "api.h"
 #include "debug.h"
 
-namespace DBus {
+namespace DBus
+{
 
 /*
  *   Very simple reference counting
@@ -43,65 +44,65 @@ class DXXAPI RefCnt
 {
 public:
 
-	RefCnt()
-	{
-		__ref = new int;
-		(*__ref) = 1;
-	}
+  RefCnt()
+  {
+    __ref = new int;
+    (*__ref) = 1;
+  }
 
-	RefCnt(const RefCnt &rc)
-	{
-		__ref = rc.__ref;
-		ref();
-	}
+  RefCnt(const RefCnt &rc)
+  {
+    __ref = rc.__ref;
+    ref();
+  }
 
-	virtual ~RefCnt()
-	{
-		unref();
-	}
+  virtual ~RefCnt()
+  {
+    unref();
+  }
 
-	RefCnt &operator = (const RefCnt &ref)
-	{
-		ref.ref();
-		unref();
-		__ref = ref.__ref;
-		return *this;
-	}
+  RefCnt &operator = (const RefCnt &ref)
+  {
+    ref.ref();
+    unref();
+    __ref = ref.__ref;
+    return *this;
+  }
 
-	bool noref() const
-	{
-		return (*__ref) == 0;
-	}
+  bool noref() const
+  {
+    return (*__ref) == 0;
+  }
 
-	bool one() const
-	{
-		return (*__ref) == 1;
-	}
-
-private:
-
-	DXXAPILOCAL void ref() const
-	{
-		++ (*__ref);
-	}
-	DXXAPILOCAL void unref() const
-	{
-		-- (*__ref);
-
-		if ((*__ref) < 0)
-		{
-			debug_log("%p: refcount dropped below zero!", __ref);
-		}
-
-		if (noref())
-		{
-			delete __ref;
-		}
-	}
+  bool one() const
+  {
+    return (*__ref) == 1;
+  }
 
 private:
 
-	int *__ref;
+  DXXAPILOCAL void ref() const
+  {
+    ++ (*__ref);
+  }
+  DXXAPILOCAL void unref() const
+  {
+    -- (*__ref);
+
+    if ((*__ref) < 0)
+    {
+      debug_log("%p: refcount dropped below zero!", __ref);
+    }
+
+    if (noref())
+    {
+      delete __ref;
+    }
+  }
+
+private:
+
+  int *__ref;
 };
 
 /*
@@ -113,45 +114,45 @@ class RefPtrI		// RefPtr to incomplete type
 {
 public:
 
-	RefPtrI(T *ptr = 0);
+  RefPtrI(T *ptr = 0);
 
-	~RefPtrI();
+  ~RefPtrI();
 
-	RefPtrI &operator = (const RefPtrI &ref)
-	{
-		if (this != &ref)
-		{
-			if (__cnt.one()) delete __ptr;
+  RefPtrI &operator = (const RefPtrI &ref)
+  {
+    if (this != &ref)
+    {
+      if (__cnt.one()) delete __ptr;
 
-			__ptr = ref.__ptr;
-			__cnt = ref.__cnt;
-		}
-		return *this;
-	}
+      __ptr = ref.__ptr;
+      __cnt = ref.__cnt;
+    }
+    return *this;
+  }
 
-	T &operator *() const
-	{
-		return *__ptr;
-	}
+  T &operator *() const
+  {
+    return *__ptr;
+  }
 
-	T *operator ->() const
-	{
-		if (__cnt.noref()) return 0;
-		
-		return __ptr;
-	}
+  T *operator ->() const
+  {
+    if (__cnt.noref()) return 0;
 
-	T *get() const
-	{
-		if (__cnt.noref()) return 0;
-		
-		return __ptr;
-	}
+    return __ptr;
+  }
+
+  T *get() const
+  {
+    if (__cnt.noref()) return 0;
+
+    return __ptr;
+  }
 
 private:
 
-	T *__ptr;
-	RefCnt __cnt;
+  T *__ptr;
+  RefCnt __cnt;
 };
 
 template <class T>
@@ -159,50 +160,50 @@ class RefPtr
 {
 public:
 
-	RefPtr(T *ptr = 0)
-	: __ptr(ptr)
-	{}
+  RefPtr(T *ptr = 0)
+    : __ptr(ptr)
+  {}
 
-	~RefPtr()
-	{
-		if (__cnt.one()) delete __ptr;
-	}
+  ~RefPtr()
+  {
+    if (__cnt.one()) delete __ptr;
+  }
 
-	RefPtr &operator = (const RefPtr &ref)
-	{
-		if (this != &ref)
-		{
-			if (__cnt.one()) delete __ptr;
+  RefPtr &operator = (const RefPtr &ref)
+  {
+    if (this != &ref)
+    {
+      if (__cnt.one()) delete __ptr;
 
-			__ptr = ref.__ptr;
-			__cnt = ref.__cnt;
-		}
-		return *this;
-	}
+      __ptr = ref.__ptr;
+      __cnt = ref.__cnt;
+    }
+    return *this;
+  }
 
-	T &operator *() const
-	{
-		return *__ptr;
-	}
+  T &operator *() const
+  {
+    return *__ptr;
+  }
 
-	T *operator ->() const
-	{
-		if (__cnt.noref()) return 0;
-		
-		return __ptr;
-	}
+  T *operator ->() const
+  {
+    if (__cnt.noref()) return 0;
 
-	T *get() const
-	{
-		if (__cnt.noref()) return 0;
-		
-		return __ptr;
-	}
+    return __ptr;
+  }
+
+  T *get() const
+  {
+    if (__cnt.noref()) return 0;
+
+    return __ptr;
+  }
 
 private:
 
-	T *__ptr;
-	RefCnt __cnt;
+  T *__ptr;
+  RefCnt __cnt;
 };
 
 /*
@@ -214,10 +215,10 @@ class Callback_Base
 {
 public:
 
-	virtual R call(P param) const = 0;
+  virtual R call(P param) const = 0;
 
-	virtual ~Callback_Base()
-	{}
+  virtual ~Callback_Base()
+  {}
 };
 
 template <class R, class P>
@@ -225,28 +226,16 @@ class Slot
 {
 public:
 
-	Slot &operator = (Callback_Base<R,P>* s)
-	{
-		_cb = s;
+  Slot &operator = (Callback_Base<R, P>* s)
+  {
+    _cb = s;
 
-		return *this;
-	}
+    return *this;
+  }
 
-	R operator()(P param) const
-	{
-		if (!empty())
-    {      
-      return _cb->call(param);
-    }
-
-    // TODO: think about return type in this case
-    // this assert should help me to find the use case where it's needed...
-    //assert (false);
-	}
-
-	R call(P param) const
-	{
-		if (!empty())
+  R operator()(P param) const
+  {
+    if (!empty())
     {
       return _cb->call(param);
     }
@@ -254,46 +243,59 @@ public:
     // TODO: think about return type in this case
     // this assert should help me to find the use case where it's needed...
     //assert (false);
-	}
+  }
 
-	bool empty() const
-	{
-		return _cb.get() == 0;
-	}
+  R call(P param) const
+  {
+    if (!empty())
+    {
+      return _cb->call(param);
+    }
+
+    // TODO: think about return type in this case
+    // this assert should help me to find the use case where it's needed...
+    //assert (false);
+  }
+
+  bool empty() const
+  {
+    return _cb.get() == 0;
+  }
 
 private:
 
-	RefPtr< Callback_Base<R,P> > _cb;
+  RefPtr< Callback_Base<R, P> > _cb;
 };
 
 template <class C, class R, class P>
-class Callback : public Callback_Base<R,P>
+class Callback : public Callback_Base<R, P>
 {
 public:
 
-	typedef R (C::*M)(P);
+  typedef R(C::*M)(P);
 
-	Callback(C *c, M m)
-	: _c(c), _m(m)
-	{}
+  Callback(C *c, M m)
+    : _c(c), _m(m)
+  {}
 
-	R call(P param) const
-	{
-		/*if (_c)*/ return (_c->*_m)(param);
-	}
+  R call(P param) const
+  {
+    /*if (_c)*/ return (_c->*_m)(param);
+  }
 
 private:
 
-	C *_c; M _m;
+  C *_c;
+  M _m;
 };
 
 /// create std::string from any number
 template <typename T>
-std::string toString (const T &thing, int w = 0, int p = 0)
+std::string toString(const T &thing, int w = 0, int p = 0)
 {
-	std::ostringstream os;
-	os << std::setw(w) << std::setprecision(p) << thing;
-	return os.str();
+  std::ostringstream os;
+  os << std::setw(w) << std::setprecision(p) << thing;
+  return os.str();
 }
 
 } /* namespace DBus */

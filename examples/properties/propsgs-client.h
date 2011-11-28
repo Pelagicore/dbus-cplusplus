@@ -5,18 +5,18 @@
 #include "propsgs-glue-proxy.h"
 
 class PropsClient
-: public org::freedesktop::DBus::PropsGSDemo_proxy,
+  : public org::freedesktop::DBus::PropsGSDemo_proxy,
   public DBus::IntrospectableProxy,
   public DBus::PropertiesProxy,
   public DBus::ObjectProxy
 {
 public:
 
-	PropsClient(DBus::Connection &connection, const char *path, const char *name);
-	
-	void MessageChanged(const std::string& message);
+  PropsClient(DBus::Connection &connection, const char *path, const char *name);
 
-	void DataChanged(const double& data);
+  void MessageChanged(const std::string &message);
+
+  void DataChanged(const double &data);
 };
 
 #endif//__DEMO_PROPS_SERVER_H

@@ -13,15 +13,15 @@
 class TestApp
 {
 public:
-  TestApp ();  
+  TestApp();
 
 private:
-  void initDBus ();
+  void initDBus();
 
-  static void testHandler (const void *data, void *buffer, unsigned int nbyte);
-  static void *testThreadRunner (void *arg);
-  static void *testThreadRunnerProvider (void *arg);
-  
+  static void testHandler(const void *data, void *buffer, unsigned int nbyte);
+  static void *testThreadRunner(void *arg);
+  static void *testThreadRunnerProvider(void *arg);
+
   // variables
   pthread_t testThread;
 };

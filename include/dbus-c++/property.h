@@ -29,37 +29,38 @@
 #include "types.h"
 #include "interface.h"
 
-namespace DBus {
+namespace DBus
+{
 
 template <typename T>
 class PropertyAdaptor
 {
 public:
 
-	PropertyAdaptor() : _data(0)
-	{}
+  PropertyAdaptor() : _data(0)
+  {}
 
-	void bind(PropertyData &data)
-	{
-		_data = &data;
-	}
+  void bind(PropertyData &data)
+  {
+    _data = &data;
+  }
 
-	T operator() (void) const
-	{
-		return _data->value.operator T();
-	}
+  T operator()(void) const
+  {
+    return _data->value.operator T();
+  }
 
-	PropertyAdaptor &operator = (const T &t)
-	{
-		_data->value.clear();
-		MessageIter wi = _data->value.writer();
-		wi << t;
-		return *this;
-	}
+  PropertyAdaptor &operator = (const T &t)
+  {
+    _data->value.clear();
+    MessageIter wi = _data->value.writer();
+    wi << t;
+    return *this;
+  }
 
 private:
 
-	PropertyData *_data;
+  PropertyData *_data;
 };
 
 struct IntrospectedInterface;
@@ -68,32 +69,32 @@ class DXXAPI PropertiesAdaptor : public InterfaceAdaptor
 {
 public:
 
-	PropertiesAdaptor();
+  PropertiesAdaptor();
 
-	Message Get(const CallMessage &);
+  Message Get(const CallMessage &);
 
-	Message Set(const CallMessage &);
+  Message Set(const CallMessage &);
 
 protected:
 
-	virtual void on_get_property(InterfaceAdaptor &/*interface*/, const std::string &/*property*/, Variant &/*value*/)
-	{}
+  virtual void on_get_property(InterfaceAdaptor &/*interface*/, const std::string &/*property*/, Variant &/*value*/)
+  {}
 
-	virtual void on_set_property(InterfaceAdaptor &/*interface*/, const std::string &/*property*/, const Variant &/*value*/)
-	{}
+  virtual void on_set_property(InterfaceAdaptor &/*interface*/, const std::string &/*property*/, const Variant &/*value*/)
+  {}
 
-	IntrospectedInterface * introspect() const;
+  IntrospectedInterface *introspect() const;
 };
 
 class DXXAPI PropertiesProxy : public InterfaceProxy
 {
 public:
 
-	PropertiesProxy();
+  PropertiesProxy();
 
-	Variant Get(const std::string &interface, const std::string &property);
+  Variant Get(const std::string &interface, const std::string &property);
 
-	void Set(const std::string &interface, const std::string &property, const Variant &value);
+  void Set(const std::string &interface, const std::string &property, const Variant &value);
 };
 
 } /* namespace DBus */

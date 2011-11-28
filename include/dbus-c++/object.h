@@ -34,40 +34,41 @@
 #include "message.h"
 #include "types.h"
 
-namespace DBus {
+namespace DBus
+{
 
 class DXXAPI Object
 {
 protected:
 
-	Object(Connection &conn, const Path &path, const char *service);
-	
+  Object(Connection &conn, const Path &path, const char *service);
+
 public:
 
-	virtual ~Object();
+  virtual ~Object();
 
-	inline const DBus::Path &path() const;
+  inline const DBus::Path &path() const;
 
-	inline const std::string &service() const;
-	
- 	inline Connection &conn();
+  inline const std::string &service() const;
 
-	void set_timeout(int new_timeout = -1);
+  inline Connection &conn();
 
-	inline int get_timeout() const;
+  void set_timeout(int new_timeout = -1);
 
-private:
-
-	DXXAPILOCAL virtual bool handle_message(const Message &) = 0;
-	DXXAPILOCAL virtual void register_obj() = 0;
-	DXXAPILOCAL virtual void unregister_obj(bool throw_on_error = true) = 0;
+  inline int get_timeout() const;
 
 private:
 
-	Connection	_conn;
-	DBus::Path	_path;
-	std::string	_service;
-        int		_default_timeout;
+  DXXAPILOCAL virtual bool handle_message(const Message &) = 0;
+  DXXAPILOCAL virtual void register_obj() = 0;
+  DXXAPILOCAL virtual void unregister_obj(bool throw_on_error = true) = 0;
+
+private:
+
+  Connection	_conn;
+  DBus::Path	_path;
+  std::string	_service;
+  int		_default_timeout;
 };
 
 /*
@@ -75,22 +76,22 @@ private:
 
 Connection &Object::conn()
 {
-	return _conn;
+  return _conn;
 }
 
 const DBus::Path &Object::path() const
 {
-	return _path;
+  return _path;
 }
 
 const std::string &Object::service() const
 {
-	return _service;
+  return _service;
 }
 
 int Object::get_timeout() const
 {
-	return _default_timeout;
+  return _default_timeout;
 }
 
 /*
@@ -100,8 +101,8 @@ class DXXAPI Tag
 {
 public:
 
-	virtual ~Tag()
-	{}
+  virtual ~Tag()
+  {}
 };
 
 /*
@@ -116,79 +117,79 @@ class DXXAPI ObjectAdaptor : public Object, public virtual AdaptorBase
 {
 public:
 
-	static ObjectAdaptor *from_path(const Path &path);
+  static ObjectAdaptor *from_path(const Path &path);
 
-	static ObjectAdaptorPList from_path_prefix(const std::string &prefix);
+  static ObjectAdaptorPList from_path_prefix(const std::string &prefix);
 
-	static ObjectPathList child_nodes_from_prefix(const std::string &prefix);
+  static ObjectPathList child_nodes_from_prefix(const std::string &prefix);
 
-	struct Private;
+  struct Private;
 
-	ObjectAdaptor(Connection &conn, const Path &path);
+  ObjectAdaptor(Connection &conn, const Path &path);
 
-	~ObjectAdaptor();
+  ~ObjectAdaptor();
 
-	inline const ObjectAdaptor *object() const;
+  inline const ObjectAdaptor *object() const;
 
 protected:
 
-	class DXXAPI Continuation
-	{
-	public:
+  class DXXAPI Continuation
+  {
+  public:
 
-		inline MessageIter &writer();
+    inline MessageIter &writer();
 
-		inline Tag *tag();
+    inline Tag *tag();
 
-	private:
+  private:
 
-		Continuation(Connection &conn, const CallMessage &call, const Tag *tag);
+    Continuation(Connection &conn, const CallMessage &call, const Tag *tag);
 
-		Connection _conn;
-		CallMessage _call;
-		MessageIter _writer;
-		ReturnMessage _return;
-		const Tag *_tag;
+    Connection _conn;
+    CallMessage _call;
+    MessageIter _writer;
+    ReturnMessage _return;
+    const Tag *_tag;
 
-	friend class ObjectAdaptor;
-	};
+    friend class ObjectAdaptor;
+  };
 
-	void return_later(const Tag *tag);
+  void return_later(const Tag *tag);
 
-	void return_now(Continuation *ret);
+  void return_now(Continuation *ret);
 
-	void return_error(Continuation *ret, const Error error);
+  void return_error(Continuation *ret, const Error error);
 
-	Continuation *find_continuation(const Tag *tag);
+  Continuation *find_continuation(const Tag *tag);
 
 private:
 
-	void _emit_signal(SignalMessage &);
+  void _emit_signal(SignalMessage &);
 
-	bool handle_message(const Message &);
+  bool handle_message(const Message &);
 
-	void register_obj();
-	void unregister_obj(bool throw_on_error = true);
+  void register_obj();
+  void unregister_obj(bool throw_on_error = true);
 
-	typedef std::map<const Tag *, Continuation *> ContinuationMap;
-	ContinuationMap _continuations;
+  typedef std::map<const Tag *, Continuation *> ContinuationMap;
+  ContinuationMap _continuations;
 
-friend struct Private;
+  friend struct Private;
 };
 
 const ObjectAdaptor *ObjectAdaptor::object() const
 {
-	return this;
+  return this;
 }
 
 Tag *ObjectAdaptor::Continuation::tag()
 {
-	return const_cast<Tag *>(_tag);
+  return const_cast<Tag *>(_tag);
 }
 
 MessageIter &ObjectAdaptor::Continuation::writer()
 {
-	return _writer;
+  return _writer;
 }
 
 /*
@@ -202,31 +203,31 @@ class DXXAPI ObjectProxy : public Object, public virtual ProxyBase
 {
 public:
 
-	ObjectProxy(Connection &conn, const Path &path, const char *service = "");
+  ObjectProxy(Connection &conn, const Path &path, const char *service = "");
 
-	~ObjectProxy();
+  ~ObjectProxy();
 
-	inline const ObjectProxy *object() const;
-
-private:
-
-	Message _invoke_method(CallMessage &);
-    
-	bool _invoke_method_noreply(CallMessage &call);
-
-	bool handle_message(const Message &);
-
-	void register_obj();
-	void unregister_obj(bool throw_on_error = true);
+  inline const ObjectProxy *object() const;
 
 private:
 
-	MessageSlot _filtered;
+  Message _invoke_method(CallMessage &);
+
+  bool _invoke_method_noreply(CallMessage &call);
+
+  bool handle_message(const Message &);
+
+  void register_obj();
+  void unregister_obj(bool throw_on_error = true);
+
+private:
+
+  MessageSlot _filtered;
 };
 
 const ObjectProxy *ObjectProxy::object() const
 {
-	return this;
+  return this;
 }
 
 } /* namespace DBus */

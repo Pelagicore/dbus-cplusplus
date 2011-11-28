@@ -33,43 +33,44 @@
 
 #include <dbus/dbus.h>
 
-namespace DBus {
+namespace DBus
+{
 
 struct DXXAPI InternalError
 {
-	DBusError	error;
+  DBusError	error;
 
-	InternalError()
-	{
-		dbus_error_init(&error);
-	}
+  InternalError()
+  {
+    dbus_error_init(&error);
+  }
 
-	explicit InternalError(DBusError *e)
-	{
-		dbus_error_init(&error);
-		dbus_move_error(e, &error);
-	}
+  explicit InternalError(DBusError *e)
+  {
+    dbus_error_init(&error);
+    dbus_move_error(e, &error);
+  }
 
-	InternalError(const InternalError &ie)
-	{
-		dbus_error_init(&error);
-		dbus_move_error(const_cast<DBusError *>(&(ie.error)), &error);
-	}
-	
-	~InternalError()
-	{
-		dbus_error_free(&error);
-	}
+  InternalError(const InternalError &ie)
+  {
+    dbus_error_init(&error);
+    dbus_move_error(const_cast<DBusError *>(&(ie.error)), &error);
+  }
 
-	operator DBusError *()
-	{
-		return &error;
-	}
+  ~InternalError()
+  {
+    dbus_error_free(&error);
+  }
 
-	operator bool()
-	{
-		return dbus_error_is_set(&error);
-	}
+  operator DBusError *()
+  {
+    return &error;
+  }
+
+  operator bool()
+  {
+    return dbus_error_is_set(&error);
+  }
 };
 
 } /* namespace DBus */

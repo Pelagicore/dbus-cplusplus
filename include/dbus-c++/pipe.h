@@ -30,38 +30,39 @@
 /* STD */
 #include <cstdlib>
 
-namespace DBus {
+namespace DBus
+{
 
 class DXXAPI Pipe
 {
 public:
-	/*!
-	 * Write some data into the communication pipe.
-	 *
-	 * @param buffer The raw data to write.
-	 * @param nbytes The number of bytes to write from the buffer.
-	 */
-	void write(const void *buffer, unsigned int nbytes);
+  /*!
+   * Write some data into the communication pipe.
+   *
+   * @param buffer The raw data to write.
+   * @param nbytes The number of bytes to write from the buffer.
+   */
+  void write(const void *buffer, unsigned int nbytes);
 
   ssize_t read(void *buffer, unsigned int &nbytes);
 
-	/*!
-	 * Simply write one single byte into the pipe. This is a shortcut
-	 * if there's really no data to transport, but to activate the handler.
-	 */
-	void signal();
-	
-private:
-	void(*_handler)(const void *data, void *buffer, unsigned int nbyte);
-	int _fd_write;
-  int _fd_read;
-	const void *_data;
-	
-	// allow construction only in BusDispatcher
-	Pipe (void(*handler)(const void *data, void *buffer, unsigned int nbyte), const void *data);
-	~Pipe () {};
+  /*!
+   * Simply write one single byte into the pipe. This is a shortcut
+   * if there's really no data to transport, but to activate the handler.
+   */
+  void signal();
 
-friend class BusDispatcher;
+private:
+  void(*_handler)(const void *data, void *buffer, unsigned int nbyte);
+  int _fd_write;
+  int _fd_read;
+  const void *_data;
+
+  // allow construction only in BusDispatcher
+  Pipe(void(*handler)(const void *data, void *buffer, unsigned int nbyte), const void *data);
+  ~Pipe() {};
+
+  friend class BusDispatcher;
 };
 
 } /* namespace DBus */

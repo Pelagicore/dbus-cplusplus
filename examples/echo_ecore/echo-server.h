@@ -8,25 +8,25 @@
 #include "echo-server-glue.h"
 
 class EchoServer
-: public org::freedesktop::DBus::EchoDemo_adaptor,
+  : public org::freedesktop::DBus::EchoDemo_adaptor,
   public DBus::IntrospectableAdaptor,
   public DBus::ObjectAdaptor
 {
 public:
 
-	EchoServer(DBus::Connection &connection);
+  EchoServer(DBus::Connection &connection);
 
-	int32_t Random();
+  int32_t Random();
 
-	std::string Hello(const std::string &name);
+  std::string Hello(const std::string &name);
 
-	DBus::Variant Echo(const DBus::Variant &value);
+  DBus::Variant Echo(const DBus::Variant &value);
 
-	std::vector< uint8_t > Cat(const std::string &file);
+  std::vector< uint8_t > Cat(const std::string &file);
 
-	int32_t Sum(const std::vector<int32_t> & ints);
+  int32_t Sum(const std::vector<int32_t> & ints);
 
-	std::map< std::string, std::string > Info();
+  std::map< std::string, std::string > Info();
 };
 
 #endif//__DEMO_ECHO_SERVER_H

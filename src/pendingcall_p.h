@@ -34,19 +34,20 @@
 
 #include <dbus/dbus.h>
 
-namespace DBus {
+namespace DBus
+{
 
 struct DXXAPILOCAL PendingCall::Private
 {
-	DBusPendingCall *call;
-	int dataslot;
-	Slot<void, PendingCall &> slot;
-	
-	Private(DBusPendingCall *);
+  DBusPendingCall *call;
+  int dataslot;
+  Slot<void, PendingCall &> slot;
 
-	~Private();
+  Private(DBusPendingCall *);
 
-	static void notify_stub(DBusPendingCall *dpc, void *data);
+  ~Private();
+
+  static void notify_stub(DBusPendingCall *dpc, void *data);
 };
 
 } /* namespace DBus */
