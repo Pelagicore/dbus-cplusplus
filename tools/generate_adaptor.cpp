@@ -278,7 +278,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 			string arg_object;
 
-			if (annotations_object.size() > 0)
+			if (!annotations_object.empty())
 			{
 				arg_object = annotations_object.front()->get("value");
 			}
@@ -316,7 +316,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 				string arg_name = arg.get("name");
 				string arg_object;
 
-				if (annotations_object.size() > 0)
+				if (!annotations_object.empty())
 				{
 					arg_object = annotations_object.front()->get("value");
 				}
@@ -354,7 +354,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 					string arg_name = arg.get("name");
 					string arg_object;
 
-					if (annotations_object.size() > 0)
+					if (!annotations_object.empty())
 					{
 						arg_object = annotations_object.front()->get("value");
 					}
@@ -406,7 +406,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 				Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 				string arg_object;
 
-				if (annotations_object.size() > 0)
+				if (!annotations_object.empty())
 				{
 					arg_object = annotations_object.front()->get("value");
 				}
@@ -434,7 +434,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			<< tab << tab << "::DBus::SignalMessage sig(\"" << signal.get("name") <<"\");" << endl;
 
 			// generate the signal body
-			if (args.size() > 0)
+			if (!args.empty())
 			{
 				body << tab << tab << "::DBus::MessageIter wi = sig.writer();" << endl;
 
@@ -446,7 +446,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 					Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 					string arg_object;
 
-					if (annotations_object.size() > 0)
+					if (!annotations_object.empty())
 					{
 						arg_object = annotations_object.front()->get("value");
 					}
@@ -508,7 +508,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 				Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 				string arg_object;
 
-				if (annotations_object.size() > 0)
+				if (!annotations_object.empty())
 				{
 					arg_object = annotations_object.front()->get("value");
 				}
@@ -521,7 +521,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			}
 
 			// generate 'out' variables
-			if (args_out.size() > 0)
+			if (!args_out.empty())
 			{
 				unsigned int i = 1;
 				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
@@ -542,7 +542,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 			}
 
 			// generate 'out' object variables
-			if (args_out.size() > 0)
+			if (!args_out.empty())
 			{
 				unsigned int i = 1;
 				for (Xml::Nodes::iterator ao = args_out.begin(); ao != args_out.end(); ++ao, ++i)
@@ -552,7 +552,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 					Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 					string arg_object;
 
-					if (annotations_object.size() > 0)
+					if (!annotations_object.empty())
 					{
 						arg_object = annotations_object.front()->get("value");
 					}
@@ -574,7 +574,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 				Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 				string arg_object;
 
-				if (annotations_object.size() > 0)
+				if (!annotations_object.empty())
 				{
 					arg_object = annotations_object.front()->get("value");
 				}
@@ -597,7 +597,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 				Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 				string arg_object;
 
-				if (annotations_object.size() > 0)
+				if (!annotations_object.empty())
 				{
 					arg_object = annotations_object.front()->get("value");
 				}
@@ -625,7 +625,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 					Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 					string arg_object;
 
-					if (annotations_object.size() > 0)
+					if (!annotations_object.empty())
 					{
 						arg_object = annotations_object.front()->get("value");
 					}
@@ -648,7 +648,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 
 			body << tab << tab << "::DBus::ReturnMessage reply(call);" << endl;
 
-			if (args_out.size() > 0)
+			if (!args_out.empty())
 			{
 				body << tab << tab << "::DBus::MessageIter wi = reply.writer();" << endl;
 
@@ -661,7 +661,7 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
 					Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 					string arg_object;
 
-					if (annotations_object.size() > 0)
+					if (!annotations_object.empty())
 					{
 						arg_object = annotations_object.front()->get("value");
 					}

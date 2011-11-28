@@ -212,7 +212,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			bool annotation_noreply_value = false;
 
 			// parse method level noreply annotations
-			if (annotations_noreply.size() > 0)
+			if (!annotations_noreply.empty())
 			{
 				string annotation_noreply_value_str = annotations_noreply.front()->get("value");
 
@@ -222,7 +222,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				}
 			}
 
-			if (annotations_object.size() > 0)
+			if (!annotations_object.empty())
 			{
 				arg_object = annotations_object.front()->get("value");
 			}
@@ -254,7 +254,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 				string arg_object;
 
-				if (annotations_object.size() > 0)
+				if (!annotations_object.empty())
 				{
 					arg_object = annotations_object.front()->get("value");
 				}
@@ -294,7 +294,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 					Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 					string arg_object;
 
-					if (annotations_object.size() > 0)
+					if (!annotations_object.empty())
 					{
 						arg_object = annotations_object.front()->get("value");
 					}
@@ -328,7 +328,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			body << tab << "{" << endl
 			<< tab << tab << "::DBus::CallMessage call;" << endl;
 
-			if (args_in.size() > 0)
+			if (!args_in.empty())
 			{
 				body << tab << tab << "::DBus::MessageIter wi = call.writer();" << endl
 				<< endl;
@@ -344,7 +344,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 				string arg_object;
 
-				if (annotations_object.size() > 0)
+				if (!annotations_object.empty())
 				{
 					arg_object = annotations_object.front()->get("value");
 				}
@@ -389,7 +389,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				body << tab << tab << "::DBus::Message ret = invoke_method (call);" << endl;
 			}
 
-			if (args_out.size() > 0)
+			if (!args_out.empty())
 			{
 				body << tab << tab << "::DBus::MessageIter ri = ret.reader();" << endl
 				<< endl;
@@ -402,7 +402,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 				string arg_object;
 
-				if (annotations_object.size() > 0)
+				if (!annotations_object.empty())
 				{
 					arg_object = annotations_object.front()->get("value");
 				}
@@ -438,7 +438,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 					Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 					string arg_object;
 
-					if (annotations_object.size() > 0)
+					if (!annotations_object.empty())
 					{
 						arg_object = annotations_object.front()->get("value");
 					}
@@ -498,7 +498,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 				string arg_object;
 
-				if (annotations_object.size() > 0)
+				if (!annotations_object.empty())
 				{
 					arg_object = annotations_object.front()->get("value");
 				}
@@ -544,7 +544,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 			body << tab << "void " << stub_name(signal.get("name")) << "(const ::DBus::SignalMessage &sig)" << endl
 			<< tab << "{" << endl;
 
-			if (args.size() > 0)
+			if (!args.empty())
 			{
 				body << tab << tab << "::DBus::MessageIter ri = sig.reader();" << endl
 				<< endl;
@@ -559,7 +559,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 				string arg_object;
 
-				if (annotations_object.size() > 0)
+				if (!annotations_object.empty())
 				{
 					arg_object = annotations_object.front()->get("value");
 				}
@@ -598,7 +598,7 @@ void generate_proxy(Xml::Document &doc, const char *filename)
 				Xml::Nodes annotations_object = annotations.select("name","org.freedesktop.DBus.Object");
 				string arg_object;
 
-				if (annotations_object.size() > 0)
+				if (!annotations_object.empty())
 				{
 					arg_object = annotations_object.front()->get("value");
 				}
