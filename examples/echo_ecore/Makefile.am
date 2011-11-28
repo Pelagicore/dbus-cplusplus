@@ -8,7 +8,8 @@ noinst_PROGRAMS = echo-server
 endif
 
 echo_server_SOURCES = echo-server-glue.h echo-server.h echo-server.cpp
-echo_server_LDADD = $(top_builddir)/src/libdbus-c++-1.la \
+echo_server_LDADD = $(top_builddir)/src/libdbus-c++-ecore-1.la \
+	$(top_builddir)/src/libdbus-c++-1.la \
 	$(ecore_LIBS)
 
 echo-server-glue.h: echo-introspect.xml
@@ -19,8 +20,9 @@ noinst_PROGRAMS += echo-client-mt
 endif
 
 echo_client_mt_SOURCES = echo-client-glue.h echo-client.h echo-client.cpp
-echo_client_mt_LDADD = $(top_builddir)/src/libdbus-c++-1.la \
-	@PTHREAD_LIBS@ $(ecore_LIBS)
+echo_client_mt_LDADD = $(top_builddir)/src/libdbus-c++-ecore-1.la \
+	$(top_builddir)/src/libdbus-c++-1.la @PTHREAD_LIBS@ \
+	$(ecore_LIBS)
 echo_client_mt_CXXFLAGS = @PTHREAD_CFLAGS@
 
 echo-client-glue.h: echo-introspect.xml

@@ -1,56 +1,70 @@
+lib_LTLIBRARIES = \
+	libdbus-c++-1.la
+
+libdbus_c___1_la_SOURCES = \
+	connection.cpp    \
+	connection_p.h    \
+	debug.cpp    \
+	dispatcher.cpp    \
+	dispatcher_p.h    \
+	error.cpp    \
+	eventloop.cpp    \
+	eventloop-integration.cpp    \
+	interface.cpp    \
+	internalerror.h    \
+	introspection.cpp    \
+	message.cpp    \
+	message_p.h    \
+	object.cpp    \
+	pendingcall.cpp    \
+	pendingcall_p.h    \
+	pipe.cpp    \
+	property.cpp    \
+	server.cpp    \
+	server_p.h    \
+	types.cpp    
+
+libdbus_c___1_la_CXXFLAGS = \
+	-I$(top_srcdir)/include \
+	-Wno-unused-parameter
+
+libdbus_c___1_la_LIBADD = \
+	$(dbus_LIBS)
+
 AM_CPPFLAGS = \
 	$(dbus_CFLAGS) \
 	$(glib_CFLAGS) \
-	$(ecore_CFLAGS) \
-	$(PRIVATE_CFLAGS) \
-	-I$(top_srcdir)/include \
-	-I$(top_builddir)/include
+	$(ecore_CFLAGS)
 
-if ENABLE_GLIB
-GLIB_H = $(HEADER_DIR)/glib-integration.h
-GLIB_CPP = glib-integration.cpp
-endif
-
-if ENABLE_ECORE
-ECORE_H = $(HEADER_DIR)/ecore-integration.h
-ECORE_CPP = ecore-integration.cpp
-endif
+SUBDIRS = \
+	integration
 
 HEADER_DIR  = $(top_srcdir)/include/dbus-c++
-HEADER_FILES = \
-	$(HEADER_DIR)/dbus.h \
-	$(HEADER_DIR)/types.h \
-	$(HEADER_DIR)/connection.h \
-	$(HEADER_DIR)/property.h \
-	$(HEADER_DIR)/debug.h \
-	$(HEADER_DIR)/error.h \
-	$(HEADER_DIR)/interface.h \
-	$(HEADER_DIR)/message.h \
-	$(HEADER_DIR)/dispatcher.h \
-	$(HEADER_DIR)/object.h \
-	$(HEADER_DIR)/pendingcall.h \
-	$(HEADER_DIR)/server.h \
-	$(HEADER_DIR)/util.h \
-	$(HEADER_DIR)/refptr_impl.h \
-	$(HEADER_DIR)/introspection.h \
-	$(HEADER_DIR)/api.h \
-	$(HEADER_DIR)/eventloop.h \
-	$(HEADER_DIR)/eventloop-integration.h \
-	$(HEADER_DIR)/pipe.h \
-	$(GLIB_H) $(ECORE_H)
+libdbus_c___1_HEADERS = \
+	$(HEADER_DIR)/api.h          \
+	$(HEADER_DIR)/connection.h          \
+	$(HEADER_DIR)/dbus.h          \
+	$(HEADER_DIR)/debug.h          \
+	$(HEADER_DIR)/dispatcher.h          \
+	$(HEADER_DIR)/error.h          \
+	$(HEADER_DIR)/eventloop.h          \
+	$(HEADER_DIR)/eventloop-integration.h          \
+	$(HEADER_DIR)/interface.h          \
+	$(HEADER_DIR)/introspection.h          \
+	$(HEADER_DIR)/message.h          \
+	$(HEADER_DIR)/object.h          \
+	$(HEADER_DIR)/pendingcall.h          \
+	$(HEADER_DIR)/pipe.h          \
+	$(HEADER_DIR)/property.h          \
+	$(HEADER_DIR)/refptr_impl.h          \
+	$(HEADER_DIR)/server.h          \
+	$(HEADER_DIR)/types.h          \
+	$(HEADER_DIR)/util.h
 
-lib_includedir=$(includedir)/dbus-c++-1/dbus-c++/
-lib_include_HEADERS = $(HEADER_FILES)
+libdbus_c___1dir=$(includedir)/dbus-c++-1/dbus-c++/
 
-lib_LTLIBRARIES = libdbus-c++-1.la
-libdbus_c___1_la_SOURCES = $(HEADER_FILES) interface.cpp object.cpp introspection.cpp debug.cpp types.cpp connection.cpp connection_p.h property.cpp dispatcher.cpp dispatcher_p.h pendingcall.cpp pendingcall_p.h error.cpp internalerror.h message.cpp message_p.h server.cpp server_p.h eventloop.cpp eventloop-integration.cpp pipe.cpp $(GLIB_CPP) $(ECORE_CPP) 
+EXTRA_DIST = \
+	$(libdbus_c___1_HEADERS)
 
-libdbus_c___1_la_CXXFLAGS = \
-	-Wno-unused-parameter
+## File created by the gnome-build tools
 
-libdbus_c___1_la_LIBADD = $(dbus_LIBS) $(glib_LIBS) $(pthread_LIBS) $(ecore_LIBS)
-
-libdbus_c___1_la_LDFLAGS = -no-undefined
-
-MAINTAINERCLEANFILES = \
-	Makefile.in

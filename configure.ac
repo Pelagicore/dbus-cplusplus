@@ -181,8 +181,11 @@ AC_SUBST(BUILD_LIBDBUS_CXX_DIR)
 PKG_CHECK_MODULES(CPPUNIT, cppunit)
 AC_OUTPUT(
 	Makefile
-	src/Makefile
-	tools/Makefile
+        src/Makefile
+        src/integration/Makefile
+        src/integration/ecore/Makefile
+        src/integration/glib/Makefile
+        tools/Makefile
 	test/Makefile
 	test/generator/Makefile
 	test/functional/Makefile
@@ -199,5 +202,9 @@ AC_OUTPUT(
 	examples/echo_ecore/Makefile
 	dbus-c++-1.pc
 	dbus-c++-1-uninstalled.pc
+	dbus-c++-ecore-1.pc
+	dbus-c++-ecore-1-uninstalled.pc
+	dbus-c++-glib-1.pc
+	dbus-c++-glib-1-uninstalled.pc
 	libdbus-c++.spec
 )
