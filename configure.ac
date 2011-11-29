@@ -1,7 +1,7 @@
 # Autojunk script for libdbus-c++
 
 AC_PREREQ(2.59)
-AC_INIT([libdbus-c++], 0.6.0-pre1, [andreas.volz@tux-style.com])
+AC_INIT([libdbus-c++], 0.9.0-pre1, [andreas.volz@tux-style.com])
 
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_CONFIG_HEADER([config.h])
@@ -34,6 +34,14 @@ AC_ARG_ENABLE(doxygen-docs,
 	[enable_doxygen_docs=$enableval],
  	[enable_doxygen_docs=no]
 )
+
+AC_CHECK_FUNCS(clock_gettime, [], [
+  AC_CHECK_LIB(rt, clock_gettime, [
+    AC_DEFINE(HAVE_CLOCK_GETTIME, 1)
+    RT_LIBS="-lrt"
+  ])
+])
+AC_SUBST(RT_LIBS)
 
 # Check for programs
 
@@ -178,7 +186,6 @@ AC_SUBST(BUILD_LIBDBUS_CXX_DIR)
 
 # Save processed files
 
-PKG_CHECK_MODULES(CPPUNIT, cppunit)
 AC_OUTPUT(
 	Makefile
         src/Makefile

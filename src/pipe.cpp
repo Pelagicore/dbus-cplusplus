@@ -62,6 +62,7 @@ Pipe::Pipe(void(*handler)(const void *data, void *buffer, unsigned int nbyte), c
 
 void Pipe::write(const void *buffer, unsigned int nbytes)
 {
+  // TODO: ignoring return of read/write generates warning; maybe relevant for eventloop work...
   // first write the size into the pipe...
   ::write(_fd_write, static_cast <const void *>(&nbytes), sizeof(nbytes));
 
@@ -71,6 +72,7 @@ void Pipe::write(const void *buffer, unsigned int nbytes)
 
 ssize_t Pipe::read(void *buffer, unsigned int &nbytes)
 {
+  // TODO: ignoring return of read/write generates warning; maybe relevant for eventloop work...
   // first read the size from the pipe...
   ::read(_fd_read, &nbytes, sizeof(nbytes));
 
@@ -80,5 +82,6 @@ ssize_t Pipe::read(void *buffer, unsigned int &nbytes)
 
 void Pipe::signal()
 {
+  // TODO: ignoring return of read/write generates warning; maybe relevant for eventloop work...
   ::write(_fd_write, '\0', 1);
 }
