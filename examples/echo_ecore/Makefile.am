@@ -1,6 +1,6 @@
 EXTRA_DIST = README echo-introspect.xml
 
-AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_builddir)/include \
+AM_CPPFLAGS = -I$(top_srcdir)/include \
 	$(ecore_CFLAGS)
 
 if ENABLE_ECORE

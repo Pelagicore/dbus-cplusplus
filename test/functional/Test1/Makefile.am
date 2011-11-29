@@ -29,10 +29,10 @@ TestApp_SOURCES = \
 	TestAppIntroProvider.h
 
 TestApp_LDFLAGS = \
-	../../../src/libdbus-c++-1.la
+	$(top_builddir)/src/libdbus-c++-1.la
 
 TestApp_CXXFLAGS = \
-	-I../../../include
+	-I$(top_srcdir)/include
 
 AM_CPPFLAGS = 
 

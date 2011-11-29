@@ -4,7 +4,6 @@
 
 #include "dbus_ecore.h"
 
-#include <xml.h>
 #include <iostream>
 #include <vector>
 
