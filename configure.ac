@@ -35,6 +35,20 @@ AC_ARG_ENABLE(doxygen-docs,
  	[enable_doxygen_docs=no]
 )
 
+AC_ARG_ENABLE(tests,
+	AS_HELP_STRING([--enable-tests],
+		[build tests]),
+	[enable_tests=$enableval],
+ 	[enable_tests=yes]
+)
+
+AC_ARG_ENABLE(examples,
+	AS_HELP_STRING([--enable-examples],
+		[build examples]),
+	[enable_examples=$enableval],
+ 	[enable_examples=yes]
+)
+
 AC_CHECK_FUNCS(clock_gettime, [], [
   AC_CHECK_LIB(rt, clock_gettime, [
     AC_DEFINE(HAVE_CLOCK_GETTIME, 1)
@@ -121,6 +135,18 @@ AC_SUBST(ecore_LIBS)
 AM_CONDITIONAL(ENABLE_ECORE, test 1 = 1)
 else
 AM_CONDITIONAL(ENABLE_ECORE, test 0 = 1)
+fi
+
+if test "$enable_tests" = "yes" ; then
+AM_CONDITIONAL(ENABLE_TESTS, test 1 = 1)
+else
+AM_CONDITIONAL(ENABLE_TESTS, test 0 = 1)
+fi
+
+if test "$enable_examples" = "yes" ; then
+AM_CONDITIONAL(ENABLE_EXAMPLES, test 1 = 1)
+else
+AM_CONDITIONAL(ENABLE_EXAMPLES, test 0 = 1)
 fi
 
 AC_CHECK_LIB([expat], XML_ParserCreate_MM,
@@ -215,3 +241,20 @@ AC_OUTPUT(
 	dbus-c++-glib-1-uninstalled.pc
 	libdbus-c++.spec
 )
+
+echo
+echo "Build configuration:"
+echo "--------------------"
+echo
+echo "Mainloop integration support:"
+echo "ecore ......................... $enable_ecore"
+echo "glib........................... $enable_glib"
+echo
+echo "Optional build items:"
+echo "build tests.................... $enable_tests"
+echo "build examples................. $enable_examples"
+echo "build doxygen documentation.... $enable_doxygen_docs"
+echo "Cross Compiling activated...... $cross_compiling"
+echo "PThread support found.......... $acx_pthread_ok"
+echo
+
