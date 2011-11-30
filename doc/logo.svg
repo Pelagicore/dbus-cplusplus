@@ -26,7 +26,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497475"
      inkscape:cx="-12.490543"
-     inkscape:cy="511.71784"
+     inkscape:cy="430.90564"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -72,7 +72,10 @@
        x="40.406101"
        y="270.50412"
        ry="76.914886"
-       rx="26.263966" />
+       rx="26.263966"
+       inkscape:export-filename="/home/andreas/src/git/dbus-c++/mainline/doc/logo.png"
+       inkscape:export-xdpi="13"
+       inkscape:export-ydpi="13" />
     <path
        sodipodi:type="arc"
        style="fill:#009933;fill-opacity:1;fill-rule:nonzero;stroke:#009933;stroke-width:0.30000001;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
