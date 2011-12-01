@@ -1,7 +1,7 @@
 # Autojunk script for libdbus-c++
 
 AC_PREREQ(2.59)
-AC_INIT([libdbus-c++], 0.9.0-pre1, [andreas.volz@tux-style.com])
+AC_INIT([libdbus-c++], 0.9.0, [andreas.volz@tux-style.com])
 
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_CONFIG_HEADER([config.h])
