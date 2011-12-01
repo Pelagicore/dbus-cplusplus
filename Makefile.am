@@ -8,7 +8,7 @@ if ENABLE_ECORE
 PKG_CONFIG_ECORE = dbus-c++-ecore-1.pc
 endif
 
-EXTRA_DIST = autogen.sh bootstrap libdbus-c++.spec libdbus-c++.spec.in
+EXTRA_DIST = autogen.sh bootstrap libdbus-c++.spec.in
 
 ACLOCAL_AMFLAGS = -I m4
 
