@@ -209,10 +209,15 @@ bool ObjectAdaptor::handle_message(const Message &msg)
     const CallMessage &cmsg = reinterpret_cast<const CallMessage &>(msg);
     const char *member      = cmsg.member();
     const char *interface   = cmsg.interface();
+    InterfaceAdaptor *ii    = NULL;
 
     debug_log(" invoking method %s.%s", interface, member);
 
-    InterfaceAdaptor *ii = find_interface(interface);
+    if (interface)
+      ii = find_interface(interface);
+    else
+      ii = NULL;
+
     if (ii)
     {
       try
