@@ -38,6 +38,7 @@
 #include <cassert>
 #include <sys/poll.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 using namespace DBus;
 using namespace std;
