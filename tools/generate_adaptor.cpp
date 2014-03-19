@@ -485,9 +485,12 @@ void generate_adaptor(Xml::Document &doc, const char *filename)
       Xml::Nodes args_out = args.select("direction", "out");
 
       body << tab << "::DBus::Message " << stub_name(method.get("name")) << "(const ::DBus::CallMessage &call)" << endl
-           << tab << "{" << endl
-           << tab << tab << "::DBus::MessageIter ri = call.reader();" << endl
-           << endl;
+           << tab << "{" << endl;
+      if(!args_in.empty())
+      {
+         body << tab << tab << "::DBus::MessageIter ri = call.reader();" << endl;
+         body << endl;
+      }
 
       // generate the 'in' variables
       unsigned int i = 1;
